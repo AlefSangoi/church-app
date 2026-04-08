@@ -3083,6 +3083,16 @@ function openServiceModal(id) {
       saveTeam(id, team.id);
     });
     footer.appendChild(saveBtn);
+
+    // Botão Notificar Equipe via WhatsApp
+    var waBtn = document.createElement('button');
+    waBtn.className = 'btn btn-secondary';
+    waBtn.style.cssText = 'width:auto;background:rgba(37,211,102,.15);color:#25d366;border:1px solid rgba(37,211,102,.3)';
+    waBtn.innerHTML = '&#128242; Notificar Equipe';
+    waBtn.addEventListener('click', function() {
+      notificarEquipeWA(s, team);
+    });
+    footer.appendChild(waBtn);
   }
 
   document.getElementById('service-modal').classList.remove('hidden');
@@ -3091,6 +3101,110 @@ function openServiceModal(id) {
 document.getElementById('btn-close-service-modal').addEventListener('click', closeServiceModal);
 function closeServiceModal() {
   document.getElementById('service-modal').classList.add('hidden');
+}
+
+function notificarEquipeWA(s, team) {
+  // Coletar todos os nomes escalados
+  var campos = [
+    { label: 'Louvor', valor: team.worship_band },
+    { label: 'Lider de Louvor', valor: team.worship_leader },
+    { label: 'Vocais', valor: team.worship_vocais },
+    { label: 'Teclado', valor: team.worship_teclado },
+    { label: 'Guitarra', valor: team.worship_guitarra },
+    { label: 'Bateria', valor: team.worship_bateria },
+    { label: 'Baixo', valor: team.worship_baixo },
+    { label: 'Som', valor: team.sound_operator },
+    { label: 'Projecao', valor: team.projection_operator },
+    { label: 'Iluminacao', valor: team.lighting_operator },
+    { label: 'Live', valor: team.live_operator },
+  ];
+
+  // Coletar nomes únicos
+  var nomes = [];
+  campos.forEach(function(c) {
+    if (!c.valor) return;
+    parseList(c.valor).forEach(function(n) {
+      if (n && nomes.indexOf(n) === -1) nomes.push(n);
+    });
+  });
+
+  if (!nomes.length) {
+    toast('Nenhum membro escalado ainda.', 'error');
+    return;
+  }
+
+  var dateObj = new Date(s.date + 'T00:00:00');
+  var dataFmt = dateObj.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' });
+  var hora    = (s.time || '').slice(0, 5);
+  var local   = s.location || '';
+  var titulo  = s.title || '';
+
+  // Buscar phones dos membros pelo nome
+  sb.from('profiles')
+    .select('name, phone')
+    .eq('church_id', currentProfile.church_id)
+    .eq('status', 'approved')
+    .then(function(res) {
+      var profiles = res.data || [];
+
+      // Abrir modal de notificação
+      var old = document.getElementById('modal-notificar-wa');
+      if (old) old.remove();
+
+      var overlay = document.createElement('div');
+      overlay.id = 'modal-notificar-wa';
+      overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px';
+
+      var msg = '*Escala de Servico*' +
+        '\n\n*Culto:* ' + titulo +
+        '\n*Data:* ' + dataFmt +
+        '\n*Horario:* ' + hora +
+        '\n*Local:* ' + local +
+        '\n\nVoce esta escalado(a) para este culto. Por favor confirme sua presenca! \uD83D\uDE4F';
+
+      var itens = nomes.map(function(nome) {
+        var perfil = profiles.find(function(p) {
+          return p.name && p.name.toLowerCase().trim() === nome.toLowerCase().trim();
+        });
+        var phone = perfil && perfil.phone ? perfil.phone.replace(/[^0-9]/g,'') : '';
+        var waUrl = phone
+          ? 'https://wa.me/55' + phone + '?text=' + encodeURIComponent(msg)
+          : 'https://wa.me/?text=' + encodeURIComponent(msg);
+        var hasPhone = !!phone;
+
+        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)">' +
+          '<div>' +
+            '<div style="font-weight:600;font-size:13px;color:#fff">' + nome + '</div>' +
+            '<div style="font-size:11px;color:' + (hasPhone ? '#25d366' : '#f59e0b') + '">' +
+              (hasPhone ? '&#9989; ' + phone : '&#9888; Sem WhatsApp cadastrado') +
+            '</div>' +
+          '</div>' +
+          '<a href="' + waUrl + '" target="_blank" style="background:#25d366;color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap">&#128242; Notificar</a>' +
+        '</div>';
+      }).join('');
+
+      overlay.innerHTML =
+        '<div style="background:#1a1a2e;border-radius:16px;width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)">' +
+          '<div style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center">' +
+            '<div>' +
+              '<div style="font-weight:700;font-size:15px;color:#fff">&#128242; Notificar Equipe</div>' +
+              '<div style="font-size:12px;color:#6b7280;margin-top:2px">' + titulo + ' &bull; ' + dataFmt + '</div>' +
+            '</div>' +
+            '<button id="btn-fechar-notif" style="background:rgba(255,255,255,.1);color:#fff;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:13px">Fechar</button>' +
+          '</div>' +
+          '<div style="flex:1;overflow-y:auto;padding:16px 20px">' +
+            '<p style="font-size:12px;color:#6b7280;margin-bottom:12px">Clique em Notificar para abrir o WhatsApp com a mensagem pronta para cada membro.</p>' +
+            itens +
+          '</div>' +
+          '<div style="padding:14px 20px;border-top:1px solid rgba(255,255,255,.1)">' +
+            '<a href="https://wa.me/?text=' + encodeURIComponent(msg) + '" target="_blank" style="display:block;text-align:center;background:#25d366;color:#fff;padding:12px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none">&#128242; Notificar Todos (Mensagem Geral)</a>' +
+          '</div>' +
+        '</div>';
+
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+      document.getElementById('btn-fechar-notif').addEventListener('click', function() { overlay.remove(); });
+    });
 }
 
 function saveTeam(serviceId, teamId) {
