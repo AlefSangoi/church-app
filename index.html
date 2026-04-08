@@ -2515,7 +2515,7 @@ function loadApp(user) {
 
       // Carregar nome e logo da igreja no sidebar e favicon
       if (currentProfile.church_id) {
-        sb.from('churches').select('name, logo_url').eq('id', currentProfile.church_id).single().then(function(r) {
+        sb.from('churches').select('name, logo_url, plan_status, plan_expires_at, plan, plan_value').eq('id', currentProfile.church_id).single().then(function(r) {
           if (!r.data) return;
           if (r.data.name) {
             var nameEl = document.getElementById('sidebar-church-name');
@@ -2523,7 +2523,6 @@ function loadApp(user) {
             document.title = r.data.name + ' - Agenda';
           }
           if (r.data.logo_url) {
-            // Logo no sidebar
             var logoEl = document.querySelector('.logo-church-img');
             if (logoEl) {
               var img = document.createElement('img');
@@ -2532,11 +2531,14 @@ function loadApp(user) {
               img.alt = 'Logo';
               logoEl.parentNode.replaceChild(img, logoEl);
             }
-            // Favicon dinamico
             var fav = document.querySelector("link[rel~='icon']");
             if (!fav) { fav = document.createElement('link'); fav.rel = 'icon'; document.head.appendChild(fav); }
             fav.type = 'image/x-icon';
             fav.href = r.data.logo_url;
+          }
+          // Verificar status do plano (exceto super admin)
+          if (currentUser.email !== 'getprojection@gmail.com') {
+            verificarStatusPlano(r.data);
           }
         });
       }
@@ -4325,6 +4327,79 @@ function abrirModalPix(nome, valor, pixKey, waCliente) {
     var waUrl = waNum ? 'https://wa.me/55' + waNum + '?text=' + encodeURIComponent(msg)
                      : 'https://wa.me/?text=' + encodeURIComponent(msg);
     window.open(waUrl, '_blank');
+  });
+}
+
+// =============================================
+// VERIFICACAO DE STATUS DO PLANO
+// =============================================
+function verificarStatusPlano(church) {
+  var status = church.plan_status || 'trial';
+  if (status !== 'overdue' && status !== 'cancelled') return;
+
+  // Remover modal anterior se existir
+  var old = document.getElementById('modal-plano-bloqueado');
+  if (old) return; // ja está bloqueado
+
+  var isCancelled = status === 'cancelled';
+  var titulo = isCancelled ? 'Plano Cancelado' : 'Pagamento em Atraso';
+  var icon   = isCancelled ? '&#128683;' : '&#9888;';
+  var cor    = isCancelled ? '#ef4444' : '#f59e0b';
+  var msg    = isCancelled
+    ? 'Sua agenda foi cancelada. Entre em contato para reativar o seu plano e continuar usando o sistema.'
+    : 'Identificamos um pagamento em atraso na sua conta. Regularize sua situacao para continuar usando o sistema normalmente.';
+
+  var overlay = document.createElement('div');
+  overlay.id = 'modal-plano-bloqueado';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)';
+
+  overlay.innerHTML =
+    '<div style="background:var(--surface);border:2px solid ' + cor + ';border-radius:20px;width:100%;max-width:440px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6);text-align:center">' +
+      // Header colorido
+      '<div style="background:' + cor + '22;padding:32px 24px 20px;border-bottom:1px solid ' + cor + '33">' +
+        '<div style="font-size:48px;margin-bottom:12px">' + icon + '</div>' +
+        '<div style="font-size:20px;font-weight:800;color:' + cor + ';margin-bottom:8px">' + titulo + '</div>' +
+        '<div style="font-size:13px;color:var(--muted);line-height:1.6">' + msg + '</div>' +
+      '</div>' +
+      // Corpo
+      '<div style="padding:24px">' +
+        '<div style="background:var(--surface2);border-radius:12px;padding:16px;margin-bottom:20px;text-align:left">' +
+          '<div style="font-size:12px;color:var(--muted);margin-bottom:4px">Igreja</div>' +
+          '<div style="font-weight:700;font-size:15px">' + (church.name || '') + '</div>' +
+        '</div>' +
+        '<p style="font-size:13px;color:var(--muted);margin-bottom:20px">Entre em contato com o suporte para regularizar sua situacao.</p>' +
+        // Botão WhatsApp suporte
+        '<a href="https://wa.me/5549988068778?text=' + encodeURIComponent('Ola! Preciso regularizar o plano da minha agenda: ' + (church.name || '')) + '" target="_blank" ' +
+          'style="display:block;background:#25d366;color:#fff;padding:14px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;margin-bottom:10px">' +
+          '&#128242; Falar com Suporte no WhatsApp' +
+        '</a>' +
+        '<button id="btn-ver-somente-leitura" style="width:100%;background:transparent;color:var(--muted);border:1px solid var(--border);padding:10px;border-radius:10px;font-size:13px;cursor:pointer">Ver sistema (somente leitura)</button>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(overlay);
+
+  // Listener do botão ver somente leitura
+  setTimeout(function() {
+    var btnVer = document.getElementById('btn-ver-somente-leitura');
+    if (btnVer) btnVer.addEventListener('click', function() {
+      var m = document.getElementById('modal-plano-bloqueado');
+      if (m) { m.style.opacity = '0.15'; m.style.pointerEvents = 'none'; }
+      setTimeout(function() {
+        var m2 = document.getElementById('modal-plano-bloqueado');
+        if (m2) { m2.style.opacity = '1'; m2.style.pointerEvents = ''; }
+      }, 10000); // volta em 10 segundos
+    });
+  }, 100);
+
+  // Impedir fechar clicando fora
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) {
+      // Dar um "shake" visual para indicar que nao pode fechar
+      overlay.style.animation = 'none';
+      overlay.style.transform = 'scale(1.02)';
+      setTimeout(function() { overlay.style.transform = ''; }, 150);
+    }
   });
 }
 
