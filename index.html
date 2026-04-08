@@ -5853,7 +5853,7 @@ function showInviteScreen(token) {
 // PASTOR: ESBOCOS DE PREGACAO COM IA
 // =============================================
 // Configure sua chave da API Gemini abaixo
-var GROQ_API_KEY = 'GROQ_KEY_HERE';
+// Groq API chamada via Netlify Function (chave segura no servidor)
 
 var sermaoInit = false;
 
@@ -5984,12 +5984,9 @@ function gerarEsboço() {
     '- Duracao da pregacao: ' + duracao + ' minutos'
   ].join('\n');
 
-  fetch('https://api.groq.com/openai/v1/chat/completions', {
+  fetch('/.netlify/functions/groq', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + GROQ_API_KEY
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
       messages: [{ role: 'user', content: promptText }],
