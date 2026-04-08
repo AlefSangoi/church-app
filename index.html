@@ -1396,12 +1396,26 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
       <div style="max-width:860px">
 
         <!-- Header -->
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:16px;flex-wrap:wrap">
           <div>
             <h3 style="font-size:18px;font-weight:700;margin-bottom:4px">&#128214; Gerador de Esbocos para Pregacao</h3>
             <p style="font-size:13px;color:var(--muted)">Gere um esboço completo baseado em referencias biblicas. O esboço e gerado por inteligencia artificial.</p>
           </div>
           <button class="btn btn-primary" id="btn-novo-sermao" style="white-space:nowrap;width:auto">+ Novo Esboço</button>
+        </div>
+
+        <!-- Contador de esboços do plano -->
+        <div id="sermao-contador" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:20px;display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+            <div style="font-size:13px;font-weight:600">Esboços gerados este mes</div>
+            <div id="sermao-contador-txt" style="font-size:13px;color:var(--muted)"></div>
+          </div>
+          <div style="background:var(--surface2);border-radius:100px;height:8px;overflow:hidden">
+            <div id="sermao-contador-bar" style="height:100%;border-radius:100px;background:var(--accent);transition:width .4s;width:0%"></div>
+          </div>
+          <div id="sermao-upgrade-hint" style="display:none;margin-top:10px;font-size:12px;color:var(--muted)">
+            Limite atingido. <button onclick="abrirModalPlanos()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-weight:700;font-size:12px;padding:0">Fazer upgrade</button> para gerar mais esboços.
+          </div>
         </div>
 
         <!-- Form novo esboço -->
@@ -4335,6 +4349,96 @@ function abrirModalPix(nome, valor, pixKey, waCliente) {
 }
 
 // =============================================
+// MODAL DE PLANOS E UPGRADE
+// =============================================
+function abrirModalPlanos() {
+  var old = document.getElementById('modal-planos');
+  if (old) old.remove();
+
+  var church = window.currentChurch || {};
+  var planoAtual = church.plan || 'trial';
+  var nomeIgreja = church.name || '';
+
+  var planos = [
+    { key:'trial',        nome:'Trial',        valor:'Gratis',   dias:'7 dias',  usuarios:5,   esbocos:'Nao',       convites:'Nao',   cor:'#6b7280' },
+    { key:'basico',       nome:'Basico',        valor:'R$19,90',  dias:'30 dias', usuarios:15,  esbocos:'Nao',       convites:'Sim',   cor:'#3b82f6' },
+    { key:'essencial',    nome:'Essencial',     valor:'R$29,90',  dias:'30 dias', usuarios:30,  esbocos:'5/mes',     convites:'Sim',   cor:'#8b5cf6' },
+    { key:'profissional', nome:'Profissional',  valor:'R$39,90',  dias:'30 dias', usuarios:60,  esbocos:'20/mes',    convites:'Sim',   cor:'#f59e0b' },
+    { key:'premium',      nome:'Premium',       valor:'R$59,90',  dias:'30 dias', usuarios:999, esbocos:'Ilimitado', convites:'Sim',   cor:'#10b981' },
+  ];
+
+  var cardsHtml = planos.map(function(p) {
+    var isAtual = p.key === planoAtual;
+    var isMelhor = p.key === 'profissional';
+    return '<div style="background:var(--surface2);border:2px solid ' + (isAtual ? p.cor : isMelhor ? p.cor : 'var(--border)') + ';border-radius:14px;padding:20px;position:relative;' + (isMelhor ? 'transform:scale(1.03)' : '') + '">' +
+      (isMelhor ? '<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:' + p.cor + ';color:#000;padding:2px 14px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap">MAIS POPULAR</div>' : '') +
+      (isAtual ? '<div style="position:absolute;top:-10px;right:12px;background:var(--green);color:#fff;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700">ATUAL</div>' : '') +
+      '<div style="text-align:center;margin-bottom:14px">' +
+        '<div style="font-weight:800;font-size:15px;color:' + p.cor + ';margin-bottom:4px">' + p.nome + '</div>' +
+        '<div style="font-size:22px;font-weight:800;color:var(--text)">' + p.valor + '</div>' +
+        '<div style="font-size:11px;color:var(--muted)">' + p.dias + '</div>' +
+      '</div>' +
+      '<div style="font-size:12px;display:flex;flex-direction:column;gap:6px;margin-bottom:16px">' +
+        '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Usuarios</span><strong>' + (p.usuarios >= 999 ? 'Ilimitado' : 'Ate ' + p.usuarios) + '</strong></div>' +
+        '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Esbocos IA</span><strong>' + p.esbocos + '</strong></div>' +
+        '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Convites</span><strong>' + p.convites + '</strong></div>' +
+        '<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Suporte</span><strong>' + (p.key === 'trial' ? 'Nao' : 'Seg-Sex') + '</strong></div>' +
+      '</div>' +
+      (isAtual
+        ? '<div style="text-align:center;padding:8px;border-radius:8px;background:rgba(16,185,129,.1);color:var(--green);font-size:12px;font-weight:700">Plano Atual</div>'
+        : '<button class="btn-assinar-plano" data-key="' + p.key + '" data-nome="' + p.nome + '" data-valor="' + p.valor + '" style="width:100%;background:' + p.cor + ';color:' + (p.key==="basico"?"#fff":"#000") + ';border:none;padding:10px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer">Assinar ' + p.nome + '</button>'
+      ) +
+    '</div>';
+  }).join('');
+
+  var overlay = document.createElement('div');
+  overlay.id = 'modal-planos';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:99999;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;backdrop-filter:blur(4px)';
+
+  overlay.innerHTML =
+    '<div style="background:var(--surface);border-radius:20px;width:100%;max-width:900px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);margin:auto">' +
+      '<div style="background:linear-gradient(135deg,#1a2744,#0f172a);padding:28px;text-align:center">' +
+        '<div style="font-size:28px;margin-bottom:8px">&#9679; Planos Church App</div>' +
+        '<p style="color:#94a3b8;font-size:14px">Escolha o plano ideal para sua igreja</p>' +
+      '</div>' +
+      '<div style="padding:24px">' +
+        '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:24px">' +
+          cardsHtml +
+        '</div>' +
+        '<p style="text-align:center;font-size:12px;color:var(--muted)">Pagamento via PIX. Suporte de segunda a sexta, das 8h as 18h.</p>' +
+      '</div>' +
+      '<div style="padding:16px 24px;border-top:1px solid var(--border);text-align:right">' +
+        '<button id="btn-fechar-planos" style="background:var(--surface2);color:var(--muted);border:1px solid var(--border);padding:8px 20px;border-radius:8px;cursor:pointer;font-size:13px">Fechar</button>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+  document.getElementById('btn-fechar-planos').addEventListener('click', function() { overlay.remove(); });
+
+  // Listeners dos botões de assinar
+  overlay.querySelectorAll('.btn-assinar-plano').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      solicitarUpgrade(
+        this.getAttribute('data-key'),
+        this.getAttribute('data-nome'),
+        this.getAttribute('data-valor'),
+        nomeIgreja
+      );
+    });
+  });
+}
+
+function solicitarUpgrade(planoKey, planoNome, planoValor, nomeIgreja) {
+  var msg = 'Ola! Quero fazer upgrade do meu plano na *Agenda Church App*.' +
+    '\n\nIgreja: *' + nomeIgreja + '*' +
+    '\nPlano desejado: *' + planoNome + '* (' + planoValor + '/mes)' +
+    '\n\nAguardo as instrucoes para o pagamento via PIX. Obrigado!';
+  var url = 'https://wa.me/5549988068778?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+}
+
+// =============================================
 // BANNER DE PLANO NO SISTEMA DO CLIENTE
 // =============================================
 function mostrarBannerPlano(church) {
@@ -4376,7 +4480,7 @@ function mostrarBannerPlano(church) {
       '<span style="font-size:18px">' + (isTrial ? '&#9201;' : '&#9888;') + '</span>' +
       '<span>' + msg + '</span>' +
     '</div>' +
-    '<a href="https://wa.me/5549988068778?text=' + encodeURIComponent('Ola! Quero assinar um plano da Agenda Church App. Igreja: ' + (church.name||'')) + '" target="_blank" style="background:' + cor + ';color:#fff;padding:6px 16px;border-radius:8px;font-weight:700;font-size:12px;text-decoration:none;white-space:nowrap">Ver Planos</a>';
+    '<button onclick="abrirModalPlanos()" style="background:' + cor + ';color:#fff;padding:6px 16px;border-radius:8px;font-weight:700;font-size:12px;border:none;cursor:pointer;white-space:nowrap">Ver Planos</button>';
 
   // Inserir no topo do main-content
   var mainContent = document.getElementById('main-content');
@@ -5116,6 +5220,8 @@ initApp();
 window.openServiceModal = openServiceModal;
 window.deletarLocal = deletarLocal;
 window.gerarPDFSermao = gerarPDFSermao;
+window.abrirModalPlanos = abrirModalPlanos;
+window.solicitarUpgrade = solicitarUpgrade;
 window.addPessoa = addPessoa;
 window.showOnboarding = showOnboarding;
 
@@ -6195,7 +6301,13 @@ function gerarEsboço() {
   // Verificar limite de esbocos do plano
   var planoAtual = PLANOS[(window.currentChurch && window.currentChurch.plan) || 'trial'];
   if (planoAtual.esbocos === 0) {
-    toast('Seu plano (' + planoAtual.label + ') nao inclui o Gerador de Esbocos com IA. Fale com o suporte para fazer upgrade!', 'error');
+    toast('Seu plano (' + planoAtual.label + ') nao inclui o Gerador de Esbocos com IA.', 'error');
+    setTimeout(abrirModalPlanos, 500);
+    return;
+  }
+  if (planoAtual.esbocos < 999 && (window.esbocosUsadosMes || 0) >= planoAtual.esbocos) {
+    toast('Limite de ' + planoAtual.esbocos + ' esbocos/mes atingido no plano ' + planoAtual.label + '.', 'error');
+    setTimeout(abrirModalPlanos, 500);
     return;
   }
 
@@ -6361,6 +6473,9 @@ function carregarSermoes() {
   if (!container) return;
   container.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:10px">Carregando...</p>';
 
+  // Atualizar contador
+  atualizarContadorSermoes();
+
   sb.from('sermons').select('*')
     .eq('church_id', currentProfile.church_id)
     .order('created_at', { ascending: false })
@@ -6453,6 +6568,54 @@ function carregarSermoes() {
     });
 }
 
+
+function atualizarContadorSermoes() {
+  if (!currentProfile || !currentProfile.church_id) return;
+  var plano = PLANOS[(window.currentChurch && window.currentChurch.plan) || 'trial'];
+  var limite = plano.esbocos;
+
+  var contador = document.getElementById('sermao-contador');
+  if (!contador) return;
+
+  // Se plano nao tem IA, esconder contador
+  if (limite === 0) {
+    contador.style.display = 'none';
+    return;
+  }
+
+  // Buscar esboços do mês atual
+  var agora = new Date();
+  var inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1).toISOString();
+  var fimMes    = new Date(agora.getFullYear(), agora.getMonth() + 1, 0, 23, 59, 59).toISOString();
+
+  sb.from('sermons').select('id', { count: 'exact' })
+    .eq('church_id', currentProfile.church_id)
+    .gte('created_at', inicioMes)
+    .lte('created_at', fimMes)
+    .then(function(res) {
+      var usado  = res.count || 0;
+      var ilimit = limite >= 999;
+      var pct    = ilimit ? 30 : Math.min(100, Math.round(usado / limite * 100));
+      var corBar = pct >= 100 ? '#ef4444' : pct >= 70 ? '#f59e0b' : '#10b981';
+
+      var txt = ilimit
+        ? usado + ' esbocos gerados este mes (Ilimitado)'
+        : usado + ' de ' + limite + ' esbocos (' + plano.label + ')';
+
+      var bar  = document.getElementById('sermao-contador-bar');
+      var txtEl = document.getElementById('sermao-contador-txt');
+      var hint = document.getElementById('sermao-upgrade-hint');
+
+      if (bar)   { bar.style.width = pct + '%'; bar.style.background = corBar; }
+      if (txtEl) txtEl.textContent = txt;
+      if (hint)  hint.style.display = (!ilimit && usado >= limite) ? 'block' : 'none';
+
+      contador.style.display = 'block';
+
+      // Salvar localmente para verificar ao gerar
+      window.esbocosUsadosMes = usado;
+    });
+}
 
 function renderSermaoHTML(s) {
   var titulo = s.titulo || 'Esboço de Pregacao';
