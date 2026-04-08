@@ -2540,9 +2540,9 @@ function loadApp(user) {
           }
           // Verificar status do plano (exceto super admin)
           if (currentUser.email !== 'getprojection@gmail.com') {
-            verificarStatusPlano(r.data);
-            // Salvar dados da church globalmente para controle de limites
             window.currentChurch = r.data;
+            verificarStatusPlano(r.data);
+            mostrarBannerPlano(r.data);
           }
         });
       }
@@ -4279,13 +4279,13 @@ function abrirModalPix(nome, valor, pixKey, waCliente) {
   overlay.id = 'modal-pix-sa';
   overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
 
-  var planoInfo = PLANOS[waCliente ? '' : ''] || {};
   overlay.innerHTML =
-    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">' +
+    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:380px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">' +
+      // Header
       '<div style="background:linear-gradient(135deg,#1a2744,#0f172a);padding:20px;text-align:center">' +
-        '<div style="font-size:13px;color:var(--accent);font-weight:700;letter-spacing:1px;margin-bottom:4px">COBRANCA PIX</div>' +
+        '<div style="font-size:13px;color:var(--accent);font-weight:700;letter-spacing:1px;margin-bottom:4px">COBRANÇA PIX</div>' +
         '<div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:2px">' + nome + '</div>' +
-        '<div style="font-size:28px;font-weight:800;color:var(--accent)">R$ ' + parseFloat(valor).toFixed(2) + '<span style="font-size:13px;color:var(--muted)">/mes</span></div>' +
+        '<div style="font-size:28px;font-weight:800;color:var(--accent)">R$ ' + parseFloat(valor).toFixed(2) + '<span style="font-size:13px;color:var(--muted)">/mês</span></div>' +
       '</div>' +
       // QR Code
       '<div style="padding:24px;text-align:center">' +
@@ -4320,36 +4320,67 @@ function abrirModalPix(nome, valor, pixKey, waCliente) {
   });
 
   document.getElementById('btn-wa-pix').addEventListener('click', function() {
-    var valorFmt = 'R$ ' + parseFloat(valor).toFixed(2);
-    var msg = 'Ola! Tudo bem? &#128591;' +
-      '\n\nPassando para lembrar sobre o pagamento mensal da *Agenda Church App*.' +
-      '\n\n&#9962; *Igreja:* ' + nome +
-      '\n&#128176; *Valor:* *' + valorFmt + '/mes*' +
-      '\n\n*Chave PIX (UUID):*' +
-      '\n`' + pixKey + '`' +
-      '\n\nApós confirmar o pagamento, sua agenda continua funcionando normalmente!' +
-      '\n\n_Suporte: segunda a sexta, das 8h as 18h_' +
-      '\n_Qualquer duvida e so responder esta mensagem!_ &#128522;';
+    var msg = 'Ola! Tudo bem?' +
+      '\n\nPassando para lembrar o pagamento mensal da *Agenda Church App* referente a igreja *' + nome + '*.' +
+      '\n\nValor: *R$ ' + parseFloat(valor).toFixed(2) + '/mes*' +
+      '\n\nChave PIX: *' + pixKey + '*' +
+      '\n\nApos o pagamento sua agenda continua funcionando normalmente.' +
+      '\nQualquer duvida estou a disposicao!';
+    // Se tiver numero do cliente, abrir direto para ele
     var waNum = (waCliente || '').replace(/[^0-9]/g,'');
-    var waUrl = waNum
-      ? 'https://wa.me/55' + waNum + '?text=' + encodeURIComponent(msg)
-      : 'https://wa.me/?text=' + encodeURIComponent(msg);
+    var waUrl = waNum ? 'https://wa.me/55' + waNum + '?text=' + encodeURIComponent(msg)
+                     : 'https://wa.me/?text=' + encodeURIComponent(msg);
     window.open(waUrl, '_blank');
   });
 }
 
-function autoPreencherValorPlano(plano) {
-  var p = PLANOS[plano];
-  if (!p) return;
-  var el = document.getElementById('sa-edit-value');
-  if (el) el.value = p.valor.toFixed(2);
-  // Sugerir vencimento
-  if (plano === 'trial') {
-    var d = new Date();
-    d.setDate(d.getDate() + 7);
-    var exp = document.getElementById('sa-edit-expires');
-    if (exp) exp.value = d.toISOString().slice(0,10);
+// =============================================
+// BANNER DE PLANO NO SISTEMA DO CLIENTE
+// =============================================
+function mostrarBannerPlano(church) {
+  if (!church) return;
+  var status  = church.plan_status || 'trial';
+  var plan    = church.plan || 'trial';
+  var plano   = PLANOS[plan] || PLANOS.trial;
+  var expires = church.plan_expires_at ? new Date(church.plan_expires_at) : null;
+  var hoje    = new Date();
+
+  // Calcular dias restantes
+  var diasRestantes = expires ? Math.ceil((expires - hoje) / (1000*60*60*24)) : null;
+
+  // Mostrar banner no topo do app apenas para trial ou vencendo em breve
+  var mostrar = (status === 'trial') || (diasRestantes !== null && diasRestantes <= 7 && diasRestantes > 0);
+  if (!mostrar) return;
+
+  var old = document.getElementById('banner-plano');
+  if (old) old.remove();
+
+  var banner = document.createElement('div');
+  banner.id = 'banner-plano';
+
+  var isTrial = status === 'trial';
+  var cor     = isTrial ? '#f59e0b' : '#ef4444';
+  var msg     = '';
+
+  if (isTrial) {
+    msg = diasRestantes !== null
+      ? 'Voce esta no periodo Trial. Restam <strong>' + diasRestantes + ' dias</strong>. Assine um plano para continuar usando!'
+      : 'Voce esta no periodo Trial gratuito. Assine um plano para continuar usando!';
+  } else {
+    msg = 'Seu plano <strong>' + plano.label + '</strong> vence em <strong>' + diasRestantes + ' dias</strong>. Renove para nao perder o acesso!';
   }
+
+  banner.style.cssText = 'background:' + cor + '18;border-bottom:2px solid ' + cor + ';padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;color:var(--text);flex-wrap:wrap;position:relative;z-index:10';
+  banner.innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px">' +
+      '<span style="font-size:18px">' + (isTrial ? '&#9201;' : '&#9888;') + '</span>' +
+      '<span>' + msg + '</span>' +
+    '</div>' +
+    '<a href="https://wa.me/5549988068778?text=' + encodeURIComponent('Ola! Quero assinar um plano da Agenda Church App. Igreja: ' + (church.name||'')) + '" target="_blank" style="background:' + cor + ';color:#fff;padding:6px 16px;border-radius:8px;font-weight:700;font-size:12px;text-decoration:none;white-space:nowrap">Ver Planos</a>';
+
+  // Inserir no topo do main-content
+  var mainContent = document.getElementById('main-content');
+  if (mainContent) mainContent.insertBefore(banner, mainContent.firstChild);
 }
 
 // =============================================
@@ -6081,16 +6112,29 @@ function showInviteScreen(token) {
 // CONFIGURACAO DOS PLANOS
 // =============================================
 var PLANOS = {
-  trial:         { label:'Trial',         valor:0,     dias:7,  usuarios:5,   esbocos:0,   convites:false, wa_notif:false, locais:1  },
-  basico:        { label:'Basico',        valor:19.90, dias:30, usuarios:15,  esbocos:0,   convites:true,  wa_notif:false, locais:1  },
-  essencial:     { label:'Essencial',     valor:29.90, dias:30, usuarios:30,  esbocos:5,   convites:true,  wa_notif:true,  locais:2  },
-  profissional:  { label:'Profissional',  valor:39.90, dias:30, usuarios:60,  esbocos:20,  convites:true,  wa_notif:true,  locais:5  },
+  trial:         { label:'Trial',         valor:0,     dias:7,  usuarios:5,   esbocos:0,   convites:false, wa_notif:false, locais:1   },
+  basico:        { label:'Basico',        valor:19.90, dias:30, usuarios:15,  esbocos:0,   convites:true,  wa_notif:false, locais:1   },
+  essencial:     { label:'Essencial',     valor:29.90, dias:30, usuarios:30,  esbocos:5,   convites:true,  wa_notif:true,  locais:2   },
+  profissional:  { label:'Profissional',  valor:39.90, dias:30, usuarios:60,  esbocos:20,  convites:true,  wa_notif:true,  locais:5   },
   premium:       { label:'Premium',       valor:59.90, dias:30, usuarios:999, esbocos:999, convites:true,  wa_notif:true,  locais:999 },
-  free:          { label:'Free',          valor:0,     dias:30, usuarios:10,  esbocos:0,   convites:false, wa_notif:false, locais:1  },
+  free:          { label:'Free',          valor:0,     dias:30, usuarios:10,  esbocos:0,   convites:false, wa_notif:false, locais:1   },
 };
 
 function getPlano(church) {
-  return PLANOS[church && church.plan] || PLANOS.trial;
+  return PLANOS[(church && church.plan)] || PLANOS.trial;
+}
+
+function autoPreencherValorPlano(plano) {
+  var p = PLANOS[plano];
+  if (!p) return;
+  var el = document.getElementById('sa-edit-value');
+  if (el) el.value = p.valor.toFixed(2);
+  if (plano === 'trial') {
+    var d = new Date();
+    d.setDate(d.getDate() + 7);
+    var exp = document.getElementById('sa-edit-expires');
+    if (exp) exp.value = d.toISOString().slice(0,10);
+  }
 }
 
 var sermaoInit = false;
@@ -6148,10 +6192,10 @@ function gerarEsboço() {
 
   if (!refs) { toast('Informe pelo menos uma referencia biblica.', 'error'); return; }
 
-  // Verificar limite de esboços do plano
+  // Verificar limite de esbocos do plano
   var planoAtual = PLANOS[(window.currentChurch && window.currentChurch.plan) || 'trial'];
   if (planoAtual.esbocos === 0) {
-    toast('Seu plano nao inclui o Gerador de Esbocos com IA. Fale com o suporte para fazer upgrade!', 'error');
+    toast('Seu plano (' + planoAtual.label + ') nao inclui o Gerador de Esbocos com IA. Fale com o suporte para fazer upgrade!', 'error');
     return;
   }
 
