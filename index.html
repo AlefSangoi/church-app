@@ -4426,18 +4426,25 @@ function carregarMeusCultos() {
       var meusCultos = res.data.filter(function(s) {
         var t = s.service_teams && s.service_teams[0];
         if (!t) return false;
-        // Busca em todos os campos de texto da equipe
+        // Busca em TODOS os campos de texto da equipe
         var campos = [
-          t.worship_band, t.worship_vocais, t.worship_teclado,
-          t.worship_guitarra, t.worship_bateria, t.worship_baixo,
-          t.worship_outros, t.sound_operator, t.sound_operators,
+          t.worship_band, t.worship_leader, t.worship_vocais, t.worship_teclado,
+          t.worship_guitarra, t.worship_bateria, t.worship_baixo, t.worship_outros,
+          t.sound_operator, t.sound_operators,
           t.projection_operator, t.projection_operators,
-          t.lighting_operator, t.live_operator, t.live_operators
+          t.lighting_operator, t.live_operator, t.live_operators, t.notes
         ];
+        // Busca por nome completo E primeiro nome
+        var primeiroNome = nome.split(' ')[0];
         return campos.some(function(c) {
           if (!c) return false;
-          // Busca o nome em qualquer parte do campo (incluindo multiplos separados por |)
-          return c.toLowerCase().indexOf(nome) !== -1;
+          var cLower = c.toLowerCase();
+          // Normalizar acentos para comparação
+          var cNorm = cLower.normalize('NFD').replace(/[̀-ͯ]/g,'');
+          var nomeNorm = nome.normalize('NFD').replace(/[̀-ͯ]/g,'');
+          var primeiroNorm = primeiroNome.normalize('NFD').replace(/[̀-ͯ]/g,'');
+          return cNorm.indexOf(nomeNorm) !== -1 ||
+                 (primeiroNome.length >= 3 && cNorm.indexOf(primeiroNorm) !== -1);
         });
       });
 
