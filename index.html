@@ -4452,8 +4452,11 @@ function mostrarBannerPlano(church) {
   // Calcular dias restantes
   var diasRestantes = expires ? Math.ceil((expires - hoje) / (1000*60*60*24)) : null;
 
-  // Mostrar banner no topo do app apenas para trial ou vencendo em breve
-  var mostrar = (status === 'trial') || (diasRestantes !== null && diasRestantes <= 7 && diasRestantes > 0);
+  // Definir se é trial pelo PLANO (não só pelo status)
+  var isTrial = (plan === 'trial' || plan === 'free');
+
+  // Mostrar banner: trial ativo, ou qualquer plano vencendo em <= 7 dias
+  var mostrar = isTrial || (diasRestantes !== null && diasRestantes <= 7 && diasRestantes > 0);
   if (!mostrar) return;
 
   var old = document.getElementById('banner-plano');
@@ -4462,12 +4465,11 @@ function mostrarBannerPlano(church) {
   var banner = document.createElement('div');
   banner.id = 'banner-plano';
 
-  var isTrial = status === 'trial';
-  var cor     = isTrial ? '#f59e0b' : '#ef4444';
-  var msg     = '';
+  var cor = isTrial ? '#f59e0b' : '#ef4444';
+  var msg = '';
 
   if (isTrial) {
-    msg = diasRestantes !== null
+    msg = diasRestantes !== null && diasRestantes > 0
       ? 'Voce esta no periodo Trial. Restam <strong>' + diasRestantes + ' dias</strong>. Assine um plano para continuar usando!'
       : 'Voce esta no periodo Trial gratuito. Assine um plano para continuar usando!';
   } else {
