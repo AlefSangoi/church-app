@@ -6731,13 +6731,21 @@ function getPlano(church) {
 function autoPreencherValorPlano(plano) {
   var p = PLANOS[plano];
   if (!p) return;
-  var el = document.getElementById('sa-edit-value');
-  if (el) el.value = p.valor.toFixed(2);
-  if (plano === 'trial') {
+
+  // Valor mensal
+  var elVal = document.getElementById('sa-edit-value');
+  if (elVal) elVal.value = p.valor.toFixed(2);
+
+  // Status: trial → trial, qualquer outro → active
+  var elStatus = document.getElementById('sa-edit-status');
+  if (elStatus) elStatus.value = (plano === 'trial' || plano === 'free') ? 'trial' : 'active';
+
+  // Data de expiração: hoje + dias do plano
+  var exp = document.getElementById('sa-edit-expires');
+  if (exp) {
     var d = new Date();
-    d.setDate(d.getDate() + 7);
-    var exp = document.getElementById('sa-edit-expires');
-    if (exp) exp.value = d.toISOString().slice(0,10);
+    d.setDate(d.getDate() + p.dias);
+    exp.value = d.toISOString().slice(0,10);
   }
 }
 
