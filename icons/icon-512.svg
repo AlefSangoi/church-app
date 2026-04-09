@@ -1,0 +1,32 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="108" fill="#0f1520"/>
+  
+  <!-- Subtle gradient overlay -->
+  <rect width="512" height="512" rx="108" fill="url(#grad512)"/>
+  
+  <!-- Glow effect behind cross -->
+  <ellipse cx="256" cy="112" rx="80" ry="60" fill="#f59e0b" opacity="0.08"/>
+  
+  <!-- Cross vertical bar -->
+  <rect x="234" y="52" width="44" height="196" rx="22" fill="#f59e0b"/>
+  
+  <!-- Cross horizontal bar -->
+  <rect x="148" y="118" width="216" height="44" rx="22" fill="#f59e0b"/>
+  
+  <!-- Divider line -->
+  <rect x="80" y="290" width="352" height="3" rx="2" fill="#f59e0b" opacity="0.2"/>
+  
+  <!-- Calendar/agenda lines -->
+  <rect x="80" y="316" width="352" height="22" rx="11" fill="#f59e0b" opacity="0.9"/>
+  <rect x="80" y="358" width="268" height="22" rx="11" fill="#f59e0b" opacity="0.6"/>
+  <rect x="80" y="400" width="196" height="22" rx="11" fill="#f59e0b" opacity="0.35"/>
+  <rect x="80" y="442" width="140" height="22" rx="11" fill="#f59e0b" opacity="0.18"/>
+  
+  <defs>
+    <linearGradient id="grad512" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1a2744" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#0a0c12" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
