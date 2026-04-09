@@ -1117,9 +1117,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   <h1>Sua agenda de <span>escalas</span><br/>em 3 minutos</h1>
   <p>Configure a agenda da sua igreja, escale equipes e gerencie voluntarios sem complicacao.</p>
   <div class="hero-badges">
-    <span class="badge">&#9989; Gratis ate 10 usuarios</span>
+    <span class="badge">&#9989; Trial gratis por 7 dias</span>
     <span class="badge">&#128274; Dados isolados por igreja</span>
-    <span class="badge">&#128247; Login com Google</span>
+    <span class="badge">&#128197; Agenda + Escalas integradas</span>
+    <span class="badge">&#128242; Notificacao via WhatsApp</span>
+    <span class="badge">&#129302; Gerador de Esbocos com IA</span>
     <span class="badge">&#128241; Mobile ready</span>
   </div>
 </section>
@@ -3374,7 +3376,7 @@ function serviceCardHTML(s) {
   function tvLouvor() {
     var banda = team.worship_band || '';
     var partes = [];
-    ['worship_vocais','worship_teclado','worship_guitarra','worship_bateria','worship_baixo','worship_outros'].forEach(function(k){
+    ['worship_vocais','worship_teclado','worship_violao','worship_guitarra','worship_bateria','worship_baixo','worship_outros'].forEach(function(k){
       if (team[k]) {
         team[k].split('|').forEach(function(n){ if (n.trim()) partes.push(n.trim()); });
       }
@@ -3457,7 +3459,7 @@ function openServiceModal(id) {
     // Verificar se o usuario esta escalado: comparar nome do perfil com os campos da equipe
     var camposEscala = [
       team.worship_band, team.worship_leader, team.worship_vocais,
-      team.worship_teclado, team.worship_guitarra, team.worship_bateria,
+      team.worship_teclado, team.worship_violao, team.worship_guitarra, team.worship_bateria,
       team.worship_baixo, team.worship_outros,
       team.sound_operator, team.sound_operators,
       team.projection_operator, team.projection_operators,
@@ -3579,6 +3581,7 @@ function notificarEquipeWA(s, team) {
     { label: 'Lider de Louvor', valor: team.worship_leader },
     { label: 'Vocais', valor: team.worship_vocais },
     { label: 'Teclado', valor: team.worship_teclado },
+    { label: 'Violao', valor: team.worship_violao },
     { label: 'Guitarra', valor: team.worship_guitarra },
     { label: 'Bateria', valor: team.worship_bateria },
     { label: 'Baixo', valor: team.worship_baixo },
@@ -3626,10 +3629,46 @@ function notificarEquipeWA(s, team) {
 
       var appUrl = window.location.origin + window.location.pathname + (getChurchSlug() ? '?church=' + getChurchSlug() : '');
 
+      // Montar bloco de equipe para a mensagem
+      function fmtList(val) {
+        if (!val) return '';
+        return parseList(val).filter(Boolean).join(', ');
+      }
+      var linhasEquipe = [];
+
+      // Louvor
+      var instrumentistas = [];
+      [{k:'worship_vocais',l:'Vocais'},{k:'worship_teclado',l:'Teclado'},{k:'worship_violao',l:'Violao'},
+       {k:'worship_guitarra',l:'Guitarra'},{k:'worship_bateria',l:'Bateria'},{k:'worship_baixo',l:'Baixo'},
+       {k:'worship_outros',l:'Outros'}].forEach(function(c) {
+        var v = fmtList(team[c.k]);
+        if (v) instrumentistas.push(c.l + ': ' + v);
+      });
+      var linhaLouvor = '';
+      if (team.worship_band) linhaLouvor += team.worship_band;
+      if (instrumentistas.length) linhaLouvor += (linhaLouvor ? '\n   ' : '') + instrumentistas.join(' | ');
+      if (linhaLouvor) linhasEquipe.push('🎵 *Louvor:* ' + linhaLouvor);
+
+      // Repertório
+      if (team.worship_repertoire) {
+        var musicas = team.worship_repertoire.split('\n').map(function(l){ return l.trim(); }).filter(Boolean);
+        if (musicas.length) linhasEquipe.push('🎶 *Repertorio:*\n   ' + musicas.join('\n   '));
+      }
+
+      // Som
+      var som = fmtList(team.sound_operators) || team.sound_operator || '';
+      if (som) linhasEquipe.push('🎚️ *Som:* ' + som);
+
+      // Iluminação
+      if (team.lighting_operator) linhasEquipe.push('💡 *Iluminacao:* ' + team.lighting_operator);
+
+      var blocoEquipe = linhasEquipe.length ? '\n\n' + linhasEquipe.join('\n') : '';
+
       var msg = '🙌 *Escala de Servico - ' + titulo + '*' +
         '\n\n📅 *Data:* ' + dataFmt +
         '\n⏰ *Horario:* ' + hora +
         '\n📍 *Local:* ' + local +
+        blocoEquipe +
         '\n\nVoce esta na escala deste culto! Por favor confirme sua presenca no app:' +
         '\n👉 ' + appUrl +
         '\n\n_Acesse, abra o culto e toque em ✅ Vou comparecer ou ❌ Nao vou._';
@@ -3715,6 +3754,7 @@ function saveTeam(serviceId, teamId) {
     updates.worship_dress_code   = val('edit-dresscode') || '';
     updates.worship_vocais       = getListFromUI('vocais');
     updates.worship_teclado      = getListFromUI('teclado');
+    updates.worship_violao       = getListFromUI('violao');
     updates.worship_guitarra     = getListFromUI('guitarra');
     updates.worship_bateria      = getListFromUI('bateria');
     updates.worship_baixo        = getListFromUI('baixo');
@@ -5271,7 +5311,7 @@ function carregarMeusCultos() {
         // Busca em TODOS os campos de texto da equipe
         var campos = [
           t.worship_band, t.worship_leader, t.worship_vocais, t.worship_teclado,
-          t.worship_guitarra, t.worship_bateria, t.worship_baixo, t.worship_outros,
+          t.worship_violao, t.worship_guitarra, t.worship_bateria, t.worship_baixo, t.worship_outros,
           t.sound_operator, t.sound_operators,
           t.projection_operator, t.projection_operators,
           t.lighting_operator, t.live_operator, t.live_operators, t.notes
@@ -5717,6 +5757,7 @@ function renderEquipeEdit(team, role, dept) {
   if (canLouvor) {
     html += multiInput('vocais', '&#127908;', 'Vocais', 'worship_vocais', true);
     html += multiInput('teclado', '&#127929;', 'Teclado', 'worship_teclado', true);
+    html += multiInput('violao', '&#127928;', 'Violao', 'worship_violao', true);
     html += multiInput('guitarra', '&#127928;', 'Guitarra', 'worship_guitarra', true);
     html += multiInput('bateria', '&#129345;', 'Bateria', 'worship_bateria', true);
     html += multiInput('baixo', '&#127932;', 'Baixo', 'worship_baixo', true);
@@ -5725,6 +5766,7 @@ function renderEquipeEdit(team, role, dept) {
     var camposLouvor = [
       {k:'worship_vocais',l:'Vocais',i:'&#127908;'},
       {k:'worship_teclado',l:'Teclado',i:'&#127929;'},
+      {k:'worship_violao',l:'Violao',i:'&#127928;'},
       {k:'worship_guitarra',l:'Guitarra',i:'&#127928;'},
       {k:'worship_bateria',l:'Bateria',i:'&#129345;'},
       {k:'worship_baixo',l:'Baixo',i:'&#127932;'}
