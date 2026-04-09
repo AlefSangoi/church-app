@@ -4330,18 +4330,6 @@ document.getElementById('btn-login').addEventListener('click', function() {
 });
 
 // BOTAO VISITANTE - acesso sem login
-// Login com Google
-// listener google removido (duplicado)
-// Listener de mudanca de estado auth (captura retorno do OAuth Google)
-sb.auth.onAuthStateChange(function(event, session) {
-  if (event === 'SIGNED_IN' && session && !currentUser) {
-    loadApp(session.user);
-  }
-  if (event === 'SIGNED_OUT') {
-    currentUser = null;
-    currentProfile = null;
-  }
-});
 
 document.getElementById('btn-visitante-login').addEventListener('click', function() {
   currentUser = null;
@@ -7908,36 +7896,7 @@ function getPlano(church) {
   return PLANOS[(church && church.plan)] || PLANOS.trial;
 }
 
-function autoPreencherValorPlano(plano) {
-  var p = PLANOS[plano];
-  if (!p) return;
-
-  // Valor mensal
-  var elVal = document.getElementById('sa-edit-value');
-  if (elVal) elVal.value = p.valor.toFixed(2);
-
-  // Status
-  var elStatus = document.getElementById('sa-edit-status');
-  if (elStatus) {
-    if (plano === 'isento') elStatus.value = 'full';
-    else if (plano === 'trial' || plano === 'free') elStatus.value = 'trial';
-    else elStatus.value = 'active';
-  }
-
-  // Data de expiração
-  var exp = document.getElementById('sa-edit-expires');
-  if (exp) {
-    if (plano === 'isento') {
-      exp.value = ''; // sem vencimento
-      exp.disabled = true;
-    } else {
-      exp.disabled = false;
-      var d = new Date();
-      d.setDate(d.getDate() + p.dias);
-      exp.value = d.toISOString().slice(0,10);
-    }
-  }
-}
+// autoPreencherValorPlano definido em superadmin.js
 window.autoPreencherValorPlano = autoPreencherValorPlano;
 
 var sermaoInit = false;
@@ -8674,17 +8633,7 @@ window.abrirModalPix        = abrirModalPix;
 // Configure sua chave da API Gemini abaixo
 // Groq API chamada via Netlify Function (chave segura no servidor)
 
-// =============================================
-// CONFIGURACAO DOS PLANOS
-// =============================================
-var PLANOS = {
-  trial:         { label:'Trial',         valor:0,     dias:7,  usuarios:5,   esbocos:1,   convites:false, wa_notif:false, locais:1   },
-  basico:        { label:'Basico',        valor:19.90, dias:30, usuarios:15,  esbocos:0,   convites:true,  wa_notif:false, locais:1   },
-  essencial:     { label:'Essencial',     valor:29.90, dias:30, usuarios:30,  esbocos:5,   convites:true,  wa_notif:true,  locais:2   },
-  profissional:  { label:'Profissional',  valor:39.90, dias:30, usuarios:60,  esbocos:20,  convites:true,  wa_notif:true,  locais:5   },
-  premium:       { label:'Premium',       valor:59.90, dias:30, usuarios:999, esbocos:999, convites:true,  wa_notif:true,  locais:999 },
-  free:          { label:'Free',          valor:0,     dias:30, usuarios:10,  esbocos:0,   convites:false, wa_notif:false, locais:1   },
-};
+// PLANOS definido em superadmin.js
 
 function getPlano(church) {
   return PLANOS[(church && church.plan)] || PLANOS.trial;
