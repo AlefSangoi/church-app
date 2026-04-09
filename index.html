@@ -5237,14 +5237,26 @@ document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
 // ESC fecha qualquer modal aberto
 document.addEventListener('keydown', function(e) {
   if (e.key !== 'Escape') return;
-  // Fecha o primeiro modal visivel
+
+  // 1. Fecha modal dinâmico de Notificar WA (criado via createElement)
+  var notifModal = document.getElementById('modal-notificar-wa');
+  if (notifModal) { notifModal.remove(); return; }
+
+  // 2. Fecha modal de culto (tem função própria)
+  var serviceModal = document.getElementById('service-modal');
+  if (serviceModal && !serviceModal.classList.contains('hidden')) {
+    closeServiceModal(); return;
+  }
+
+  // 3. Fecha qualquer outro modal-overlay visível (do mais recente para o mais antigo)
   var modals = document.querySelectorAll('.modal-overlay:not(.hidden)');
   if (modals.length > 0) {
     modals[modals.length - 1].classList.add('hidden');
     return;
   }
-  // ESC tambem fecha o sidebar no mobile
-  toggleSidebar(true);
+
+  // 4. ESC também fecha o sidebar no mobile
+  if (isMobile()) toggleSidebar(true);
 });
 
 // =============================================
