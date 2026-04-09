@@ -1436,6 +1436,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
       <p style="text-align:center;margin-top:20px;font-size:13px;color:var(--muted)">
         Nao tem conta? <a href="#" id="link-register" style="color:var(--accent)">Solicitar acesso</a>
       </p>
+
+      <p style="text-align:center;margin-top:24px;font-size:11px;color:var(--muted);line-height:1.8">
+        Ao entrar, voce concorda com os<br>
+        <a href="termos-de-uso.html" target="_blank" style="color:var(--accent)">Termos de Uso</a>
+        &nbsp;&middot;&nbsp;
+        <a href="politica-de-privacidade.html" target="_blank" style="color:var(--accent)">Politica de Privacidade</a>
+      </p>
     </div>
   </div>
 </div>
@@ -6748,6 +6755,7 @@ function autoPreencherValorPlano(plano) {
     exp.value = d.toISOString().slice(0,10);
   }
 }
+window.autoPreencherValorPlano = autoPreencherValorPlano;
 
 var sermaoInit = false;
 

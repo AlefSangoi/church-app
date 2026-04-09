@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Política de Privacidade — Church App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0c12;--surface:#11141e;--surface2:#181c2a;
+  --border:rgba(255,255,255,0.07);--text:#e8eaf6;--muted:#6b7280;
+  --accent:#f59e0b;--accent2:#3b82f6;--font:'DM Sans',sans-serif;--display:'Bebas Neue',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;line-height:1.7}
+.header{
+  padding:20px 40px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--border);
+  background:rgba(10,12,18,.95);backdrop-filter:blur(10px);
+  position:sticky;top:0;z-index:50;
+}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:36px;height:36px;flex-shrink:0}
+.logo span{font-family:var(--display);font-size:20px;letter-spacing:2px;color:var(--text)}
+.logo small{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;line-height:1}
+.back-link{
+  margin-left:auto;color:var(--muted);font-size:13px;text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+}
+.back-link:hover{color:var(--accent)}
+
+.container{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+.doc-header{margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--border)}
+.doc-header h1{font-family:var(--display);font-size:42px;letter-spacing:2px;margin-bottom:8px}
+.doc-header p{color:var(--muted);font-size:14px}
+.doc-header .updated{
+  display:inline-block;margin-top:12px;
+  background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);
+  color:var(--accent2);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;
+}
+
+section{margin-bottom:36px}
+h2{
+  font-size:18px;font-weight:700;margin-bottom:12px;
+  color:var(--text);padding-left:12px;
+  border-left:3px solid var(--accent2);
+}
+p{font-size:15px;color:rgba(232,234,246,.8);margin-bottom:12px}
+ul,ol{padding-left:20px;margin-bottom:12px}
+li{font-size:15px;color:rgba(232,234,246,.8);margin-bottom:6px}
+strong{color:var(--text)}
+.highlight{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:16px 20px;margin:16px 0;
+}
+.highlight p{margin:0}
+.data-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+.data-table th{
+  padding:10px 14px;text-align:left;font-size:11px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;color:var(--muted);
+  background:var(--surface);border-bottom:1px solid var(--border);
+}
+.data-table td{padding:12px 14px;border-bottom:1px solid var(--border);color:rgba(232,234,246,.8)}
+.data-table tr:last-child td{border-bottom:none}
+
+footer{
+  text-align:center;padding:32px 24px;border-top:1px solid var(--border);
+  font-size:13px;color:var(--muted);
+}
+footer a{color:var(--accent);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+@media(max-width:600px){
+  .header{padding:16px}
+  .container{padding:32px 16px 60px}
+  .doc-header h1{font-size:32px}
+  .data-table{font-size:13px}
+  .data-table th,.data-table td{padding:10px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="logo">
+    <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="44" height="44" rx="10" fill="#1a2744"/>
+      <rect x="20" y="8" width="4" height="20" rx="2" fill="#f59e0b"/>
+      <rect x="13" y="14" width="18" height="4" rx="2" fill="#f59e0b"/>
+      <path d="M10 38 Q22 26 34 38" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    </svg>
+    <div>
+      <span>CHURCH APP</span>
+      <small>Agenda &amp; Escalas</small>
+    </div>
+  </a>
+  <a href="index.html" class="back-link">← Voltar ao app</a>
+</header>
+
+<div class="container">
+  <div class="doc-header">
+    <h1>Política de Privacidade</h1>
+    <p>Transparência sobre como coletamos, usamos e protegemos seus dados no Church App.</p>
+    <span class="updated">Atualizado em abril de 2025</span>
+  </div>
+
+  <section>
+    <h2>1. Quem somos</h2>
+    <p>O <strong>Church App — Agenda &amp; Escalas</strong> é uma plataforma SaaS desenvolvida e mantida de forma independente, com sede em Chapecó — SC, Brasil. Esta Política de Privacidade descreve como tratamos os dados pessoais dos usuários em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)</strong>.</p>
+  </section>
+
+  <section>
+    <h2>2. Quais dados coletamos</h2>
+    <p>Coletamos apenas os dados necessários para o funcionamento do serviço:</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Dado</th>
+          <th>Finalidade</th>
+          <th>Obrigatório</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Nome completo</strong></td>
+          <td>Identificação nas escalas e comunicações internas</td>
+          <td>Sim</td>
+        </tr>
+        <tr>
+          <td><strong>E-mail</strong></td>
+          <td>Autenticação, login e comunicações do sistema</td>
+          <td>Sim</td>
+        </tr>
+        <tr>
+          <td><strong>Número de WhatsApp</strong></td>
+          <td>Notificações de escala enviadas pelo administrador da igreja</td>
+          <td>Não</td>
+        </tr>
+        <tr>
+          <td><strong>Foto de perfil (Google)</strong></td>
+          <td>Exibição no perfil, quando o login é feito via Google</td>
+          <td>Não</td>
+        </tr>
+        <tr>
+          <td><strong>Dados da organização</strong></td>
+          <td>Nome da igreja, logo, localização dos cultos</td>
+          <td>Sim (admin)</td>
+        </tr>
+        <tr>
+          <td><strong>Dados de uso</strong></td>
+          <td>Logs de acesso para segurança e manutenção</td>
+          <td>Automático</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Não coletamos dados financeiros diretamente. Pagamentos são tratados externamente conforme acordado entre as partes.</p>
+  </section>
+
+  <section>
+    <h2>3. Como usamos seus dados</h2>
+    <p>Seus dados são utilizados exclusivamente para:</p>
+    <ul>
+      <li>Autenticar seu acesso e manter sua sessão ativa;</li>
+      <li>Exibir seu nome e informações nas escalas da sua organização;</li>
+      <li>Permitir que o administrador da sua igreja envie notificações via WhatsApp;</li>
+      <li>Gerar relatórios e dashboards internos visíveis apenas à sua organização;</li>
+      <li>Melhorar o funcionamento e segurança da Plataforma.</li>
+    </ul>
+    <div class="highlight">
+      <p><strong>Não vendemos, alugamos ou compartilhamos seus dados pessoais com terceiros para fins comerciais ou publicitários.</strong></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>4. Compartilhamento de dados</h2>
+    <p>Seus dados podem ser acessados por:</p>
+    <ul>
+      <li><strong>Administradores da sua organização</strong> — nome, departamento e número de WhatsApp para fins de gestão de escalas;</li>
+      <li><strong>Supabase</strong> — nosso provedor de banco de dados e autenticação, que armazena os dados com segurança em servidores na nuvem;</li>
+      <li><strong>Netlify</strong> — plataforma de hospedagem do app;</li>
+      <li><strong>Google</strong> — quando você opta pelo login via Google, os dados de autenticação seguem a política de privacidade do Google.</li>
+    </ul>
+    <p>Todos os fornecedores listados seguem padrões internacionais de segurança e proteção de dados.</p>
+  </section>
+
+  <section>
+    <h2>5. Armazenamento e segurança</h2>
+    <p>Os dados são armazenados em servidores seguros gerenciados pelo Supabase, com:</p>
+    <ul>
+      <li>Criptografia em trânsito (HTTPS/TLS);</li>
+      <li>Isolamento de dados por organização (multi-tenant) — nenhuma organização acessa dados de outra;</li>
+      <li>Autenticação baseada em tokens JWT;</li>
+      <li>Controle de acesso por perfil (admin, líder, voluntário, visitante).</li>
+    </ul>
+    <p>Apesar das medidas adotadas, nenhum sistema é 100% invulnerável. Em caso de incidente de segurança que afete seus dados, você será notificado conforme exigido pela LGPD.</p>
+  </section>
+
+  <section>
+    <h2>6. Seus direitos (LGPD)</h2>
+    <p>De acordo com a LGPD, você tem os seguintes direitos em relação aos seus dados pessoais:</p>
+    <ul>
+      <li><strong>Acesso</strong> — solicitar a confirmação de que seus dados são tratados e obter uma cópia;</li>
+      <li><strong>Correção</strong> — atualizar dados incompletos, inexatos ou desatualizados diretamente no app (Perfil);</li>
+      <li><strong>Exclusão</strong> — solicitar a exclusão dos seus dados quando não houver obrigação legal de retenção;</li>
+      <li><strong>Portabilidade</strong> — solicitar seus dados em formato estruturado;</li>
+      <li><strong>Revogação do consentimento</strong> — retirar o consentimento para tratamentos baseados nele, a qualquer tempo;</li>
+      <li><strong>Oposição</strong> — se opor a tratamentos realizados sem seu consentimento explícito.</li>
+    </ul>
+    <p>Para exercer qualquer um desses direitos, entre em contato pelo canal de suporte indicado no app.</p>
+  </section>
+
+  <section>
+    <h2>7. Retenção de dados</h2>
+    <p>Mantemos seus dados pelo tempo necessário para a prestação do serviço:</p>
+    <ul>
+      <li>Dados de conta ativa: mantidos durante toda a vigência do contrato;</li>
+      <li>Dados após cancelamento: retidos por até <strong>30 dias</strong> para possível reativação;</li>
+      <li>Após os 30 dias ou a pedido expresso do usuário: excluídos permanentemente.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>8. Cookies e rastreamento</h2>
+    <p>O Church App utiliza apenas cookies essenciais para manter sua sessão autenticada. Não utilizamos cookies de rastreamento, publicidade ou análise comportamental de terceiros.</p>
+  </section>
+
+  <section>
+    <h2>9. Menores de idade</h2>
+    <p>O Church App não é direcionado a menores de 18 anos. Caso um menor necessite utilizar a Plataforma no contexto de atividades da igreja, o responsável legal deve estar ciente e autorizar o cadastro.</p>
+  </section>
+
+  <section>
+    <h2>10. Alterações nesta Política</h2>
+    <p>Esta Política pode ser atualizada periodicamente. A versão mais recente estará sempre disponível nesta página, com a data de atualização indicada. Mudanças significativas serão comunicadas por e-mail ou aviso dentro do app.</p>
+  </section>
+
+  <section>
+    <h2>11. Contato e Encarregado de Dados</h2>
+    <p>Para dúvidas, solicitações ou exercício dos seus direitos previstos na LGPD, entre em contato pelos canais de suporte disponíveis dentro do Church App.</p>
+    <div class="highlight">
+      <p>📍 Desenvolvido em Chapecó — SC, Brasil &nbsp;·&nbsp; Aplicável à legislação brasileira (LGPD — Lei nº 13.709/2018)</p>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <p>Church App — Agenda &amp; Escalas &nbsp;·&nbsp; <a href="termos-de-uso.html">Termos de Uso</a> &nbsp;·&nbsp; <a href="index.html">Voltar ao app</a></p>
+  <p style="margin-top:8px">© 2025 Church App. Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>
