@@ -557,3 +557,20 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+
+// Expor globalmente
+window.initDashboard        = initDashboard;
+window.carregarDashboard    = carregarDashboard;
+window.carregarMeusCultos   = carregarMeusCultos;
+window.carregarLiderDash    = carregarLiderDash;
+window.atualizarBadgePendentes = atualizarBadgePendentes;
+window.showPageSafe         = showPageSafe;
+window.isMobile             = isMobile;
+window.toggleSidebar        = toggleSidebar;
+window.parseList            = parseList;
+window.joinList             = joinList;
+window.parseMusicasRepertorio = parseMusicasRepertorio;
+window.getChurchSlug        = getChurchSlug;
+window.getInviteToken       = getInviteToken;
+window.escHtml              = escHtml;
+window.escAttr              = escAttr;

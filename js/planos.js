@@ -458,3 +458,9 @@ document.getElementById('sidebar').addEventListener('click', function(e) {
 });
 
 // Swipe para fechar sidebar no mobile
+
+// Expor globalmente
+window.abrirModalPlanos         = abrirModalPlanos;
+window.mostrarBannerPlano       = mostrarBannerPlano;
+window.atualizarBadgePlanoSidebar = atualizarBadgePlanoSidebar;
+window.verificarStatusPlano     = verificarStatusPlano;

@@ -138,3 +138,9 @@ function deleteService(id) {
 }
 
 // =============================================
+
+// Expor globalmente
+window.openNewServiceModal  = openNewServiceModal;
+window.openEditServiceModal = openEditServiceModal;
+window.closeNewServiceModal = closeNewServiceModal;
+window.deleteService        = deleteService;

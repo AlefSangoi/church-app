@@ -659,3 +659,11 @@ function _gerarPDFSermao(sermon) {
 }
 
 // =============================================
+
+// Expor globalmente
+window.initSermao           = initSermao;
+window.gerarEsboço          = gerarEsboço;
+window.carregarSermoes      = carregarSermoes;
+window.atualizarContadorSermoes = atualizarContadorSermoes;
+window.PLANOS               = PLANOS;
+window.getPlano             = getPlano;

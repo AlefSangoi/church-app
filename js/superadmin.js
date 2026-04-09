@@ -1350,3 +1350,13 @@ function atualizarMetricas() {
 }
 window.initMetricasCusto = initMetricasCusto;
 window.atualizarMetricas = atualizarMetricas;
+
+// Expor globalmente
+window.initSuperAdmin       = initSuperAdmin;
+window.initConfiguracoes    = initConfiguracoes;
+window.exportarBackup       = exportarBackup;
+window.importarBackup       = importarBackup;
+window.exportarRelatorioSA  = exportarRelatorioSA;
+window.gerarPDFSermao       = gerarPDFSermao;
+window.solicitarUpgrade     = solicitarUpgrade;
+window.abrirModalPix        = abrirModalPix;

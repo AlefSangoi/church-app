@@ -849,3 +849,15 @@ function atualizarSelectLocais() {
 }
 
 // =============================================
+
+// Expor globalmente
+window.renderAdminServices  = renderAdminServices;
+window.loadUsersTable       = loadUsersTable;
+window.carregarAprovacoes   = carregarAprovacoes;
+window.initBulkTab          = initBulkTab;
+window.initBulkEditTab      = initBulkEditTab;
+window.openEditUserModal    = openEditUserModal;
+window.deleteUser           = deleteUser;
+window.carregarLocais       = carregarLocais;
+window.salvarLocal          = salvarLocal;
+window.deletarLocal         = deletarLocal;

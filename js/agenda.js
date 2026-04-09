@@ -584,3 +584,15 @@ function setConfirmation(serviceId, status) {
 }
 
 // =============================================
+
+// Expor globalmente
+window.renderCalendar       = renderCalendar;
+window.renderServices       = renderServices;
+window.renderServiceCards   = renderServiceCards;
+window.openServiceModal     = openServiceModal;
+window.closeServiceModal    = closeServiceModal;
+window.saveTeam             = saveTeam;
+window.setConfirmation      = setConfirmation;
+window.notificarEquipeWA    = notificarEquipeWA;
+window.serviceCardHTML      = serviceCardHTML;
+window.carregarTiposCultoSelect = carregarTiposCultoSelect;

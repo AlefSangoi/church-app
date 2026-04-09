@@ -623,3 +623,14 @@ function mostrarPinSuperAdmin(user) {
 
   setTimeout(function() { input.focus(); }, 100);
 }
+
+// Expor globalmente
+window.loadApp              = loadApp;
+window.showPageSafe         = showPageSafe;
+window.loadServices         = loadServices;
+window.applyRoleVisibility  = applyRoleVisibility;
+window.updateUserChip       = updateUserChip;
+window.verificarPendentes   = verificarPendentes;
+window.mostrarPinSuperAdmin = mostrarPinSuperAdmin;
+window.showPendingBanner    = showPendingBanner;
+window.initApp              = initApp;

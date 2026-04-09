@@ -545,3 +545,7 @@ function initOnboardingListeners() {
 
 
 // =============================================
+
+// Expor globalmente
+window.showOnboarding       = showOnboarding;
+window.hideOnboarding       = hideOnboarding;

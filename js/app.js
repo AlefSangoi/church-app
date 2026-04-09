@@ -367,3 +367,9 @@ document.addEventListener('click', function(e) {
 document.addEventListener('DOMContentLoaded', function() {
   if (typeof initApp === 'function') initApp();
 });
+
+// Expor globalmente
+window.initConvites          = initConvites;
+window.carregarListaConvites = carregarListaConvites;
+window.initEscalaMassa       = initEscalaMassa;
+window.toggleAjuda           = toggleAjuda;
