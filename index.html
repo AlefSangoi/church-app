@@ -895,6 +895,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   line-height:1.6;margin-top:4px;
 }
 /* === FIM AJUDA === */
+.sidebar-legal-links{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
+}
+.sidebar-legal-links a{
+  font-size:10px;color:var(--muted);text-decoration:none;
+  letter-spacing:.3px;transition:color .15s;
+}
+.sidebar-legal-links a:hover{color:var(--accent)}
+.sidebar-legal-links span{font-size:10px;color:var(--border)}
+#sidebar.collapsed .sidebar-legal-links{display:none}
+
 .invite-card{
   background:var(--surface);border:1px solid var(--border);border-radius:14px;
   padding:18px 20px;display:flex;align-items:center;gap:14px;margin-bottom:10px;
@@ -1576,6 +1588,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
           <div id="sidebar-plano-bar" style="height:100%;border-radius:100px;background:var(--accent);width:0%;transition:width .4s"></div>
         </div>
         <div style="font-size:10px;color:var(--muted);margin-top:3px" id="sidebar-plano-hint">Toque para ver planos</div>
+      </div>
+      <!-- Links legais -->
+      <div class="sidebar-legal-links">
+        <a href="termos-de-uso.html" target="_blank">Termos de Uso</a>
+        <span>·</span>
+        <a href="politica-de-privacidade.html" target="_blank">Privacidade</a>
       </div>
     </div>
   </nav>
@@ -2379,6 +2397,44 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
               <li>Clique em <strong>Salvar dados</strong></li>
             </ol>
             <div class="ajuda-tip">&#128161; Exemplo de numero correto: <strong>49999990000</strong> — sem espacos, traco ou +55.</div>
+          </div>
+        </div>
+
+        <!-- Tutorial 7: Gerador de Esboços IA -->
+        <div class="ajuda-card" id="ajuda-7">
+          <div class="ajuda-header" onclick="toggleAjuda('ajuda-7')">
+            <span class="ajuda-num">07</span>
+            <div>
+              <div class="ajuda-titulo">Como usar o Gerador de Esbocos com IA</div>
+              <div class="ajuda-sub">Gere esbocos de pregacao em segundos com inteligencia artificial</div>
+            </div>
+            <span class="ajuda-arrow">&#8250;</span>
+          </div>
+          <div class="ajuda-body">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Disponivel para perfis <strong>Pastor</strong> e <strong>Admin</strong> nos planos Essencial, Profissional e Premium. O plano Trial inclui <strong>1 esboco gratuito</strong> para experimentar.</p>
+            <ol class="ajuda-steps">
+              <li>No menu lateral, acesse <strong>Gerador de Esbocos</strong></li>
+              <li>Clique em <strong>Novo Esboco</strong> para abrir o formulario</li>
+              <li>Preencha os campos:
+                <ul style="margin-top:6px;padding-left:16px">
+                  <li><strong>Titulo</strong> — tema ou titulo da pregacao</li>
+                  <li><strong>Referencias biblicas</strong> — ex: Joao 3:16, Salmos 23</li>
+                  <li><strong>Publico-alvo</strong> — jovens, adultos, familia, etc.</li>
+                  <li><strong>Duracao estimada</strong> — em minutos</li>
+                </ul>
+              </li>
+              <li>Clique em <strong>Gerar Esboco</strong> e aguarde alguns segundos</li>
+              <li>O esboco sera exibido com introducao, pontos principais e conclusao</li>
+              <li>Clique em <strong>Copiar</strong> para copiar o texto ou <strong>Baixar PDF</strong> para salvar</li>
+            </ol>
+            <p style="font-size:13px;color:var(--muted);margin:14px 0"><strong>Dicas para melhores resultados:</strong></p>
+            <ul class="ajuda-steps">
+              <li>Seja especifico no titulo: <em>"Fe que move montanhas"</em> gera resultado melhor que <em>"Fe"</em></li>
+              <li>Informe o publico-alvo para a IA adaptar linguagem e exemplos</li>
+              <li>Combine mais de uma referencia biblica para esbocos mais ricos</li>
+              <li>Use o esboco como ponto de partida — personalize com sua visao e contexto da igreja</li>
+            </ul>
+            <div class="ajuda-tip">&#128161; O numero de esbocos disponiveis por mes depende do seu plano. Acompanhe o contador no topo da pagina do Gerador.</div>
           </div>
         </div>
 
@@ -4778,7 +4834,7 @@ function abrirModalPlanos() {
   var nomeIgreja = church.name || '';
 
   var planos = [
-    { key:'trial',        nome:'Trial',        valor:'Gratis',   dias:'7 dias',  usuarios:5,   esbocos:'Nao',       convites:'Nao',   cor:'#6b7280' },
+    { key:'trial',        nome:'Trial',        valor:'Gratis',   dias:'7 dias',  usuarios:5,   esbocos:'1 total',   convites:'Nao',   cor:'#6b7280' },
     { key:'basico',       nome:'Basico',        valor:'R$19,90',  dias:'30 dias', usuarios:15,  esbocos:'Nao',       convites:'Sim',   cor:'#3b82f6' },
     { key:'essencial',    nome:'Essencial',     valor:'R$29,90',  dias:'30 dias', usuarios:30,  esbocos:'5/mes',     convites:'Sim',   cor:'#8b5cf6' },
     { key:'profissional', nome:'Profissional',  valor:'R$39,90',  dias:'30 dias', usuarios:60,  esbocos:'20/mes',    convites:'Sim',   cor:'#f59e0b' },
@@ -4867,14 +4923,14 @@ function mostrarBannerPlano(church) {
   var expires = church.plan_expires_at ? new Date(church.plan_expires_at) : null;
   var hoje    = new Date();
 
-  // Calcular dias restantes
-  var diasRestantes = expires ? Math.ceil((expires - hoje) / (1000*60*60*24)) : null;
+  // Banners de vencimento/carencia sao tratados por verificarStatusPlano — nao duplicar
+  if (status === 'overdue' || status === 'cancelled') return;
 
-  // Definir se é trial pelo PLANO (não só pelo status)
+  var diasRestantes = expires ? Math.ceil((expires - hoje) / (1000*60*60*24)) : null;
   var isTrial = (plan === 'trial' || plan === 'free');
 
-  // Mostrar banner: trial ativo, ou qualquer plano vencendo em <= 7 dias
-  var mostrar = isTrial || (diasRestantes !== null && diasRestantes <= 7 && diasRestantes > 0);
+  // Mostrar banner: trial ativo, ou plano vencendo em <= 7 dias (nao coberto acima)
+  var mostrar = isTrial || (diasRestantes !== null && diasRestantes <= 7 && diasRestantes > 3);
   if (!mostrar) return;
 
   var old = document.getElementById('banner-plano');
@@ -4883,26 +4939,24 @@ function mostrarBannerPlano(church) {
   var banner = document.createElement('div');
   banner.id = 'banner-plano';
 
-  var cor = isTrial ? '#f59e0b' : '#ef4444';
+  var cor = isTrial ? '#f59e0b' : (diasRestantes <= 3 ? '#ef4444' : '#f59e0b');
   var msg = '';
 
   if (isTrial) {
     msg = diasRestantes !== null && diasRestantes > 0
-      ? 'Voce esta no periodo Trial. Restam <strong>' + diasRestantes + ' dias</strong>. Assine um plano para continuar usando!'
-      : 'Voce esta no periodo Trial gratuito. Assine um plano para continuar usando!';
+      ? '&#9201; Voce esta no periodo Trial. Restam <strong>' + diasRestantes + ' dias</strong>. Assine um plano para continuar usando!'
+      : '&#9201; Voce esta no periodo Trial gratuito. Assine um plano para continuar usando!';
   } else {
-    msg = 'Seu plano <strong>' + plano.label + '</strong> vence em <strong>' + diasRestantes + ' dias</strong>. Renove para nao perder o acesso!';
+    msg = '&#9888; Seu plano <strong>' + plano.label + '</strong> vence em <strong>' + diasRestantes + ' dias</strong>. Renove para nao perder o acesso!';
   }
 
   banner.style.cssText = 'background:' + cor + '18;border-bottom:2px solid ' + cor + ';padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;color:var(--text);flex-wrap:wrap;position:relative;z-index:10';
   banner.innerHTML =
     '<div style="display:flex;align-items:center;gap:8px">' +
-      '<span style="font-size:18px">' + (isTrial ? '&#9201;' : '&#9888;') + '</span>' +
       '<span>' + msg + '</span>' +
     '</div>' +
     '<button onclick="abrirModalPlanos()" style="background:' + cor + ';color:#fff;padding:6px 16px;border-radius:8px;font-weight:700;font-size:12px;border:none;cursor:pointer;white-space:nowrap">Ver Planos</button>';
 
-  // Inserir no topo do main-content
   var mainContent = document.getElementById('main-content');
   if (mainContent) mainContent.insertBefore(banner, mainContent.firstChild);
 }
@@ -4958,20 +5012,90 @@ function atualizarBadgePlanoSidebar(church) {
 // VERIFICACAO DE STATUS DO PLANO
 // =============================================
 function verificarStatusPlano(church) {
-  var status = church.plan_status || 'trial';
-  if (status !== 'overdue' && status !== 'cancelled') return;
+  var status  = church.plan_status || 'trial';
+  var expires = church.plan_expires_at ? new Date(church.plan_expires_at) : null;
+  var hoje    = new Date();
 
-  // Remover modal anterior se existir
+  // Calcular dias desde o vencimento (positivo = já venceu)
+  var diasVencido = expires ? Math.ceil((hoje - expires) / (1000*60*60*24)) : 0;
+
+  // Cancelado: bloqueia imediatamente
+  if (status === 'cancelled') {
+    _mostrarModalBloqueio(church, 'cancelled', 0);
+    return;
+  }
+
+  // Inadimplente (overdue)
+  if (status === 'overdue') {
+    if (diasVencido <= 3) {
+      // Dentro da carência: banner vermelho com countdown, app funciona
+      _mostrarBannerCarencia(church, diasVencido);
+    } else {
+      // Carência esgotada: bloqueia
+      _mostrarModalBloqueio(church, 'overdue', diasVencido);
+    }
+    return;
+  }
+
+  // Ativo mas vencendo em breve: banner progressivo
+  if (status === 'active' && expires) {
+    var diasRestantes = Math.ceil((expires - hoje) / (1000*60*60*24));
+    if (diasRestantes <= 3 && diasRestantes >= 0) {
+      _mostrarBannerAviso(church, diasRestantes, 'danger');
+    } else if (diasRestantes <= 7) {
+      _mostrarBannerAviso(church, diasRestantes, 'warning');
+    }
+  }
+}
+
+function _mostrarBannerCarencia(church, diasVencido) {
+  var old = document.getElementById('banner-plano-carencia');
+  if (old) old.remove();
+  var restantes = 3 - diasVencido;
+  var banner = document.createElement('div');
+  banner.id = 'banner-plano-carencia';
+  banner.style.cssText = 'background:rgba(239,68,68,.12);border-bottom:2px solid #ef4444;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;color:var(--text);flex-wrap:wrap;position:relative;z-index:10';
+  var msg = restantes <= 0
+    ? '&#128680; Seu plano venceu e o acesso sera bloqueado hoje. Regularize agora!'
+    : '&#128680; Seu plano venceu. Voce tem mais <strong>' + restantes + ' dia' + (restantes > 1 ? 's' : '') + '</strong> de carencia antes do bloqueio.';
+  banner.innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px">' +
+      '<span>' + msg + '</span>' +
+    '</div>' +
+    '<button onclick="abrirModalPlanos()" style="background:#ef4444;color:#fff;padding:6px 16px;border-radius:8px;font-weight:700;font-size:12px;border:none;cursor:pointer;white-space:nowrap">Regularizar agora</button>';
+  var mainContent = document.getElementById('main-content');
+  if (mainContent) mainContent.insertBefore(banner, mainContent.firstChild);
+}
+
+function _mostrarBannerAviso(church, diasRestantes, tipo) {
+  var old = document.getElementById('banner-plano-aviso');
+  if (old) old.remove();
+  var cor = tipo === 'danger' ? '#ef4444' : '#f59e0b';
+  var icon = tipo === 'danger' ? '&#9888;' : '&#9201;';
+  var msg = diasRestantes === 0
+    ? icon + ' Seu plano <strong>vence hoje</strong>! Renove para nao perder o acesso.'
+    : icon + ' Seu plano vence em <strong>' + diasRestantes + ' dia' + (diasRestantes > 1 ? 's' : '') + '</strong>. Renove para continuar usando normalmente.';
+  var banner = document.createElement('div');
+  banner.id = 'banner-plano-aviso';
+  banner.style.cssText = 'background:' + cor + '18;border-bottom:2px solid ' + cor + ';padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;color:var(--text);flex-wrap:wrap;position:relative;z-index:10';
+  banner.innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px"><span>' + msg + '</span></div>' +
+    '<button onclick="abrirModalPlanos()" style="background:' + cor + ';color:#fff;padding:6px 16px;border-radius:8px;font-weight:700;font-size:12px;border:none;cursor:pointer;white-space:nowrap">Renovar plano</button>';
+  var mainContent = document.getElementById('main-content');
+  if (mainContent) mainContent.insertBefore(banner, mainContent.firstChild);
+}
+
+function _mostrarModalBloqueio(church, status, diasVencido) {
   var old = document.getElementById('modal-plano-bloqueado');
-  if (old) return; // ja está bloqueado
+  if (old) return;
 
   var isCancelled = status === 'cancelled';
-  var titulo = isCancelled ? 'Plano Cancelado' : 'Pagamento em Atraso';
-  var icon   = isCancelled ? '&#128683;' : '&#9888;';
-  var cor    = isCancelled ? '#ef4444' : '#f59e0b';
+  var titulo = isCancelled ? 'Plano Cancelado' : 'Acesso Bloqueado';
+  var icon   = isCancelled ? '&#128683;' : '&#128274;';
+  var cor    = '#ef4444';
   var msg    = isCancelled
     ? 'Sua agenda foi cancelada. Entre em contato para reativar o seu plano e continuar usando o sistema.'
-    : 'Identificamos um pagamento em atraso na sua conta. Regularize sua situacao para continuar usando o sistema normalmente.';
+    : 'Seu plano venceu ha ' + diasVencido + ' dia' + (diasVencido > 1 ? 's' : '') + ' e o periodo de carencia de 3 dias foi encerrado. Regularize para retomar o acesso.';
 
   var overlay = document.createElement('div');
   overlay.id = 'modal-plano-bloqueado';
@@ -4979,20 +5103,16 @@ function verificarStatusPlano(church) {
 
   overlay.innerHTML =
     '<div style="background:var(--surface);border:2px solid ' + cor + ';border-radius:20px;width:100%;max-width:440px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6);text-align:center">' +
-      // Header colorido
       '<div style="background:' + cor + '22;padding:32px 24px 20px;border-bottom:1px solid ' + cor + '33">' +
         '<div style="font-size:48px;margin-bottom:12px">' + icon + '</div>' +
         '<div style="font-size:20px;font-weight:800;color:' + cor + ';margin-bottom:8px">' + titulo + '</div>' +
         '<div style="font-size:13px;color:var(--muted);line-height:1.6">' + msg + '</div>' +
       '</div>' +
-      // Corpo
       '<div style="padding:24px">' +
         '<div style="background:var(--surface2);border-radius:12px;padding:16px;margin-bottom:20px;text-align:left">' +
           '<div style="font-size:12px;color:var(--muted);margin-bottom:4px">Igreja</div>' +
           '<div style="font-weight:700;font-size:15px">' + (church.name || '') + '</div>' +
         '</div>' +
-        '<p style="font-size:13px;color:var(--muted);margin-bottom:20px">Entre em contato com o suporte para regularizar sua situacao.</p>' +
-        // Botão WhatsApp suporte
         '<a href="https://wa.me/5549988068778?text=' + encodeURIComponent('Ola! Preciso regularizar o plano da minha agenda: ' + (church.name || '')) + '" target="_blank" ' +
           'style="display:block;background:#25d366;color:#fff;padding:14px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;margin-bottom:10px">' +
           '&#128242; Falar com Suporte no WhatsApp' +
@@ -5003,7 +5123,6 @@ function verificarStatusPlano(church) {
 
   document.body.appendChild(overlay);
 
-  // Listener do botão ver somente leitura
   setTimeout(function() {
     var btnVer = document.getElementById('btn-ver-somente-leitura');
     if (btnVer) btnVer.addEventListener('click', function() {
@@ -5012,11 +5131,10 @@ function verificarStatusPlano(church) {
       setTimeout(function() {
         var m2 = document.getElementById('modal-plano-bloqueado');
         if (m2) { m2.style.opacity = '1'; m2.style.pointerEvents = ''; }
-      }, 10000); // volta em 10 segundos
+      }, 10000);
     });
   }, 100);
 
-  // Impedir fechar clicando fora
   overlay.addEventListener('click', function(e) {
     if (e.target === overlay) {
       // Dar um "shake" visual para indicar que nao pode fechar
@@ -6335,6 +6453,16 @@ function renderSATable(lista) {
     var statusColors = { trial:'#f59e0b', active:'#10b981', overdue:'#ef4444', cancelled:'#6b7280' };
     var statusBg     = { trial:'rgba(245,158,11,.15)', active:'rgba(16,185,129,.15)', overdue:'rgba(239,68,68,.15)', cancelled:'rgba(107,114,128,.15)' };
 
+    // Verificar carência (overdue mas dentro de 3 dias)
+    if (status === 'overdue' && c.plan_expires_at) {
+      var diasVenc = Math.ceil((new Date() - new Date(c.plan_expires_at)) / (1000*60*60*24));
+      if (diasVenc <= 3) {
+        statusLabels.overdue = 'Carencia (' + (3 - diasVenc) + 'd)';
+        statusColors.overdue = '#f97316';
+        statusBg.overdue     = 'rgba(249,115,22,.15)';
+      }
+    }
+
     // Dias até vencimento
     var diasStr = '-'; var diasColor = 'var(--muted)';
     if (c.plan_expires_at) {
@@ -6723,7 +6851,7 @@ function showInviteScreen(token) {
 // CONFIGURACAO DOS PLANOS
 // =============================================
 var PLANOS = {
-  trial:         { label:'Trial',         valor:0,     dias:7,  usuarios:5,   esbocos:0,   convites:false, wa_notif:false, locais:1   },
+  trial:         { label:'Trial',         valor:0,     dias:7,  usuarios:5,   esbocos:1,   convites:false, wa_notif:false, locais:1   },
   basico:        { label:'Basico',        valor:19.90, dias:30, usuarios:15,  esbocos:0,   convites:true,  wa_notif:false, locais:1   },
   essencial:     { label:'Essencial',     valor:29.90, dias:30, usuarios:30,  esbocos:5,   convites:true,  wa_notif:true,  locais:2   },
   profissional:  { label:'Profissional',  valor:39.90, dias:30, usuarios:60,  esbocos:20,  convites:true,  wa_notif:true,  locais:5   },
