@@ -3197,43 +3197,68 @@ function openServiceModal(id) {
     }
   });
 
-  // Confirmacao de presenca - somente para o proprio usuario logado
-  // Visitantes sem conta nao podem confirmar
+  // Confirmacao de presenca - somente para o proprio usuario E somente se estiver na escala
   if (currentUser && (r === 'voluntario' || r === 'lider' || r === 'admin')) {
-    sb.from('service_confirmations').select('*')
-      .eq('service_id', id).eq('user_id', currentUser.id).maybeSingle()
-      .then(function(res) {
-        var status = (res.data && res.data.status) || 'pending';
-        var statusColors = {
-          confirmed: 'color:var(--green)',
-          declined: 'color:var(--red)',
-          pending: 'color:var(--accent)'
-        };
-        var statusLabel = { confirmed: 'Confirmado - Voce marcou que vai!', declined: 'Ausente - Voce marcou que nao vai', pending: 'Pendente - Confirme sua presenca!' };
-        var bar = document.createElement('div');
-        bar.className = 'confirm-bar';
-        bar.style.cssText = 'flex-direction:column;align-items:flex-start;gap:10px';
-        bar.innerHTML =
-          '<div style="display:flex;align-items:center;gap:8px;width:100%">' +
-            '<span style="font-size:18px">' + (status==='confirmed'?'&#9989;':status==='declined'?'&#10060;':'&#8987;') + '</span>' +
-            '<div>' +
-              '<div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)">Sua confirmacao de presenca</div>' +
-              '<div style="font-size:14px;font-weight:600;' + (statusColors[status]||'') + '">' + (statusLabel[status]||status) + '</div>' +
+    // Verificar se o usuario esta escalado: comparar nome do perfil com os campos da equipe
+    var camposEscala = [
+      team.worship_band, team.worship_leader, team.worship_vocais,
+      team.worship_teclado, team.worship_guitarra, team.worship_bateria,
+      team.worship_baixo, team.worship_outros,
+      team.sound_operator, team.sound_operators,
+      team.projection_operator, team.projection_operators,
+      team.lighting_operator, team.live_operator, team.live_operators
+    ];
+    var nomesEscalados = [];
+    camposEscala.forEach(function(v) {
+      if (!v) return;
+      v.split('|').forEach(function(n) { var t = n.trim(); if (t) nomesEscalados.push(t.toLowerCase()); });
+    });
+    var meuNome = (currentProfile.name || '').toLowerCase().trim();
+    var estouEscalado = meuNome && nomesEscalados.some(function(n) {
+      return n === meuNome || n.indexOf(meuNome) !== -1 || meuNome.indexOf(n) !== -1;
+    });
+
+    // Admin vê sempre; voluntario/lider só se estiver escalado
+    if (estouEscalado || r === 'admin') {
+      sb.from('service_confirmations').select('*')
+        .eq('service_id', id).eq('user_id', currentUser.id).maybeSingle()
+        .then(function(res) {
+          var status = (res.data && res.data.status) || 'pending';
+          var statusColors = {
+            confirmed: 'color:var(--green)',
+            declined: 'color:var(--red)',
+            pending: 'color:var(--accent)'
+          };
+          var statusLabel = { confirmed: 'Confirmado - Voce marcou que vai!', declined: 'Ausente - Voce marcou que nao vai', pending: 'Pendente - Confirme sua presenca!' };
+          var bar = document.createElement('div');
+          bar.className = 'confirm-bar';
+          bar.id = 'confirm-bar-presenca'; // id para evitar duplicata
+          bar.style.cssText = 'flex-direction:column;align-items:flex-start;gap:10px';
+          bar.innerHTML =
+            '<div style="display:flex;align-items:center;gap:8px;width:100%">' +
+              '<span style="font-size:18px">' + (status==='confirmed'?'&#9989;':status==='declined'?'&#10060;':'&#8987;') + '</span>' +
+              '<div>' +
+                '<div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)">Sua confirmacao de presenca</div>' +
+                '<div style="font-size:14px;font-weight:600;' + (statusColors[status]||'') + '">' + (statusLabel[status]||status) + '</div>' +
+              '</div>' +
             '</div>' +
-          '</div>' +
-          '<div style="display:flex;gap:8px;width:100%">' +
-            '<button class="btn btn-success btn-sm confirm-yes-btn" style="flex:1' + (status==='confirmed'?';opacity:1;font-weight:700':';opacity:.6') + '">&#10003; Vou comparecer</button>' +
-            '<button class="btn btn-danger btn-sm confirm-no-btn" style="flex:1' + (status==='declined'?';opacity:1;font-weight:700':';opacity:.6') + '">&#10007; Nao vou</button>' +
-          '</div>' +
-          '<p style="font-size:11px;color:var(--muted);margin:0">Esta confirmacao e somente para <strong>' + (currentProfile.name||'voce') + '</strong>.</p>';
-        document.getElementById('svc-modal-body').appendChild(bar);
-        bar.querySelector('.confirm-yes-btn').addEventListener('click', function() {
-          setConfirmation(id, 'confirmed');
+            '<div style="display:flex;gap:8px;width:100%">' +
+              '<button class="btn btn-success btn-sm confirm-yes-btn" style="flex:1' + (status==='confirmed'?';opacity:1;font-weight:700':';opacity:.6') + '">&#10003; Vou comparecer</button>' +
+              '<button class="btn btn-danger btn-sm confirm-no-btn" style="flex:1' + (status==='declined'?';opacity:1;font-weight:700':';opacity:.6') + '">&#10007; Nao vou</button>' +
+            '</div>' +
+            '<p style="font-size:11px;color:var(--muted);margin:0">Esta confirmacao e somente para <strong>' + (currentProfile.name||'voce') + '</strong>.</p>';
+          // Garante que nao duplica
+          var existing = document.getElementById('confirm-bar-presenca');
+          if (existing) existing.remove();
+          document.getElementById('svc-modal-body').appendChild(bar);
+          bar.querySelector('.confirm-yes-btn').addEventListener('click', function() {
+            setConfirmation(id, 'confirmed');
+          });
+          bar.querySelector('.confirm-no-btn').addEventListener('click', function() {
+            setConfirmation(id, 'declined');
+          });
         });
-        bar.querySelector('.confirm-no-btn').addEventListener('click', function() {
-          setConfirmation(id, 'declined');
-        });
-      });
+    }
   } else if (!currentUser) {
     // visitante sem conta
     var infoBar = document.createElement('div');
@@ -3328,9 +3353,9 @@ function notificarEquipeWA(s, team) {
   var local   = s.location || '';
   var titulo  = s.title || '';
 
-  // Buscar phones dos membros pelo nome
+  // Buscar phones dos membros pelo nome (comparacao flexivel)
   sb.from('profiles')
-    .select('name, phone')
+    .select('id, name, phone')
     .eq('church_id', currentProfile.church_id)
     .eq('status', 'approved')
     .then(function(res) {
@@ -3352,9 +3377,18 @@ function notificarEquipeWA(s, team) {
         '\n\nVoce esta escalado(a) para este culto. Por favor confirme sua presenca! \uD83D\uDE4F';
 
       var itens = nomes.map(function(nome) {
+        // Tenta match exato primeiro, depois parcial
         var perfil = profiles.find(function(p) {
           return p.name && p.name.toLowerCase().trim() === nome.toLowerCase().trim();
         });
+        if (!perfil) {
+          perfil = profiles.find(function(p) {
+            if (!p.name) return false;
+            var pn = p.name.toLowerCase().trim();
+            var nn = nome.toLowerCase().trim();
+            return pn.indexOf(nn) !== -1 || nn.indexOf(pn) !== -1;
+          });
+        }
         var phone = perfil && perfil.phone ? perfil.phone.replace(/[^0-9]/g,'') : '';
         var waUrl = phone
           ? 'https://wa.me/55' + phone + '?text=' + encodeURIComponent(msg)
@@ -3365,7 +3399,7 @@ function notificarEquipeWA(s, team) {
           '<div>' +
             '<div style="font-weight:600;font-size:13px;color:#fff">' + nome + '</div>' +
             '<div style="font-size:11px;color:' + (hasPhone ? '#25d366' : '#f59e0b') + '">' +
-              (hasPhone ? '&#9989; ' + phone : '&#9888; Sem WhatsApp cadastrado') +
+              (hasPhone ? '&#9989; +55 ' + phone : '&#9888; Sem WhatsApp cadastrado') +
             '</div>' +
           '</div>' +
           '<a href="' + waUrl + '" target="_blank" style="background:#25d366;color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap">&#128242; Notificar</a>' +
