@@ -1021,6 +1021,36 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
       <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="exportarRelatorioSA()">&#11015; Exportar CSV</button>
     </div>
 
+    <!-- Tabela de referência de planos -->
+    <details style="margin-bottom:20px">
+      <summary style="cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.5px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;list-style:none;display:flex;align-items:center;gap:8px">
+        <span>&#9432;</span> Referência de Planos <span style="margin-left:auto;font-size:11px;font-weight:400">clique para expandir</span>
+      </summary>
+      <div style="background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead>
+            <tr>
+              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Plano</th>
+              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Valor/mês</th>
+              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Usuários</th>
+              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Esboços IA</th>
+              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Convites</th>
+              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Notif. WA</th>
+              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Locais</th>
+              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Vigência</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border)"><span class="plan-badge plan-trial">Trial</span></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">Grátis</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">5</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">1 total</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">❌</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">❌</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">1</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">7 dias</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border)"><span class="plan-badge" style="background:rgba(59,130,246,.15);color:#3b82f6">Básico</span></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">R$ 19,90</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">15</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">—</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">✅</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">❌</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">1</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">30 dias</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border)"><span class="plan-badge" style="background:rgba(139,92,246,.15);color:#8b5cf6">Essencial</span></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">R$ 29,90</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">30</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">5/mês</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">✅</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">✅</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">2</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">30 dias</td></tr>
+            <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border)"><span class="plan-badge plan-trial">Profissional</span></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">R$ 39,90</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">60</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">20/mês</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">✅</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">✅</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">5</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">30 dias</td></tr>
+            <tr><td style="padding:10px 14px"><span class="plan-badge plan-active">Premium</span></td><td style="padding:10px 14px;text-align:center">R$ 59,90</td><td style="padding:10px 14px;text-align:center">Ilimitado</td><td style="padding:10px 14px;text-align:center">Ilimitado</td><td style="padding:10px 14px;text-align:center">✅</td><td style="padding:10px 14px;text-align:center">✅</td><td style="padding:10px 14px;text-align:center">Ilimitado</td><td style="padding:10px 14px;text-align:center">30 dias</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
     <!-- Tabela de clientes -->
     <div class="admin-table-wrap">
       <table>
@@ -1334,9 +1364,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   <div id="success-screen">
     <div class="success-icon">&#127881;</div>
     <h2>Igreja criada com sucesso!</h2>
-    <p>Sua agenda esta pronta. Agora voce pode adicionar os cultos do ano e comecar a escalar as equipes.</p>
-    <button class="btn btn-primary" style="max-width:320px;margin:0 auto" id="btn-ir-agenda">
-      Acessar minha agenda &#8594;
+    <p>Sua agenda esta pronta. Agora convide sua equipe para comecar a escalar os cultos!</p>
+    <button class="btn btn-primary" style="max-width:320px;margin:0 auto 12px" id="btn-convidar-agora">
+      &#128279; Convidar minha equipe agora
+    </button>
+    <button class="btn btn-secondary" style="max-width:320px;margin:0 auto;background:transparent;border:none;color:var(--muted);font-size:13px" id="btn-ir-agenda">
+      Acessar agenda primeiro &#8594;
     </button>
   </div>
 
@@ -1623,6 +1656,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 
     <!-- AGENDA PAGE -->
     <div id="page-agenda" class="page active">
+
+      <!-- Banner de convite (aparece para admins com vagas disponíveis) -->
+      <div id="banner-convidar" style="display:none;background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(59,130,246,.08));border:1px solid rgba(245,158,11,.25);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <span style="font-size:24px">&#128101;</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:700;margin-bottom:2px">Convide sua equipe!</div>
+          <div id="banner-convidar-txt" style="font-size:12px;color:var(--muted)">Sua equipe ainda esta incompleta.</div>
+        </div>
+        <button onclick="showPageSafe('admin');setTimeout(function(){document.querySelector('[data-admin-tab=convites]').click();},100)" style="background:var(--accent);color:#000;border:none;padding:10px 18px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap">&#128279; Convidar agora</button>
+        <button onclick="document.getElementById('banner-convidar').style.display='none'" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px;line-height:1" title="Fechar">&#215;</button>
+      </div>
+
       <div class="month-nav">
         <button class="btn btn-secondary btn-sm" id="btn-prev-month">Anterior</button>
         <h3 id="month-label">Janeiro 2026</h3>
@@ -1810,6 +1855,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         <button class="tab-btn" data-admin-tab="dashboard">Dashboard</button>
         <button class="tab-btn" data-admin-tab="bulk">Adicionar em Massa</button>
         <button class="tab-btn" data-admin-tab="bulk-edit">Editar em Massa</button>
+        <button class="tab-btn" data-admin-tab="escala-massa">&#128101; Escala em Massa</button>
         <button class="tab-btn" data-admin-tab="users">Usuarios</button>
         <button class="tab-btn" data-admin-tab="aprovacoes" id="tab-aprovacoes">Aprovacoes <span id="badge-aprov" style="display:none;background:var(--red);color:#fff;border-radius:20px;padding:1px 7px;font-size:11px;margin-left:4px">0</span></button>
         <button class="tab-btn" data-admin-tab="convites">&#128279; Convites</button>
@@ -1982,14 +2028,90 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         </div>
       </div>
 
+      <!-- ESCALA EM MASSA -->
+      <div id="admin-escala-massa" class="hidden">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap">
+          <div>
+            <h3 style="font-size:18px;font-weight:700;margin-bottom:4px">&#128101; Escala em Massa</h3>
+            <p style="font-size:13px;color:var(--muted)">Selecione cultos e defina funcoes para varios voluntarios de uma vez.</p>
+          </div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px">1. Selecione o periodo</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+            <div class="form-group" style="margin:0;flex:1;min-width:120px">
+              <label>Mes</label>
+              <select id="em-mes">
+                <option value="1">Janeiro</option><option value="2">Fevereiro</option>
+                <option value="3">Marco</option><option value="4">Abril</option>
+                <option value="5">Maio</option><option value="6">Junho</option>
+                <option value="7">Julho</option><option value="8">Agosto</option>
+                <option value="9">Setembro</option><option value="10">Outubro</option>
+                <option value="11">Novembro</option><option value="12">Dezembro</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin:0;flex:1;min-width:100px">
+              <label>Ano</label>
+              <select id="em-ano">
+                <option value="2025">2025</option>
+                <option value="2026" selected>2026</option>
+                <option value="2027">2027</option>
+              </select>
+            </div>
+            <button class="btn btn-secondary" id="btn-em-buscar">Buscar Cultos</button>
+          </div>
+        </div>
+        <div id="em-cultos-wrap" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+            <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">2. Selecione os cultos</div>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+              <input type="checkbox" id="em-check-all" style="width:16px;height:16px;accent-color:var(--accent)"/> Selecionar todos
+            </label>
+          </div>
+          <div id="em-cultos-list" style="display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto"></div>
+          <div id="em-cultos-empty" style="display:none;text-align:center;padding:20px;color:var(--muted);font-size:13px">Nenhum culto encontrado neste periodo.</div>
+        </div>
+        <div id="em-equipe-wrap" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px">3. Defina a equipe a escalar</div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:16px">Preencha apenas as funcoes que deseja atualizar. Campos em branco nao serao alterados.</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+            <div class="form-group" style="margin:0"><label>&#127908; Vocais</label><input type="text" id="em-vocais" placeholder="Nome(s) separados por |"/></div>
+            <div class="form-group" style="margin:0"><label>&#127929; Teclado</label><input type="text" id="em-teclado" placeholder="Nome(s)"/></div>
+            <div class="form-group" style="margin:0"><label>&#127928; Violao</label><input type="text" id="em-violao" placeholder="Nome(s)"/></div>
+            <div class="form-group" style="margin:0"><label>&#127928; Guitarra</label><input type="text" id="em-guitarra" placeholder="Nome(s)"/></div>
+            <div class="form-group" style="margin:0"><label>&#129345; Bateria</label><input type="text" id="em-bateria" placeholder="Nome(s)"/></div>
+            <div class="form-group" style="margin:0"><label>&#127932; Baixo</label><input type="text" id="em-baixo" placeholder="Nome(s)"/></div>
+            <div class="form-group" style="margin:0"><label>&#127911; Outros (Louvor)</label><input type="text" id="em-outros" placeholder="Nome(s)"/></div>
+            <div class="form-group" style="margin:0"><label>&#128266; Som</label><input type="text" id="em-som" placeholder="Nome(s)"/></div>
+            <div class="form-group" style="margin:0"><label>&#128250; LED/Projecao</label><input type="text" id="em-proj" placeholder="Nome(s)"/></div>
+            <div class="form-group" style="margin:0"><label>&#128161; Iluminacao</label><input type="text" id="em-luz" placeholder="Nome"/></div>
+            <div class="form-group" style="margin:0"><label>&#127909; Live</label><input type="text" id="em-live" placeholder="Nome(s)"/></div>
+          </div>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+              <input type="checkbox" id="em-sobrescrever" checked style="width:16px;height:16px;accent-color:var(--accent)"/>
+              Sobrescrever escalas existentes (desmarque para adicionar sem apagar)
+            </label>
+          </div>
+        </div>
+        <div id="em-aplicar-wrap" style="display:none">
+          <div id="em-preview" style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:12px 16px;margin-bottom:12px;font-size:13px;color:var(--text)"></div>
+          <button class="btn btn-primary" id="btn-em-aplicar" style="width:auto">&#9889; Aplicar Escala em Massa</button>
+        </div>
+        <div id="em-progress" style="display:none;margin-top:12px">
+          <div style="background:var(--border);border-radius:100px;height:8px;overflow:hidden;margin-bottom:8px">
+            <div id="em-progress-bar" style="height:100%;border-radius:100px;background:var(--accent);width:0%;transition:width .3s"></div>
+          </div>
+          <div id="em-progress-label" style="font-size:12px;color:var(--muted);text-align:center">Aplicando...</div>
+        </div>
+      </div>
+
       <!-- CONVITES -->
       <div id="admin-convites" class="hidden">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
           <div>
             <h3 style="font-size:18px;font-weight:700;margin-bottom:4px">Links de Convite</h3>
             <p style="font-size:13px;color:var(--muted)">Gere links para convidar voluntarios e lideres para sua igreja.</p>
-          </div>
-          <button class="btn btn-primary btn-sm ml-auto" id="btn-novo-convite">+ Gerar Convite</button>
         </div>
 
         <!-- Form novo convite -->
@@ -2997,6 +3119,7 @@ function loadApp(user) {
             verificarStatusPlano(r.data);
             mostrarBannerPlano(r.data);
             atualizarBadgePlanoSidebar(r.data);
+            setTimeout(verificarBannerConvite, 1500);
           }
         });
       }
@@ -3970,6 +4093,7 @@ document.querySelectorAll('[data-admin-tab]').forEach(function(btn) {
     document.getElementById('admin-dashboard').classList.toggle('hidden', tab !== 'dashboard');
     document.getElementById('admin-bulk').classList.toggle('hidden', tab !== 'bulk');
     document.getElementById('admin-bulk-edit').classList.toggle('hidden', tab !== 'bulk-edit');
+    document.getElementById('admin-escala-massa').classList.toggle('hidden', tab !== 'escala-massa');
     document.getElementById('admin-users').classList.toggle('hidden', tab !== 'users');
     document.getElementById('admin-aprovacoes').classList.toggle('hidden', tab !== 'aprovacoes');
     document.getElementById('admin-convites').classList.toggle('hidden', tab !== 'convites');
@@ -3978,6 +4102,7 @@ document.querySelectorAll('[data-admin-tab]').forEach(function(btn) {
     if (tab === 'services') renderAdminServices();
     if (tab === 'bulk') initBulkTab();
     if (tab === 'bulk-edit') initBulkEditTab();
+    if (tab === 'escala-massa') initEscalaMassa();
     if (tab === 'dashboard') initDashboard();
     if (tab === 'aprovacoes') carregarAprovacoes();
     if (tab === 'convites') initConvites();
@@ -5417,24 +5542,32 @@ document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
 document.addEventListener('keydown', function(e) {
   if (e.key !== 'Escape') return;
 
-  // 1. Fecha modal dinâmico de Notificar WA (criado via createElement)
+  // 1. Fecha modal dinâmico de Notificar WA
   var notifModal = document.getElementById('modal-notificar-wa');
   if (notifModal) { notifModal.remove(); return; }
 
-  // 2. Fecha modal de culto (tem função própria)
+  // 2. Fecha modal de planos
+  var planosModal = document.getElementById('modal-planos');
+  if (planosModal) { planosModal.remove(); return; }
+
+  // 3. Fecha modal de escala em massa
+  var massaModal = document.getElementById('modal-escala-massa');
+  if (massaModal) { massaModal.remove(); return; }
+
+  // 4. Fecha modal de culto (tem função própria)
   var serviceModal = document.getElementById('service-modal');
   if (serviceModal && !serviceModal.classList.contains('hidden')) {
     closeServiceModal(); return;
   }
 
-  // 3. Fecha qualquer outro modal-overlay visível (do mais recente para o mais antigo)
+  // 5. Fecha qualquer outro modal-overlay visível
   var modals = document.querySelectorAll('.modal-overlay:not(.hidden)');
   if (modals.length > 0) {
     modals[modals.length - 1].classList.add('hidden');
     return;
   }
 
-  // 4. ESC também fecha o sidebar no mobile
+  // 6. ESC também fecha o sidebar no mobile
   if (isMobile()) toggleSidebar(true);
 });
 
@@ -6432,6 +6565,22 @@ function initOnboardingListeners() {
   if (btnIr) btnIr.addEventListener('click', function() {
     hideOnboarding();
     if (obState.user) loadApp(obState.user);
+  });
+
+  // Btn convidar agora (success screen)
+  var btnConvidar = document.getElementById('btn-convidar-agora');
+  if (btnConvidar) btnConvidar.addEventListener('click', function() {
+    hideOnboarding();
+    if (obState.user) {
+      loadApp(obState.user);
+      setTimeout(function() {
+        showPageSafe('admin');
+        setTimeout(function() {
+          var tab = document.querySelector('[data-admin-tab="convites"]');
+          if (tab) tab.click();
+        }, 300);
+      }, 500);
+    }
   });
 
   // Botoes voltar
@@ -7693,6 +7842,235 @@ function carregarListaConvites() {
 }
 
 })();
+
+// =============================================
+// ESCALA EM MASSA
+// =============================================
+var escalaMassaInit = false;
+function initEscalaMassa() {
+  if (!escalaMassaInit) {
+    escalaMassaInit = true;
+
+    // Preencher mês atual
+    var hoje = new Date();
+    document.getElementById('em-mes').value = hoje.getMonth() + 1;
+    document.getElementById('em-ano').value = hoje.getFullYear();
+
+    // Buscar cultos
+    document.getElementById('btn-em-buscar').addEventListener('click', buscarCultosEscalaMassa);
+
+    // Selecionar todos
+    document.getElementById('em-check-all').addEventListener('change', function() {
+      document.querySelectorAll('.em-culto-check').forEach(function(cb) { cb.checked = this.checked; }.bind(this));
+      atualizarPreviewEscala();
+    });
+
+    // Botão aplicar
+    document.getElementById('btn-em-aplicar').addEventListener('click', aplicarEscalaMassa);
+  }
+  buscarCultosEscalaMassa();
+}
+
+function buscarCultosEscalaMassa() {
+  var mes = parseInt(document.getElementById('em-mes').value);
+  var ano = parseInt(document.getElementById('em-ano').value);
+  var inicio = new Date(ano, mes - 1, 1).toISOString().slice(0, 10);
+  var fim    = new Date(ano, mes, 0).toISOString().slice(0, 10);
+
+  var wrap  = document.getElementById('em-cultos-wrap');
+  var lista = document.getElementById('em-cultos-list');
+  var empty = document.getElementById('em-cultos-empty');
+  lista.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:13px">Carregando...</div>';
+  wrap.style.display = 'block';
+
+  sb.from('services')
+    .select('id, title, date, time, location, color')
+    .eq('church_id', currentProfile.church_id)
+    .gte('date', inicio).lte('date', fim)
+    .order('date', { ascending: true })
+    .then(function(res) {
+      var cultos = res.data || [];
+      if (!cultos.length) {
+        lista.innerHTML = '';
+        empty.style.display = 'block';
+        document.getElementById('em-equipe-wrap').style.display = 'none';
+        document.getElementById('em-aplicar-wrap').style.display = 'none';
+        return;
+      }
+      empty.style.display = 'none';
+      lista.innerHTML = cultos.map(function(c) {
+        var dt = new Date(c.date + 'T00:00:00').toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'short' });
+        var hr = c.time ? c.time.slice(0,5) : '';
+        return '<label style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .15s" ' +
+          'onmouseover="this.style.borderColor=\'var(--accent)\'" onmouseout="this.style.borderColor=\'var(--border)\'">' +
+          '<input type="checkbox" class="em-culto-check" data-id="' + c.id + '" style="width:16px;height:16px;accent-color:var(--accent);flex-shrink:0" onchange="atualizarPreviewEscala()"/>' +
+          '<div style="width:6px;height:6px;border-radius:50%;background:' + (c.color||'var(--accent)') + ';flex-shrink:0"></div>' +
+          '<div style="flex:1;min-width:0">' +
+            '<div style="font-size:13px;font-weight:600">' + c.title + '</div>' +
+            '<div style="font-size:11px;color:var(--muted)">' + dt + (hr ? ' &middot; ' + hr : '') + ' &middot; ' + (c.location||'') + '</div>' +
+          '</div>' +
+        '</label>';
+      }).join('');
+      document.getElementById('em-equipe-wrap').style.display = 'block';
+      atualizarPreviewEscala();
+    });
+}
+
+function atualizarPreviewEscala() {
+  var selecionados = document.querySelectorAll('.em-culto-check:checked').length;
+  var preview = document.getElementById('em-preview');
+  var wrap    = document.getElementById('em-aplicar-wrap');
+  if (selecionados === 0) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  preview.innerHTML = '&#9889; Serao escalados <strong>' + selecionados + ' culto' + (selecionados > 1 ? 's' : '') + '</strong> com as funcoes preenchidas abaixo.';
+}
+
+function aplicarEscalaMassa() {
+  var checks = Array.from(document.querySelectorAll('.em-culto-check:checked'));
+  if (!checks.length) { toast('Selecione ao menos um culto.', 'error'); return; }
+
+  function getField(id) { return (document.getElementById(id).value || '').trim(); }
+  var campos = {
+    worship_vocais:       getField('em-vocais'),
+    worship_teclado:      getField('em-teclado'),
+    worship_violao:       getField('em-violao'),
+    worship_guitarra:     getField('em-guitarra'),
+    worship_bateria:      getField('em-bateria'),
+    worship_baixo:        getField('em-baixo'),
+    worship_outros:       getField('em-outros'),
+    sound_operators:      getField('em-som'),
+    sound_operator:       getField('em-som').split('|')[0] || '',
+    projection_operators: getField('em-proj'),
+    projection_operator:  getField('em-proj').split('|')[0] || '',
+    lighting_operator:    getField('em-luz'),
+    live_operators:       getField('em-live'),
+    live_operator:        getField('em-live').split('|')[0] || ''
+  };
+
+  // Remove campos vazios se não está sobrescrevendo
+  var sobrescrever = document.getElementById('em-sobrescrever').checked;
+  var updates = {};
+  Object.keys(campos).forEach(function(k) {
+    if (sobrescrever || campos[k]) updates[k] = campos[k];
+  });
+
+  if (!Object.keys(updates).length) { toast('Preencha ao menos uma funcao para escalar.', 'error'); return; }
+
+  var ids = checks.map(function(cb) { return cb.getAttribute('data-id'); });
+  var prog = document.getElementById('em-progress');
+  var bar  = document.getElementById('em-progress-bar');
+  var lbl  = document.getElementById('em-progress-label');
+  var btn  = document.getElementById('btn-em-aplicar');
+
+  prog.style.display = 'block';
+  btn.disabled = true;
+  var done = 0;
+
+  // Processar em sequência para não sobrecarregar
+  function processNext(i) {
+    if (i >= ids.length) {
+      bar.style.width = '100%';
+      lbl.textContent = 'Concluido! ' + ids.length + ' culto' + (ids.length > 1 ? 's' : '') + ' escalado' + (ids.length > 1 ? 's' : '') + '.';
+      btn.disabled = false;
+      toast('Escala em massa aplicada em ' + ids.length + ' culto' + (ids.length > 1 ? 's' : '') + '!', 'success');
+      loadServices();
+      return;
+    }
+    var serviceId = ids[i];
+    // Buscar team_id existente
+    sb.from('service_teams').select('id').eq('service_id', serviceId).maybeSingle()
+      .then(function(r) {
+        var promise;
+        if (r.data && r.data.id) {
+          promise = sb.from('service_teams').update(updates).eq('id', r.data.id);
+        } else {
+          var insert = Object.assign({ service_id: serviceId, church_id: currentProfile.church_id }, updates);
+          promise = sb.from('service_teams').insert(insert);
+        }
+        return promise;
+      })
+      .then(function() {
+        done++;
+        bar.style.width = Math.round((done / ids.length) * 100) + '%';
+        lbl.textContent = 'Aplicando... ' + done + '/' + ids.length;
+        processNext(i + 1);
+      })
+      .catch(function(err) {
+        console.error('Erro escala massa:', err);
+        done++;
+        processNext(i + 1);
+      });
+  }
+  processNext(0);
+}
+window.atualizarPreviewEscala = atualizarPreviewEscala;
+
+// =============================================
+// BANNER DE CONVITE NA AGENDA
+// =============================================
+function verificarBannerConvite() {
+  if (!currentProfile || currentProfile.role !== 'admin') return;
+  if (!window.currentChurch) return;
+
+  var plano = PLANOS[(window.currentChurch.plan) || 'trial'];
+  var maxUsers = plano.usuarios;
+
+  sb.from('profiles').select('id', { count: 'exact', head: true })
+    .eq('church_id', currentProfile.church_id)
+    .eq('status', 'approved')
+    .then(function(res) {
+      var total = res.count || 0;
+      var vagas = maxUsers === 999 ? 999 : maxUsers - total;
+      var banner = document.getElementById('banner-convidar');
+      var txt    = document.getElementById('banner-convidar-txt');
+      if (!banner) return;
+      if (vagas > 0 && total < 3) {
+        // Poucos usuários — mostrar banner incisivo
+        banner.style.display = 'flex';
+        txt.textContent = 'Voce tem ' + vagas + ' vaga' + (vagas > 1 ? 's' : '') + ' disponivel' + (vagas > 1 ? 'is' : '') + ' no plano ' + plano.label + '. Convide sua equipe!';
+      } else if (vagas > 0) {
+        banner.style.display = 'flex';
+        txt.textContent = total + ' membro' + (total > 1 ? 's' : '') + ' cadastrado' + (total > 1 ? 's' : '') + ' · ' + vagas + ' vaga' + (vagas > 1 ? 's' : '') + ' disponivel' + (vagas > 1 ? 'is' : '') + ' no plano ' + plano.label + '.';
+      } else {
+        banner.style.display = 'none';
+      }
+    });
+}
+window.verificarBannerConvite = verificarBannerConvite;
+
+// =============================================
+// MODAL BOAS-VINDAS PÓS-ONBOARDING
+// =============================================
+function mostrarBoasVindasComConvite() {
+  var old = document.getElementById('modal-boas-vindas');
+  if (old) old.remove();
+
+  var overlay = document.createElement('div');
+  overlay.id = 'modal-boas-vindas';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px';
+
+  overlay.innerHTML =
+    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:460px;padding:32px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)">' +
+      '<div style="font-size:52px;margin-bottom:16px">&#127881;</div>' +
+      '<div style="font-family:var(--font-display);font-size:28px;letter-spacing:1px;margin-bottom:8px">Agenda criada!</div>' +
+      '<p style="font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.6">Agora convide sua equipe para comecar a escalar os cultos. Cada voluntario recebera um link para entrar direto na sua agenda.</p>' +
+      '<button id="btn-bv-convidar" style="display:block;width:100%;background:var(--accent);color:#000;border:none;padding:15px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;margin-bottom:10px">&#128279; Convidar minha equipe agora</button>' +
+      '<button id="btn-bv-depois" style="display:block;width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:12px;border-radius:12px;font-size:13px;cursor:pointer">Fazer isso depois</button>' +
+    '</div>';
+
+  document.body.appendChild(overlay);
+
+  document.getElementById('btn-bv-convidar').addEventListener('click', function() {
+    overlay.remove();
+    showPageSafe('admin');
+    setTimeout(function() {
+      var tab = document.querySelector('[data-admin-tab="convites"]');
+      if (tab) tab.click();
+    }, 150);
+  });
+  document.getElementById('btn-bv-depois').addEventListener('click', function() { overlay.remove(); });
+}
+window.mostrarBoasVindasComConvite = mostrarBoasVindasComConvite;
 
 // =============================================
 // AJUDA - accordion
