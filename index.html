@@ -856,7 +856,45 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   max-height:400px;overflow-y:auto;
 }
 
-/* === CONVITES === */
+/* === AJUDA === */
+.ajuda-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;margin-bottom:12px;overflow:hidden;
+  transition:border-color .2s;
+}
+.ajuda-card.open{border-color:rgba(245,158,11,.3)}
+.ajuda-header{
+  display:flex;align-items:center;gap:14px;
+  padding:18px 20px;cursor:pointer;user-select:none;
+}
+.ajuda-header:hover{background:var(--surface2)}
+.ajuda-num{
+  font-family:var(--font-display);font-size:22px;letter-spacing:1px;
+  color:var(--accent);flex-shrink:0;width:32px;
+}
+.ajuda-titulo{font-size:15px;font-weight:700;margin-bottom:2px}
+.ajuda-sub{font-size:12px;color:var(--muted)}
+.ajuda-arrow{
+  margin-left:auto;font-size:20px;color:var(--muted);
+  transition:transform .25s;flex-shrink:0;
+}
+.ajuda-card.open .ajuda-arrow{transform:rotate(90deg);color:var(--accent)}
+.ajuda-body{
+  display:none;padding:0 20px 20px;border-top:1px solid var(--border);
+}
+.ajuda-card.open .ajuda-body{display:block}
+.ajuda-steps{
+  padding-left:20px;display:flex;flex-direction:column;gap:8px;
+  margin-bottom:14px;
+}
+.ajuda-steps li{font-size:14px;line-height:1.6;color:var(--text)}
+.ajuda-steps li strong{color:var(--text)}
+.ajuda-tip{
+  background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);
+  border-radius:10px;padding:12px 14px;font-size:13px;color:rgba(255,255,255,.7);
+  line-height:1.6;margin-top:4px;
+}
+/* === FIM AJUDA === */
 .invite-card{
   background:var(--surface);border:1px solid var(--border);border-radius:14px;
   padding:18px 20px;display:flex;align-items:center;gap:14px;margin-bottom:10px;
@@ -1505,6 +1543,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
           <div style="font-size:12px;color:var(--muted);text-align:center;padding:8px">Carregando...</div>
         </div>
       </div>
+
+      <div class="nav-section-label" style="margin-top:8px">Suporte</div>
+      <button class="nav-item" data-page="ajuda">
+        <span class="icon">&#10067;</span><span class="nav-item-label"> Ajuda</span>
+      </button>
     </div>
 
     <div class="sidebar-footer">
@@ -2183,6 +2226,155 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
           <input type="password" id="profile-confirm-pass" placeholder="Repita a nova senha"/>
         </div>
         <button class="btn btn-secondary" style="width:auto" id="btn-change-pass">Alterar Senha</button>
+      </div>
+    </div>
+
+    <!-- AJUDA -->
+    <div id="page-ajuda" class="page">
+      <div style="max-width:720px">
+
+        <h2 style="font-family:var(--font-display);font-size:28px;letter-spacing:1px;margin-bottom:4px">Central de Ajuda</h2>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:32px">Tutoriais rapidos para usar o Church App.</p>
+
+        <!-- Tutorial 1: Convidar alguem -->
+        <div class="ajuda-card" id="ajuda-1">
+          <div class="ajuda-header" onclick="toggleAjuda('ajuda-1')">
+            <span class="ajuda-num">01</span>
+            <div>
+              <div class="ajuda-titulo">Como convidar alguem para o sistema</div>
+              <div class="ajuda-sub">Adicione voluntarios, lideres e admins via link de convite</div>
+            </div>
+            <span class="ajuda-arrow">&#8250;</span>
+          </div>
+          <div class="ajuda-body">
+            <ol class="ajuda-steps">
+              <li>No menu lateral, acesse <strong>Administracao</strong></li>
+              <li>Clique na aba <strong>&#128279; Convites</strong></li>
+              <li>Clique em <strong>Novo Convite</strong></li>
+              <li>Escolha o perfil da pessoa: <em>Voluntario</em>, <em>Lider</em> ou <em>Admin</em></li>
+              <li>Defina a validade do link (ex: 7 dias) e o numero maximo de usos</li>
+              <li>Clique em <strong>Gerar Link</strong></li>
+              <li>Copie o link ou envie direto pelo botao <strong>WhatsApp</strong></li>
+            </ol>
+            <div class="ajuda-tip">&#128161; A pessoa acessa o link, faz login com Google e ja entra direto na sua igreja — sem precisar de aprovacao manual se usar o convite.</div>
+          </div>
+        </div>
+
+        <!-- Tutorial 2: Criar culto -->
+        <div class="ajuda-card" id="ajuda-2">
+          <div class="ajuda-header" onclick="toggleAjuda('ajuda-2')">
+            <span class="ajuda-num">02</span>
+            <div>
+              <div class="ajuda-titulo">Como criar um culto ou evento na agenda</div>
+              <div class="ajuda-sub">Adicione cultos avulsos ou em massa para o mes/ano</div>
+            </div>
+            <span class="ajuda-arrow">&#8250;</span>
+          </div>
+          <div class="ajuda-body">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:14px"><strong>Culto avulso:</strong></p>
+            <ol class="ajuda-steps">
+              <li>Va em <strong>Administracao &rarr; Cultos</strong></li>
+              <li>Clique em <strong>+ Novo Culto</strong></li>
+              <li>Preencha titulo, data, horario e local</li>
+              <li>Escolha uma cor para identificar o tipo de culto</li>
+              <li>Clique em <strong>Salvar na Agenda</strong></li>
+            </ol>
+            <p style="font-size:13px;color:var(--muted);margin:14px 0"><strong>Varios cultos de uma vez (em massa):</strong></p>
+            <ol class="ajuda-steps">
+              <li>Va em <strong>Administracao &rarr; Adicionar em Massa</strong></li>
+              <li>Configure o nome, recorrencia (ex: toda semana no domingo), horario e cor</li>
+              <li>Selecione o periodo (mes ou ano inteiro)</li>
+              <li>Clique em <strong>Gerar Cultos</strong> para criar automaticamente</li>
+            </ol>
+            <div class="ajuda-tip">&#128161; Voce consegue editar ou excluir qualquer culto depois clicando nele na agenda.</div>
+          </div>
+        </div>
+
+        <!-- Tutorial 3: Escalar equipe -->
+        <div class="ajuda-card" id="ajuda-3">
+          <div class="ajuda-header" onclick="toggleAjuda('ajuda-3')">
+            <span class="ajuda-num">03</span>
+            <div>
+              <div class="ajuda-titulo">Como escalar a equipe em um culto</div>
+              <div class="ajuda-sub">Defina quem vai servir em cada funcao</div>
+            </div>
+            <span class="ajuda-arrow">&#8250;</span>
+          </div>
+          <div class="ajuda-body">
+            <ol class="ajuda-steps">
+              <li>Clique em qualquer culto na <strong>Agenda</strong> ou em <strong>Proximos Cultos</strong></li>
+              <li>Na modal do culto, voce vera as secoes de equipe: <em>Louvor</em>, <em>Som</em>, <em>LED/Projecao</em>, <em>Live</em>, etc.</li>
+              <li>Clique em <strong>+ Adicionar</strong> na secao desejada e digite o nome da pessoa</li>
+              <li>Repita para todas as funcoes necessarias</li>
+              <li>Clique em <strong>Salvar Equipe</strong> no rodape da modal</li>
+            </ol>
+            <div class="ajuda-tip">&#128161; Apos salvar, os voluntarios escalados verao um bloco de <strong>confirmacao de presenca</strong> ao abrir o culto — podendo confirmar ou recusar.</div>
+          </div>
+        </div>
+
+        <!-- Tutorial 4: Notificar equipe -->
+        <div class="ajuda-card" id="ajuda-4">
+          <div class="ajuda-header" onclick="toggleAjuda('ajuda-4')">
+            <span class="ajuda-num">04</span>
+            <div>
+              <div class="ajuda-titulo">Como notificar a equipe pelo WhatsApp</div>
+              <div class="ajuda-sub">Avise os escalados diretamente pelo WhatsApp</div>
+            </div>
+            <span class="ajuda-arrow">&#8250;</span>
+          </div>
+          <div class="ajuda-body">
+            <ol class="ajuda-steps">
+              <li>Abra o culto clicando nele na agenda</li>
+              <li>Clique no botao <strong>&#128242; Notificar Equipe</strong> no rodape da modal</li>
+              <li>Uma lista com os membros escalados sera exibida</li>
+              <li>Clique em <strong>Notificar</strong> ao lado de cada pessoa para abrir o WhatsApp com a mensagem pronta</li>
+              <li>Ou clique em <strong>Notificar Todos</strong> para enviar uma mensagem geral</li>
+            </ol>
+            <div class="ajuda-tip">&#128161; Para que o link direto funcione, cada voluntario precisa ter o numero de WhatsApp cadastrado no perfil dele (menu <strong>Perfil</strong>).</div>
+          </div>
+        </div>
+
+        <!-- Tutorial 5: Configuracoes -->
+        <div class="ajuda-card" id="ajuda-5">
+          <div class="ajuda-header" onclick="toggleAjuda('ajuda-5')">
+            <span class="ajuda-num">05</span>
+            <div>
+              <div class="ajuda-titulo">Configuracoes da igreja</div>
+              <div class="ajuda-sub">Nome, logo, departamentos e outras opcoes</div>
+            </div>
+            <span class="ajuda-arrow">&#8250;</span>
+          </div>
+          <div class="ajuda-body">
+            <ol class="ajuda-steps">
+              <li>Va em <strong>Administracao &rarr; Config</strong></li>
+              <li>Voce pode alterar o <strong>nome da igreja</strong>, o <strong>logo</strong> e as <strong>localizacoes</strong> dos cultos</li>
+              <li>Em <strong>Usuarios</strong>, voce gerencia perfis, altera funcoes (voluntario, lider, admin) e remove membros</li>
+              <li>Em <strong>Aprovacoes</strong>, voce aprova ou recusa pedidos de acesso de novas pessoas</li>
+            </ol>
+            <div class="ajuda-tip">&#128161; Apenas admins tem acesso ao painel de Administracao.</div>
+          </div>
+        </div>
+
+        <!-- Tutorial 6: Perfil -->
+        <div class="ajuda-card" id="ajuda-6">
+          <div class="ajuda-header" onclick="toggleAjuda('ajuda-6')">
+            <span class="ajuda-num">06</span>
+            <div>
+              <div class="ajuda-titulo">Como atualizar meu perfil e WhatsApp</div>
+              <div class="ajuda-sub">Mantenha seus dados atualizados</div>
+            </div>
+            <span class="ajuda-arrow">&#8250;</span>
+          </div>
+          <div class="ajuda-body">
+            <ol class="ajuda-steps">
+              <li>Clique no seu nome no rodape do menu lateral, ou acesse <strong>Perfil</strong></li>
+              <li>Atualize seu nome e numero de <strong>WhatsApp</strong> (somente numeros com DDD, sem o +55)</li>
+              <li>Clique em <strong>Salvar dados</strong></li>
+            </ol>
+            <div class="ajuda-tip">&#128161; Exemplo de numero correto: <strong>49999990000</strong> — sem espacos, traco ou +55.</div>
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
@@ -3390,16 +3582,18 @@ function notificarEquipeWA(s, team) {
           });
         }
         var phone = perfil && perfil.phone ? perfil.phone.replace(/[^0-9]/g,'') : '';
-        var waUrl = phone
-          ? 'https://wa.me/55' + phone + '?text=' + encodeURIComponent(msg)
+        // Remove 55 do inicio se já vier no numero para nao duplicar
+        var phoneNorm = phone.startsWith('55') && phone.length > 11 ? phone.slice(2) : phone;
+        var waUrl = phoneNorm
+          ? 'https://wa.me/55' + phoneNorm + '?text=' + encodeURIComponent(msg)
           : 'https://wa.me/?text=' + encodeURIComponent(msg);
-        var hasPhone = !!phone;
+        var hasPhone = !!phoneNorm;
 
         return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)">' +
           '<div>' +
             '<div style="font-weight:600;font-size:13px;color:#fff">' + nome + '</div>' +
             '<div style="font-size:11px;color:' + (hasPhone ? '#25d366' : '#f59e0b') + '">' +
-              (hasPhone ? '&#9989; +55 ' + phone : '&#9888; Sem WhatsApp cadastrado') +
+              (hasPhone ? '&#9989; +55 ' + phoneNorm : '&#9888; Sem WhatsApp cadastrado') +
             '</div>' +
           '</div>' +
           '<a href="' + waUrl + '" target="_blank" style="background:#25d366;color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap">&#128242; Notificar</a>' +
@@ -7222,6 +7416,19 @@ function carregarListaConvites() {
 }
 
 })();
+
+// =============================================
+// AJUDA - accordion
+// =============================================
+function toggleAjuda(id) {
+  var card = document.getElementById(id);
+  if (!card) return;
+  var isOpen = card.classList.contains('open');
+  // Fecha todos
+  document.querySelectorAll('.ajuda-card').forEach(function(c) { c.classList.remove('open'); });
+  // Abre o clicado (se estava fechado)
+  if (!isOpen) card.classList.add('open');
+}
 
 // =============================================
 // LISTENER GLOBAL - fora do IIFE
