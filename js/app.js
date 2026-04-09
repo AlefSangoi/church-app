@@ -360,3 +360,10 @@ document.addEventListener('click', function(e) {
     return;
   }
 });
+
+// =============================================
+// INICIALIZAR APP - chamado após todos os scripts
+// =============================================
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof initApp === 'function') initApp();
+});

@@ -192,19 +192,10 @@ function getListFromUI(sectionId) {
 }
 
 // =============================================
-// START
+// EXPOR FUNCOES GLOBALMENTE
 // =============================================
-// START
-initApp();
-
-// Expor funcoes no escopo global
-window.openServiceModal = openServiceModal;
-window.deletarLocal = deletarLocal;
-window.gerarPDFSermao = gerarPDFSermao;
-window.abrirModalPlanos = abrirModalPlanos;
-window.atualizarBadgePlanoSidebar = atualizarBadgePlanoSidebar;
-window.solicitarUpgrade = solicitarUpgrade;
-window.addPessoa = addPessoa;
-window.showOnboarding = showOnboarding;
+window.addPessoa       = addPessoa;
+window.getListFromUI   = getListFromUI;
+window.renderEquipeEdit = renderEquipeEdit;
 
 // =============================================

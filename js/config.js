@@ -10,6 +10,7 @@ var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: true, autoRefreshToken: true },
   global: { headers: { 'x-my-custom-header': 'church-app' } }
 });
+window.sb = sb;
 
 // =============================================
 // SUPER ADMINS AUTORIZADOS
@@ -54,6 +55,40 @@ var hoje = new Date(); var currentMonth = new Date(hoje.getFullYear(), hoje.getM
 var allServices = [];
 var editingServiceId = null;
 var editingUserId = null;
+
+// Expor estado globalmente para todos os módulos
+window.currentUser       = currentUser;
+window.currentProfile    = currentProfile;
+window.currentMonth      = currentMonth;
+window.allServices       = allServices;
+window.editingServiceId  = editingServiceId;
+window.editingUserId     = editingUserId;
+
+// Getters/setters para manter sincronia entre arquivos
+Object.defineProperty(window, 'currentUser', {
+  get: function() { return currentUser; },
+  set: function(v) { currentUser = v; }
+});
+Object.defineProperty(window, 'currentProfile', {
+  get: function() { return currentProfile; },
+  set: function(v) { currentProfile = v; }
+});
+Object.defineProperty(window, 'allServices', {
+  get: function() { return allServices; },
+  set: function(v) { allServices = v; }
+});
+Object.defineProperty(window, 'currentMonth', {
+  get: function() { return currentMonth; },
+  set: function(v) { currentMonth = v; }
+});
+Object.defineProperty(window, 'editingServiceId', {
+  get: function() { return editingServiceId; },
+  set: function(v) { editingServiceId = v; }
+});
+Object.defineProperty(window, 'editingUserId', {
+  get: function() { return editingUserId; },
+  set: function(v) { editingUserId = v; }
+});
 
 var SERVICE_META = {
   'culto-familia-sede-09':   { title: 'Culto da Familia', location: 'SEDE', time: '09:00', color: '#f59e0b', recurrence: 'weekly', dayOfWeek: 0 },
@@ -136,17 +171,21 @@ function mostrarVersiculo() {
   var hoje = new Date();
   var idx = (hoje.getDate() + hoje.getMonth() * 31) % VERSICULOS.length;
   var v = VERSICULOS[idx];
-  // Painel do formulario
   var elTexto = document.getElementById('versiculo-texto');
   var elRef   = document.getElementById('versiculo-ref');
   if (elTexto) elTexto.textContent = v.texto;
   if (elRef)   elRef.textContent   = v.ref;
-  // Painel da foto (desktop)
   var elFoto    = document.getElementById('versiculo-texto-foto');
   var elRefFoto = document.getElementById('versiculo-ref-foto');
   if (elFoto)    elFoto.textContent    = v.texto;
   if (elRefFoto) elRefFoto.textContent = v.ref;
 }
 
+// Expor funções e constantes globalmente
+window.SERVICE_META      = SERVICE_META;
+window.DEPT_FIELDS       = DEPT_FIELDS;
+window.VERSICULOS        = VERSICULOS;
+window.mostrarVersiculo  = mostrarVersiculo;
+window.toast             = toast;
 
 })();
