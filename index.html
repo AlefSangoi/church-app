@@ -5724,8 +5724,7 @@ function renderEquipeEdit(team, role, dept) {
         '<option value="">Selecionar...</option>' +
         '</select>' +
       '</div>';
-      // populate select async
-      html += '<script>setTimeout(function(){if(window._profilesCache){var s=document.getElementById("edit-pastor-select");if(s){window._profilesCache.forEach(function(p){var o=document.createElement("option");o.value=p.name;o.textContent=p.name;s.appendChild(o);});}}}  ,100);</script>';
+      // populate select will be done by carregarUsuariosParaSelects()
     } else {
       html += '<div style="font-size:14px;font-weight:600;color:var(--text)">' +
         (team.worship_pastor || '<span style="color:var(--muted);font-style:italic">A definir</span>') + '</div>';
