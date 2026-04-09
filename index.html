@@ -1203,6 +1203,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
       Seu link: agendaget.netlify.app/<span id="slug-val"></span>
     </div>
 
+    <div class="form-group">
+      <label>CEP <span style="color:var(--muted);font-weight:400;font-size:11px">(preenchimento automatico)</span></label>
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <input type="text" id="church-cep" placeholder="Ex: 89801-000" maxlength="9" style="flex:1"/>
+        <button type="button" id="btn-buscar-cep" style="padding:15px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;color:var(--text);cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;transition:all .2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">Buscar</button>
+      </div>
+      <p id="cep-status" style="font-size:11px;margin-top:4px;display:none"></p>
+    </div>
+
     <div class="form-row">
       <div class="form-group">
         <label>Cidade</label>
@@ -1212,6 +1221,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         <label>Estado (UF)</label>
         <input type="text" id="church-state" placeholder="SC" maxlength="2"/>
       </div>
+    </div>
+
+    <div class="form-group" id="church-address-group" style="display:none">
+      <label>Endereco <span style="color:var(--muted);font-weight:400;font-size:11px">(opcional)</span></label>
+      <input type="text" id="church-address" placeholder="Ex: Rua das Flores, 123 - Centro"/>
     </div>
 
     <div class="form-group">
@@ -6305,6 +6319,57 @@ function initOnboardingListeners() {
   });
 
   // Step 2 continuar
+  // CEP auto-preenchimento via ViaCEP
+  function buscarCEP(cep) {
+    cep = cep.replace(/[^0-9]/g, '');
+    if (cep.length !== 8) {
+      var st = document.getElementById('cep-status');
+      if (st) { st.textContent = 'CEP invalido — informe 8 digitos.'; st.style.color = 'var(--red)'; st.style.display = 'block'; }
+      return;
+    }
+    var st = document.getElementById('cep-status');
+    if (st) { st.textContent = 'Buscando...'; st.style.color = 'var(--muted)'; st.style.display = 'block'; }
+    fetch('https://viacep.com.br/ws/' + cep + '/json/')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.erro) {
+          if (st) { st.textContent = 'CEP nao encontrado.'; st.style.color = 'var(--red)'; }
+          return;
+        }
+        var cityEl  = document.getElementById('church-city');
+        var stateEl = document.getElementById('church-state');
+        var addrEl  = document.getElementById('church-address');
+        var addrGrp = document.getElementById('church-address-group');
+        if (cityEl)  cityEl.value  = data.localidade || '';
+        if (stateEl) stateEl.value = data.uf || '';
+        if (addrEl && data.logradouro) {
+          addrEl.value = data.logradouro + (data.bairro ? ' - ' + data.bairro : '');
+          if (addrGrp) addrGrp.style.display = 'block';
+        }
+        if (st) { st.textContent = '✓ ' + (data.localidade||'') + ' — ' + (data.uf||''); st.style.color = 'var(--green)'; }
+      })
+      .catch(function() {
+        if (st) { st.textContent = 'Erro ao buscar CEP. Preencha manualmente.'; st.style.color = 'var(--red)'; }
+      });
+  }
+
+  var btnCep = document.getElementById('btn-buscar-cep');
+  if (btnCep) btnCep.addEventListener('click', function() {
+    buscarCEP((document.getElementById('church-cep').value || ''));
+  });
+
+  // Buscar automaticamente ao digitar 8 dígitos
+  var inpCep = document.getElementById('church-cep');
+  if (inpCep) {
+    inpCep.addEventListener('input', function() {
+      // Formatar CEP com hífen
+      var v = this.value.replace(/[^0-9]/g, '');
+      if (v.length > 5) v = v.slice(0,5) + '-' + v.slice(5,8);
+      this.value = v;
+      if (v.replace('-','').length === 8) buscarCEP(v);
+    });
+  }
+
   var btnS2 = document.getElementById('btn-step2');
   if (btnS2) btnS2.addEventListener('click', function() {
     obState.churchName     = (document.getElementById('church-name')||{}).value || '';
