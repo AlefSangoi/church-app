@@ -3561,12 +3561,15 @@ function notificarEquipeWA(s, team) {
       overlay.id = 'modal-notificar-wa';
       overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px';
 
-      var msg = '*Escala de Servico*' +
-        '\n\n*Culto:* ' + titulo +
-        '\n*Data:* ' + dataFmt +
-        '\n*Horario:* ' + hora +
-        '\n*Local:* ' + local +
-        '\n\nVoce esta escalado(a) para este culto. Por favor confirme sua presenca! \uD83D\uDE4F';
+      var appUrl = window.location.origin + window.location.pathname + (getChurchSlug() ? '?church=' + getChurchSlug() : '');
+
+      var msg = '🙌 *Escala de Servico - ' + titulo + '*' +
+        '\n\n📅 *Data:* ' + dataFmt +
+        '\n⏰ *Horario:* ' + hora +
+        '\n📍 *Local:* ' + local +
+        '\n\nVoce esta na escala deste culto! Por favor confirme sua presenca no app:' +
+        '\n👉 ' + appUrl +
+        '\n\n_Acesse, abra o culto e toque em ✅ Vou comparecer ou ❌ Nao vou._';
 
       var itens = nomes.map(function(nome) {
         // Tenta match exato primeiro, depois parcial
@@ -3587,11 +3590,13 @@ function notificarEquipeWA(s, team) {
         if (phoneNorm.startsWith('55') && phoneNorm.length >= 12) {
           phoneNorm = phoneNorm.slice(2);
         }
-        // Numeros brasileiros com 10 digitos (sem o 9) → adiciona 9 apos o DDD
-        // Ex: 4988068778 → 49988068778
+        // Garante 11 dígitos (DDD 2 + 9 + número 8)
+        // Se tiver 10 dígitos (sem o 9), insere o 9 após o DDD
         if (phoneNorm.length === 10) {
           phoneNorm = phoneNorm.slice(0,2) + '9' + phoneNorm.slice(2);
         }
+        // Se tiver 11 dígitos mas o 3º dígito não for 9, também insere
+        // (ex: número antigo de 8 dígitos com DDD mas sem o 9 → não se aplica ao Brasil atual)
         var waNum = phoneNorm ? '55' + phoneNorm : '';
         var waUrl = waNum
           ? 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg)
