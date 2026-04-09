@@ -3582,15 +3582,19 @@ function notificarEquipeWA(s, team) {
           });
         }
         var phone = perfil && perfil.phone ? perfil.phone.replace(/[^0-9]/g,'') : '';
-        // Normaliza para formato internacional: remove 55 duplicado se houver, garante 55 + DDD + número
+        // Remove 55 do inicio se já vier no numero
         var phoneNorm = phone;
         if (phoneNorm.startsWith('55') && phoneNorm.length >= 12) {
-          phoneNorm = phoneNorm.slice(2); // remove o 55 do início
+          phoneNorm = phoneNorm.slice(2);
         }
-        // phoneNorm deve ter 10 ou 11 dígitos (DDD + número com ou sem 9)
+        // Numeros brasileiros com 10 digitos (sem o 9) → adiciona 9 apos o DDD
+        // Ex: 4988068778 → 49988068778
+        if (phoneNorm.length === 10) {
+          phoneNorm = phoneNorm.slice(0,2) + '9' + phoneNorm.slice(2);
+        }
         var waNum = phoneNorm ? '55' + phoneNorm : '';
         var waUrl = waNum
-          ? 'https://api.whatsapp.com/send?phone=' + waNum + '&text=' + encodeURIComponent(msg)
+          ? 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg)
           : 'https://wa.me/?text=' + encodeURIComponent(msg);
         var hasPhone = !!phoneNorm;
 
