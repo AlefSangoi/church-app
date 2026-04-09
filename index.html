@@ -3809,7 +3809,6 @@ window.carregarDashboard    = carregarDashboard;
 window.carregarMeusCultos   = carregarMeusCultos;
 window.carregarLiderDash    = carregarLiderDash;
 window.atualizarBadgePendentes = atualizarBadgePendentes;
-window.showPageSafe         = showPageSafe;
 window.isMobile             = isMobile;
 window.toggleSidebar        = toggleSidebar;
 window.parseList            = parseList;
@@ -9656,9 +9655,10 @@ document.addEventListener('click', function(e) {
 // =============================================
 // INICIALIZAR APP - chamado após todos os scripts
 // =============================================
-document.addEventListener('DOMContentLoaded', function() {
-  if (typeof initApp === 'function') initApp();
-});
+// Iniciar app diretamente (scripts estao no final do body, DOM ja esta pronto)
+if (typeof initApp === 'function') {
+  initApp();
+}
 
 // Expor globalmente
 window.initConvites          = initConvites;
