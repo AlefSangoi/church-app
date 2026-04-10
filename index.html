@@ -2940,6 +2940,112 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
           </div>
         </div>
 
+
+        <!-- CARD 8: Atalho na tela inicial (PWA) -->
+        <div class="ajuda-card" id="ajuda-8">
+          <div class="ajuda-header" onclick="toggleAjuda('ajuda-8')">
+            <span class="ajuda-num">08</span>
+            <div>
+              <div class="ajuda-titulo">Como criar atalho do app no celular</div>
+              <div class="ajuda-sub">Instale o Church App na tela inicial como um app nativo</div>
+            </div>
+            <span class="ajuda-arrow">&#8250;</span>
+          </div>
+          <div class="ajuda-body">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Adicione o Church App na tela inicial do seu celular e acesse com um toque, igual a um app instalado.</p>
+
+            <!-- iPhone Safari -->
+            <div style="background:var(--surface2);border-radius:10px;padding:14px;margin-bottom:12px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                <span style="font-size:18px">&#63743;</span>
+                <strong style="font-size:13px">iPhone — Safari</strong>
+              </div>
+              <ol class="ajuda-steps" style="margin:0">
+                <li>Abra o site no <strong>Safari</strong> (nao funciona em outros navegadores no iPhone)</li>
+                <li>Toque no botao de <strong>Compartilhar</strong> &#10064; (quadrado com seta para cima) na barra inferior</li>
+                <li>Role a lista e toque em <strong>"Adicionar a Tela de Inicio"</strong></li>
+                <li>Confirme o nome e toque em <strong>"Adicionar"</strong></li>
+                <li>O icone do Church App aparecera na sua tela inicial &#10003;</li>
+              </ol>
+            </div>
+
+            <!-- iPhone Chrome -->
+            <div style="background:var(--surface2);border-radius:10px;padding:14px;margin-bottom:12px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                <span style="font-size:18px">&#127758;</span>
+                <strong style="font-size:13px">iPhone — Chrome</strong>
+              </div>
+              <ol class="ajuda-steps" style="margin:0">
+                <li>Abra o site no <strong>Chrome</strong></li>
+                <li>Toque nos <strong>tres pontos</strong> &#8942; no canto inferior direito</li>
+                <li>Toque em <strong>"Adicionar a tela inicial"</strong></li>
+                <li>Confirme o nome e toque em <strong>"Adicionar"</strong></li>
+                <li>O icone aparecera na sua tela inicial &#10003;</li>
+              </ol>
+            </div>
+
+            <!-- Android Chrome -->
+            <div style="background:var(--surface2);border-radius:10px;padding:14px;margin-bottom:12px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                <span style="font-size:18px">&#129518;</span>
+                <strong style="font-size:13px">Android — Chrome</strong>
+              </div>
+              <ol class="ajuda-steps" style="margin:0">
+                <li>Abra o site no <strong>Chrome</strong></li>
+                <li>Toque nos <strong>tres pontos</strong> &#8942; no canto superior direito</li>
+                <li>Toque em <strong>"Adicionar a tela inicial"</strong> ou <strong>"Instalar app"</strong></li>
+                <li>Confirme tocando em <strong>"Adicionar"</strong></li>
+                <li>O icone aparecera na sua tela inicial e na gaveta de apps &#10003;</li>
+              </ol>
+            </div>
+
+            <div class="ajuda-tip">&#128161; Apos instalar, o Church App abre em tela cheia sem a barra do navegador, igual a um app da loja!</div>
+          </div>
+        </div>
+
+        <!-- CARD 9: Feedback -->
+        <div class="ajuda-card" id="ajuda-9" style="border-color:rgba(245,158,11,.2)">
+          <div class="ajuda-header" onclick="toggleAjuda('ajuda-9')">
+            <span class="ajuda-num">&#128172;</span>
+            <div>
+              <div class="ajuda-titulo">Enviar Feedback</div>
+              <div class="ajuda-sub">Sugestoes, bugs ou elogios — sua opiniao melhora o Church App</div>
+            </div>
+            <span class="ajuda-arrow">&#8250;</span>
+          </div>
+          <div class="ajuda-body">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Quer sugerir uma melhoria, reportar um bug ou deixar um elogio? Use o formulario abaixo:</p>
+
+            <!-- Formulario de feedback inline -->
+            <div style="background:var(--surface2);border-radius:12px;padding:16px">
+              <div style="margin-bottom:12px">
+                <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Categoria</label>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <button class="feedback-cat-btn active" data-cat="sugestao" onclick="selecionarCatFeedback(this)">&#128161; Sugestao</button>
+                  <button class="feedback-cat-btn" data-cat="bug" onclick="selecionarCatFeedback(this)">&#128027; Bug</button>
+                  <button class="feedback-cat-btn" data-cat="elogio" onclick="selecionarCatFeedback(this)">&#11088; Elogio</button>
+                  <button class="feedback-cat-btn" data-cat="outro" onclick="selecionarCatFeedback(this)">&#128172; Outro</button>
+                </div>
+              </div>
+              <div style="margin-bottom:12px">
+                <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Avaliacao</label>
+                <div id="feedback-stars-ajuda" style="display:flex;gap:6px">
+                  <button class="feedback-star" data-val="1" onclick="selecionarEstrelaAjuda(1)">&#9734;</button>
+                  <button class="feedback-star" data-val="2" onclick="selecionarEstrelaAjuda(2)">&#9734;</button>
+                  <button class="feedback-star" data-val="3" onclick="selecionarEstrelaAjuda(3)">&#9734;</button>
+                  <button class="feedback-star" data-val="4" onclick="selecionarEstrelaAjuda(4)">&#9734;</button>
+                  <button class="feedback-star" data-val="5" onclick="selecionarEstrelaAjuda(5)">&#9734;</button>
+                </div>
+              </div>
+              <div style="margin-bottom:12px">
+                <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Mensagem</label>
+                <textarea id="feedback-texto-ajuda" rows="3" placeholder="Descreva sua sugestao, problema ou elogio..." style="width:100%;resize:vertical;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--font-body);font-size:14px"></textarea>
+              </div>
+              <button onclick="enviarFeedbackAjuda()" class="btn btn-primary" style="width:auto">&#9993; Enviar Feedback</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
@@ -9889,6 +9995,41 @@ window.selecionarCatFeedback = selecionarCatFeedback;
 window.selecionarEstrela = selecionarEstrela;
 window.enviarFeedback   = enviarFeedback;
 
+function selecionarEstrelaAjuda(val) {
+  feedbackEstrela = val;
+  document.querySelectorAll('#feedback-stars-ajuda .feedback-star').forEach(function(s, i) {
+    s.innerHTML = i < val ? '&#9733;' : '&#9734;';
+    s.classList.toggle('filled', i < val);
+  });
+}
+function enviarFeedbackAjuda() {
+  var texto = (document.getElementById('feedback-texto-ajuda').value || '').trim();
+  if (!texto) { toast('Escreva uma mensagem antes de enviar.', 'error'); return; }
+  var btn = event.target;
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  sb.from('feedbacks').insert({
+    church_id:   currentProfile ? currentProfile.church_id : null,
+    user_id:     currentUser ? currentUser.id : null,
+    church_name: (window.currentChurch && window.currentChurch.name) || '',
+    user_name:   currentProfile ? (currentProfile.name || '') : '',
+    plan:        (window.currentChurch && window.currentChurch.plan) || '',
+    categoria:   feedbackCategoria,
+    estrelas:    feedbackEstrela || null,
+    mensagem:    texto
+  }).then(function(res) {
+    btn.disabled = false; btn.innerHTML = '&#9993; Enviar Feedback';
+    if (res.error) { toast('Erro ao enviar: ' + res.error.message, 'error'); return; }
+    document.getElementById('feedback-texto-ajuda').value = '';
+    feedbackEstrela = 0;
+    feedbackCategoria = 'sugestao';
+    document.querySelectorAll('#feedback-stars-ajuda .feedback-star').forEach(function(s) { s.innerHTML = '&#9734;'; s.classList.remove('filled'); });
+    document.querySelectorAll('.feedback-cat-btn').forEach(function(b, i) { b.classList.toggle('active', i === 0); });
+    toast('Obrigado pelo feedback! &#128591;', 'success');
+  });
+}
+window.selecionarEstrelaAjuda = selecionarEstrelaAjuda;
+window.enviarFeedbackAjuda    = enviarFeedbackAjuda;
+
 // =============================================
 // FEEDBACK - SUPER ADMIN VE
 // =============================================
@@ -9984,7 +10125,7 @@ window.toggleAjuda           = toggleAjuda;
 </script>
 
 <!-- FEEDBACK BUTTON -->
-<div id="feedback-btn" style="display:none;position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));right:16px;z-index:500">
+<div id="feedback-btn" style="display:none !important;position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));right:16px;z-index:500">
   <button onclick="abrirFeedback()" title="Enviar Feedback" style="width:48px;height:48px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(245,158,11,.4);display:flex;align-items:center;justify-content:center;font-size:20px">
     &#128172;
   </button>
