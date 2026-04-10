@@ -1213,7 +1213,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:14px">
             <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px">
               <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
-                Netlify <span id="badge-renov-netlify" style="display:none;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700"></span>
+                <span>Netlify <a href="https://app.netlify.com/teams/account/billing" target="_blank" style="font-size:10px;color:var(--accent);margin-left:6px;font-weight:400;text-decoration:none">↗ Ver fatura</a></span>
+                <span id="badge-renov-netlify" style="display:none;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700"></span>
               </div>
               <div style="display:flex;gap:8px">
                 <div style="flex:1"><label style="display:block;font-size:10px;color:var(--muted);margin-bottom:3px">Valor (R$)</label>
@@ -1226,7 +1227,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
             </div>
             <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px">
               <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
-                Supabase <span id="badge-renov-supabase" style="display:none;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700"></span>
+                <span>Supabase <a href="https://supabase.com/dashboard/account/billing" target="_blank" style="font-size:10px;color:var(--accent);margin-left:6px;font-weight:400;text-decoration:none">↗ Ver fatura</a></span>
+                <span id="badge-renov-supabase" style="display:none;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700"></span>
               </div>
               <div style="display:flex;gap:8px">
                 <div style="flex:1"><label style="display:block;font-size:10px;color:var(--muted);margin-bottom:3px">Valor (R$)</label>
@@ -1239,7 +1241,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
             </div>
             <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px">
               <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
-                Claude AI <span id="badge-renov-claude" style="display:none;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700"></span>
+                <span>Claude AI <a href="https://console.anthropic.com/settings/billing" target="_blank" style="font-size:10px;color:var(--accent);margin-left:6px;font-weight:400;text-decoration:none">↗ Ver fatura</a></span>
+                <span id="badge-renov-claude" style="display:none;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700"></span>
               </div>
               <div style="display:flex;gap:8px">
                 <div style="flex:1"><label style="display:block;font-size:10px;color:var(--muted);margin-bottom:3px">Valor (R$)</label>
@@ -3089,6 +3092,7 @@ window.sb = sb;
 // =============================================
 var SUPER_ADMIN_EMAILS = [
   'getprojection@gmail.com',
+  'alefjrsangoi@gmail.com', // segundo super admin
   // Adicione mais emails aqui conforme necessário
 ];
 
@@ -9702,19 +9706,30 @@ document.addEventListener('click', function(e) {
 // =============================================
 // INICIALIZAR APP - chamado após todos os scripts
 // =============================================
-// Swipe down para fechar modal no mobile
+// Swipe down para fechar modal no mobile - apenas pelo header/drag handle
 (function() {
   var modal = document.getElementById('service-modal');
   if (!modal) return;
   var startY = 0;
-  var modalBox = modal.querySelector('.modal');
-  modal.addEventListener('touchstart', function(e) {
-    startY = e.touches[0].clientY;
-  }, { passive: true });
-  modal.addEventListener('touchend', function(e) {
+  var swipeTarget = false;
+  // Só detecta swipe no header e no drag handle, não no body scrollável
+  var handle = modal.querySelector('.modal-drag-handle');
+  var header = modal.querySelector('.modal-header');
+  function onTouchStart(e) { startY = e.touches[0].clientY; swipeTarget = true; }
+  function onTouchEnd(e) {
+    if (!swipeTarget) return;
     var dy = e.changedTouches[0].clientY - startY;
-    if (dy > 80) closeServiceModal(); // swipe down 80px = fechar
-  }, { passive: true });
+    if (dy > 60) closeServiceModal();
+    swipeTarget = false;
+  }
+  if (handle) {
+    handle.addEventListener('touchstart', onTouchStart, { passive: true });
+    handle.addEventListener('touchend', onTouchEnd, { passive: true });
+  }
+  if (header) {
+    header.addEventListener('touchstart', onTouchStart, { passive: true });
+    header.addEventListener('touchend', onTouchEnd, { passive: true });
+  }
 })();
 
 // Iniciar app diretamente (scripts estao no final do body, DOM ja esta pronto)
