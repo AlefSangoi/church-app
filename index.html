@@ -1328,11 +1328,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         </tbody>
       </table>
 
-    <!-- ================================ -->
-    <!-- FEEDBACKS                        -->
-    <!-- ================================ -->
-    <details style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;margin-bottom:20px;overflow:hidden">
-      <summary style="padding:14px 18px;cursor:pointer;font-weight:700;font-size:14px;list-style:none;display:flex;align-items:center;justify-content:space-between">
+    <!-- FEEDBACKS DOS CLIENTES -->
+    <details id="sa-feedbacks-details" style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;margin-bottom:20px;overflow:hidden">
+      <summary style="padding:14px 18px;cursor:pointer;font-weight:700;font-size:14px;list-style:none;display:flex;align-items:center;justify-content:space-between" onclick="carregarFeedbacks()">
         <span>&#128172; Feedbacks dos Clientes</span>
         <div style="display:flex;gap:8px;align-items:center">
           <span id="sa-fb-badge" style="display:none;background:rgba(245,158,11,.2);color:var(--accent);padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700"></span>
@@ -1343,15 +1341,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
           <select id="sa-feedback-filter" onchange="carregarFeedbacks()" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px">
             <option value="">Todas categorias</option>
-            <option value="sugestao">💡 Sugestões</option>
-            <option value="bug">🐛 Bugs</option>
-            <option value="elogio">⭐ Elogios</option>
-            <option value="outro">💬 Outros</option>
+            <option value="sugestao">Sugestoes</option>
+            <option value="bug">Bugs</option>
+            <option value="elogio">Elogios</option>
+            <option value="outro">Outros</option>
           </select>
           <button onclick="carregarFeedbacks()" class="btn btn-secondary btn-sm">&#8635; Atualizar</button>
         </div>
-
-        <!-- Resumo métricas -->
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:16px">
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
             <div style="font-size:22px;font-weight:800;color:var(--accent)" id="fb-total">-</div>
@@ -1359,24 +1355,22 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
           </div>
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
             <div style="font-size:22px;font-weight:800;color:var(--accent)" id="fb-media">-</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">Média ★</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Media estrelas</div>
           </div>
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
             <div style="font-size:22px;font-weight:800;color:#3b82f6" id="fb-sugestoes">-</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">Sugestões</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Sugestoes</div>
           </div>
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
             <div style="font-size:22px;font-weight:800;color:#ef4444" id="fb-bugs">-</div>
             <div style="font-size:11px;color:var(--muted);margin-top:2px">Bugs</div>
           </div>
         </div>
-
         <div id="sa-feedbacks-lista" style="display:flex;flex-direction:column;gap:10px">
-          <div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">Clique em Atualizar para carregar</div>
+          <div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">Clique para carregar os feedbacks</div>
         </div>
       </div>
     </details>
-
     </div>
   </div>
 </div>
@@ -3167,7 +3161,6 @@ var SUPER_ADMIN_EMAILS = [
 
 // PIN de acesso ao painel super admin (altere para o seu PIN)
 var SUPER_ADMIN_PIN = '150409';
-var FEEDBACK_WA = '554999835831'; // WhatsApp para receber feedbacks // Número WA para receber feedbacks (com DDI+DDD)
 var SA_PIN_KEY = 'sa_pin_verified';
 
 function isSuperAdmin(email) {
@@ -3784,72 +3777,6 @@ function parseMusicasRepertorio(texto) {
 }
 
 // =============================================
-
-
-// =============================================
-// FEEDBACKS - SUPER ADMIN
-// =============================================
-function carregarFeedbacks() {
-  var lista = document.getElementById('sa-feedbacks-lista');
-  if (!lista) return;
-  lista.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Carregando...</div>';
-
-  var filtro = (document.getElementById('sa-feedback-filter') || {}).value || '';
-
-  var query = sb.from('feedbacks').select('*').order('created_at', { ascending: false }).limit(100);
-  if (filtro) query = query.eq('categoria', filtro);
-
-  query.then(function(res) {
-    var items = res.data || [];
-
-    // Métricas
-    var total = items.length;
-    var comEstrela = items.filter(function(f) { return f.estrelas; });
-    var media = comEstrela.length > 0
-      ? (comEstrela.reduce(function(s,f){ return s + f.estrelas; }, 0) / comEstrela.length).toFixed(1)
-      : '-';
-    var sugestoes = items.filter(function(f){ return f.categoria === 'sugestao'; }).length;
-    var bugs      = items.filter(function(f){ return f.categoria === 'bug'; }).length;
-
-    var el = function(id) { return document.getElementById(id); };
-    if (el('fb-total'))    el('fb-total').textContent    = total;
-    if (el('fb-media'))    el('fb-media').textContent    = media;
-    if (el('fb-sugestoes'))el('fb-sugestoes').textContent= sugestoes;
-    if (el('fb-bugs'))     el('fb-bugs').textContent     = bugs;
-
-    if (!items.length) {
-      lista.innerHTML = '<div style="text-align:center;padding:60px;color:var(--muted)"><div style="font-size:40px;margin-bottom:12px">💬</div><p>Nenhum feedback ainda.</p></div>';
-      return;
-    }
-
-    var catIcons = { sugestao:'💡', bug:'🐛', elogio:'⭐', outro:'💬' };
-    var catColors = { sugestao:'rgba(59,130,246,.15)', bug:'rgba(239,68,68,.12)', elogio:'rgba(245,158,11,.12)', outro:'rgba(107,114,128,.12)' };
-    var catBorder = { sugestao:'rgba(59,130,246,.3)', bug:'rgba(239,68,68,.25)', elogio:'rgba(245,158,11,.25)', outro:'rgba(107,114,128,.2)' };
-
-    lista.innerHTML = items.map(function(f) {
-      var estrelas = f.estrelas ? '★'.repeat(f.estrelas) + '☆'.repeat(5 - f.estrelas) : '';
-      var dt = new Date(f.created_at).toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
-      var cat = f.categoria || 'outro';
-      return '<div style="background:' + (catColors[cat]||'var(--surface2)') + ';border:1px solid ' + (catBorder[cat]||'var(--border)') + ';border-radius:12px;padding:16px">' +
-        '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap">' +
-          '<div style="display:flex;align-items:center;gap:10px">' +
-            '<span style="font-size:18px">' + (catIcons[cat]||'💬') + '</span>' +
-            '<div>' +
-              '<div style="font-weight:700;font-size:14px">' + escHtml(f.church_name || 'Igreja') + '</div>' +
-              '<div style="font-size:12px;color:var(--muted)">' + escHtml(f.user_name || '') + (f.plan ? ' · ' + f.plan : '') + '</div>' +
-            '</div>' +
-          '</div>' +
-          '<div style="text-align:right">' +
-            (estrelas ? '<div style="font-size:16px;color:var(--accent);margin-bottom:2px">' + estrelas + '</div>' : '') +
-            '<div style="font-size:11px;color:var(--muted)">' + dt + '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div style="font-size:14px;line-height:1.6;color:var(--text)">' + escHtml(f.mensagem || '') + '</div>' +
-      '</div>';
-    }).join('');
-  });
-}
-window.carregarFeedbacks = carregarFeedbacks;
 
 // =============================================
 // BOTTOM NAV MOBILE
@@ -7490,14 +7417,6 @@ var SUPER_ADMIN_EMAIL = 'getprojection@gmail.com';
 var saEditingChurchId = null;
 
 function initSuperAdmin() {
-  // Pre-load feedback count badge
-  sb.from('feedbacks').select('id', { count: 'exact', head: true }).then(function(res) {
-    var badge = document.getElementById('sa-fb-badge');
-    if (badge && res.count > 0) {
-      badge.textContent = res.count + ' feedbacks';
-      badge.style.display = 'inline-block';
-    }
-  });
   document.getElementById('btn-sa-logout').addEventListener('click', function() {
     sb.auth.signOut().then(function() { window.location.reload(); });
   });
@@ -9400,42 +9319,14 @@ function gerarPDFSermao(sermon) {
     w.document.write('.bf{background:#ddd;color:#333;border:none;padding:10px 14px;border-radius:6px;font-size:13px;cursor:pointer}');
     w.document.write('@media print{.btn-area{display:none}@page{margin:12mm}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}');
     w.document.write('
-/* =============================================
-   FEEDBACK
-   ============================================= */
-.feedback-cat-btn {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 13px;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all .15s;
-  font-family: var(--font-body);
-}
-.feedback-cat-btn.active,
-.feedback-cat-btn:hover {
-  background: rgba(245,158,11,.15);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.feedback-star {
-  background: none;
-  border: none;
-  font-size: 28px;
-  cursor: pointer;
-  color: var(--muted);
-  padding: 0 2px;
-  transition: transform .1s;
-  line-height: 1;
-}
-.feedback-star.filled { color: var(--accent); }
-.feedback-star:hover { transform: scale(1.2); }
+/* FEEDBACK */
+.feedback-cat-btn{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--font-body)}
+.feedback-cat-btn.active,.feedback-cat-btn:hover{background:rgba(245,158,11,.15);border-color:var(--accent);color:var(--accent)}
+.feedback-star{background:none;border:none;font-size:28px;cursor:pointer;color:var(--muted);padding:0 2px;transition:transform .1s;line-height:1}
+.feedback-star.filled{color:var(--accent)}
+.feedback-star:hover{transform:scale(1.2)}
+@media(max-width:768px){#feedback-btn{bottom:calc(72px + env(safe-area-inset-bottom) + 8px)}}
 
-@media(max-width: 768px) {
-  #feedback-btn { bottom: calc(72px + env(safe-area-inset-bottom) + 8px); }
-}
 </style></head><body>');
     w.document.write(body.innerHTML);
     w.document.write('<div class="btn-area"><button class="bp" onclick="window.print()">Imprimir / Salvar PDF</button>');
@@ -9934,84 +9825,121 @@ document.addEventListener('click', function(e) {
 
 
 // =============================================
-// FEEDBACK
+// FEEDBACK - CLIENTE ENVIA
 // =============================================
 var feedbackEstrela = 0;
 var feedbackCategoria = 'sugestao';
 
 function abrirFeedback() {
-  document.getElementById('feedback-modal').classList.remove('hidden');
+  var m = document.getElementById('feedback-modal');
+  if (m) m.classList.remove('hidden');
 }
 function fecharFeedback() {
-  document.getElementById('feedback-modal').classList.add('hidden');
+  var m = document.getElementById('feedback-modal');
+  if (m) m.classList.add('hidden');
 }
-
 function selecionarCatFeedback(btn) {
   document.querySelectorAll('.feedback-cat-btn').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
   feedbackCategoria = btn.getAttribute('data-cat');
 }
-
 function selecionarEstrela(val) {
   feedbackEstrela = val;
   document.querySelectorAll('.feedback-star').forEach(function(s, i) {
-    s.textContent = i < val ? '★' : '☆';
+    s.innerHTML = i < val ? '&#9733;' : '&#9734;';
     s.classList.toggle('filled', i < val);
   });
 }
-
 function enviarFeedback() {
   var texto = (document.getElementById('feedback-texto').value || '').trim();
   if (!texto) { toast('Escreva uma mensagem antes de enviar.', 'error'); return; }
-
-  var catLabels = { sugestao:'[Sugestao]', bug:'[Bug]', elogio:'[Elogio]', outro:'[Outro]' };
-  var estrelas  = feedbackEstrela > 0 ? feedbackEstrela + '/5 estrelas' : 'Sem avaliacao';
-  var igreja    = (window.currentChurch && window.currentChurch.name) || 'Igreja nao identificada';
-  var usuario   = (currentProfile && currentProfile.name) || 'Usuario';
-  var plano     = (window.currentChurch && window.currentChurch.plan) || 'desconhecido';
-
-  var assunto = encodeURIComponent(
-    'Feedback Church App ' + (catLabels[feedbackCategoria] || '') + ' - ' + igreja
-  );
-
-  var corpo = encodeURIComponent(
-    'Categoria: ' + (catLabels[feedbackCategoria] || feedbackCategoria) + '
-' +
-    'Avaliacao: ' + estrelas + '
-' +
-    'Igreja: ' + igreja + '
-' +
-    'Usuario: ' + usuario + '
-' +
-    'Plano: ' + plano + '
-
-' +
-    'Mensagem:
-' + texto + '
-
-' +
-    '---
-Enviado pelo Church App'
-  );
-
-  window.location.href = 'mailto:getprojection@gmail.com?subject=' + assunto + '&body=' + corpo;
-
-  // Reset form
-  document.getElementById('feedback-texto').value = '';
-  feedbackEstrela = 0;
-  feedbackCategoria = 'sugestao';
-  document.querySelectorAll('.feedback-star').forEach(function(s) { s.textContent = '☆'; s.classList.remove('filled'); });
-  document.querySelectorAll('.feedback-cat-btn').forEach(function(b, i) { b.classList.toggle('active', i === 0); });
-
-  fecharFeedback();
-  toast('Obrigado pelo feedback! 🙏', 'success');
+  var btn = document.getElementById('btn-enviar-feedback');
+  if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
+  sb.from('feedbacks').insert({
+    church_id:   currentProfile ? currentProfile.church_id : null,
+    user_id:     currentUser ? currentUser.id : null,
+    church_name: (window.currentChurch && window.currentChurch.name) || '',
+    user_name:   currentProfile ? (currentProfile.name || '') : '',
+    plan:        (window.currentChurch && window.currentChurch.plan) || '',
+    categoria:   feedbackCategoria,
+    estrelas:    feedbackEstrela || null,
+    mensagem:    texto
+  }).then(function(res) {
+    if (btn) { btn.disabled = false; btn.innerHTML = '&#9993; Enviar Feedback'; }
+    if (res.error) { toast('Erro ao enviar: ' + res.error.message, 'error'); return; }
+    document.getElementById('feedback-texto').value = '';
+    feedbackEstrela = 0;
+    feedbackCategoria = 'sugestao';
+    document.querySelectorAll('.feedback-star').forEach(function(s) { s.innerHTML = '&#9734;'; s.classList.remove('filled'); });
+    document.querySelectorAll('.feedback-cat-btn').forEach(function(b, i) { b.classList.toggle('active', i === 0); });
+    fecharFeedback();
+    toast('Obrigado pelo feedback! &#128591;', 'success');
+  });
 }
+window.abrirFeedback    = abrirFeedback;
+window.fecharFeedback   = fecharFeedback;
+window.selecionarCatFeedback = selecionarCatFeedback;
+window.selecionarEstrela = selecionarEstrela;
+window.enviarFeedback   = enviarFeedback;
 
-// Mostrar botão de feedback quando logado
-window.mostrarBotaoFeedback = function() {
+// =============================================
+// FEEDBACK - SUPER ADMIN VE
+// =============================================
+function carregarFeedbacks() {
+  var lista = document.getElementById('sa-feedbacks-lista');
+  if (!lista) return;
+  lista.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">Carregando...</div>';
+  var filtro = (document.getElementById('sa-feedback-filter') || {}).value || '';
+  var query = sb.from('feedbacks').select('*').order('created_at', { ascending: false }).limit(100);
+  if (filtro) query = query.eq('categoria', filtro);
+  query.then(function(res) {
+    var items = res.data || [];
+    var total = items.length;
+    var comE = items.filter(function(f){ return f.estrelas; });
+    var media = comE.length ? (comE.reduce(function(s,f){ return s+f.estrelas; },0)/comE.length).toFixed(1) : '-';
+    var sug = items.filter(function(f){ return f.categoria==='sugestao'; }).length;
+    var bug = items.filter(function(f){ return f.categoria==='bug'; }).length;
+    var el = function(id){ return document.getElementById(id); };
+    if (el('fb-total'))    el('fb-total').textContent    = total;
+    if (el('fb-media'))    el('fb-media').textContent    = media;
+    if (el('fb-sugestoes'))el('fb-sugestoes').textContent= sug;
+    if (el('fb-bugs'))     el('fb-bugs').textContent     = bug;
+    var badge = el('sa-fb-badge');
+    if (badge && total > 0) { badge.textContent = total + ' total'; badge.style.display = 'inline-block'; }
+    if (!items.length) {
+      lista.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Nenhum feedback ainda.</div>';
+      return;
+    }
+    var catColors = { sugestao:'rgba(59,130,246,.1)', bug:'rgba(239,68,68,.1)', elogio:'rgba(16,185,129,.1)', outro:'rgba(107,114,128,.1)' };
+    var catBorder = { sugestao:'rgba(59,130,246,.25)', bug:'rgba(239,68,68,.2)', elogio:'rgba(16,185,129,.2)', outro:'rgba(107,114,128,.15)' };
+    lista.innerHTML = items.map(function(f) {
+      var cat = f.categoria || 'outro';
+      var est = f.estrelas ? ('&#9733;').repeat(f.estrelas) + ('&#9734;').repeat(5-f.estrelas) : '';
+      var dt  = new Date(f.created_at).toLocaleDateString('pt-BR', {day:'2-digit',month:'short',year:'numeric'});
+      return '<div style="background:' + (catColors[cat]||'var(--surface)') + ';border:1px solid ' + (catBorder[cat]||'var(--border)') + ';border-radius:12px;padding:16px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:8px">' +
+          '<div>' +
+            '<div style="font-weight:700;font-size:14px">' + escHtml(f.church_name||'Igreja') + '</div>' +
+            '<div style="font-size:12px;color:var(--muted)">' + escHtml(f.user_name||'') + (f.plan ? ' &middot; plano ' + f.plan : '') + '</div>' +
+          '</div>' +
+          '<div style="text-align:right">' +
+            (est ? '<div style="font-size:15px;color:var(--accent)">' + est + '</div>' : '') +
+            '<div style="font-size:11px;color:var(--muted)">' + dt + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="font-size:14px;line-height:1.6">' + escHtml(f.mensagem||'') + '</div>' +
+      '</div>';
+    }).join('');
+  });
+}
+window.carregarFeedbacks = carregarFeedbacks;
+
+// Mostrar botao feedback quando logado
+function mostrarBotaoFeedback() {
   var btn = document.getElementById('feedback-btn');
   if (btn) btn.style.display = 'block';
-};
+}
+window.mostrarBotaoFeedback = mostrarBotaoFeedback;
 
 // Iniciar app diretamente (scripts estao no final do body, DOM ja esta pronto)
 if (typeof initApp === 'function') {
@@ -10029,8 +9957,8 @@ window.toggleAjuda           = toggleAjuda;
 
 <!-- FEEDBACK BUTTON -->
 <div id="feedback-btn" style="display:none;position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));right:16px;z-index:500">
-  <button onclick="abrirFeedback()" style="width:48px;height:48px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(245,158,11,.4);display:flex;align-items:center;justify-content:center;font-size:20px;transition:transform .15s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-    💬
+  <button onclick="abrirFeedback()" title="Enviar Feedback" style="width:48px;height:48px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(245,158,11,.4);display:flex;align-items:center;justify-content:center;font-size:20px">
+    &#128172;
   </button>
 </div>
 
@@ -10043,35 +9971,29 @@ window.toggleAjuda           = toggleAjuda;
       <button class="modal-close" onclick="fecharFeedback()">&#10005;</button>
     </div>
     <div class="modal-body" style="padding:20px 24px">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Sua opinião ajuda a melhorar o Church App. Obrigado! 🙏</p>
-
-      <!-- Categoria -->
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Sua opiniao ajuda a melhorar o Church App. Obrigado! &#128591;</p>
       <div class="form-group" style="margin-bottom:14px">
-        <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:block">Categoria</label>
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Categoria</label>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="feedback-cat-btn active" data-cat="sugestao" onclick="selecionarCatFeedback(this)">💡 Sugestão</button>
-          <button class="feedback-cat-btn" data-cat="bug" onclick="selecionarCatFeedback(this)">🐛 Bug</button>
-          <button class="feedback-cat-btn" data-cat="elogio" onclick="selecionarCatFeedback(this)">⭐ Elogio</button>
-          <button class="feedback-cat-btn" data-cat="outro" onclick="selecionarCatFeedback(this)">💬 Outro</button>
+          <button class="feedback-cat-btn active" data-cat="sugestao" onclick="selecionarCatFeedback(this)">&#128161; Sugestao</button>
+          <button class="feedback-cat-btn" data-cat="bug" onclick="selecionarCatFeedback(this)">&#128027; Bug</button>
+          <button class="feedback-cat-btn" data-cat="elogio" onclick="selecionarCatFeedback(this)">&#11088; Elogio</button>
+          <button class="feedback-cat-btn" data-cat="outro" onclick="selecionarCatFeedback(this)">&#128172; Outro</button>
         </div>
       </div>
-
-      <!-- Avaliação -->
       <div class="form-group" style="margin-bottom:14px">
-        <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:block">Como você avalia o Church App?</label>
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Avaliacao (1-5 estrelas)</label>
         <div id="feedback-stars" style="display:flex;gap:6px">
-          <button class="feedback-star" data-val="1" onclick="selecionarEstrela(1)">☆</button>
-          <button class="feedback-star" data-val="2" onclick="selecionarEstrela(2)">☆</button>
-          <button class="feedback-star" data-val="3" onclick="selecionarEstrela(3)">☆</button>
-          <button class="feedback-star" data-val="4" onclick="selecionarEstrela(4)">☆</button>
-          <button class="feedback-star" data-val="5" onclick="selecionarEstrela(5)">☆</button>
+          <button class="feedback-star" data-val="1" onclick="selecionarEstrela(1)">&#9734;</button>
+          <button class="feedback-star" data-val="2" onclick="selecionarEstrela(2)">&#9734;</button>
+          <button class="feedback-star" data-val="3" onclick="selecionarEstrela(3)">&#9734;</button>
+          <button class="feedback-star" data-val="4" onclick="selecionarEstrela(4)">&#9734;</button>
+          <button class="feedback-star" data-val="5" onclick="selecionarEstrela(5)">&#9734;</button>
         </div>
       </div>
-
-      <!-- Mensagem -->
       <div class="form-group" style="margin-bottom:0">
-        <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:block">Mensagem</label>
-        <textarea id="feedback-texto" rows="4" placeholder="Descreva sua sugestão, problema ou elogio..." style="resize:vertical;min-height:100px"></textarea>
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Mensagem</label>
+        <textarea id="feedback-texto" rows="4" placeholder="Descreva sua sugestao, problema ou elogio..." style="resize:vertical;min-height:100px"></textarea>
       </div>
     </div>
     <div class="modal-footer" style="padding:14px 24px 20px">
