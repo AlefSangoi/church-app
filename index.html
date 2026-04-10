@@ -1321,20 +1321,20 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
       </div>
     </details>
 
-    <!-- Tabela de clientes -->
-    <div class="admin-table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Igreja</th><th>Admin / Contato</th><th>Plano</th>
-            <th>Valor/mes</th><th>Status</th><th>Vencimento</th>
-            <th>Dias</th><th>Usuarios</th><th>Limites</th><th>Acoes</th>
-          </tr>
-        </thead>
-        <tbody id="sa-churches-body">
-          <tr><td colspan="11" style="text-align:center;padding:40px;color:var(--muted)">Carregando...</td></tr>
-        </tbody>
-      </table>
+    <!-- Clientes -->
+    <div style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Clientes</div>
+      <select id="sa-filter-status-top" onchange="document.getElementById('sa-filter-status').value=this.value;initSuperAdmin()" style="padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px">
+        <option value="">Todos</option>
+        <option value="trial">Trial</option>
+        <option value="active">Ativos</option>
+        <option value="full">Isentos</option>
+        <option value="overdue">Inadimplentes</option>
+      </select>
+    </div>
+    <div id="sa-churches-body" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+      <div style="text-align:center;padding:40px;color:var(--muted)">Carregando...</div>
+    </div>
 
     <!-- FEEDBACKS DOS CLIENTES -->
     <details id="sa-feedbacks-details" style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;margin-bottom:20px;overflow:hidden">
@@ -7605,6 +7605,7 @@ function carregarChurches() {
 
 function renderSATable(lista) {
   var tbody = document.getElementById('sa-churches-body');
+  if (!tbody) return;
 
   // Stats
   var total   = lista.length;
@@ -7645,6 +7646,7 @@ function renderSATable(lista) {
     var statusLabels = { trial:'Trial', active:'Ativo', full:'Isento', overdue:'Inadimplente', cancelled:'Cancelado' };
     var statusColors = { trial:'#f59e0b', active:'#10b981', full:'#10b981', overdue:'#ef4444', cancelled:'#6b7280' };
     var statusBg     = { trial:'rgba(245,158,11,.15)', active:'rgba(16,185,129,.15)', full:'rgba(16,185,129,.15)', overdue:'rgba(239,68,68,.15)', cancelled:'rgba(107,114,128,.15)' };
+    var planColors   = { trial:'#f59e0b', basico:'#3b82f6', essencial:'#8b5cf6', profissional:'#f97316', premium:'#10b981', free:'#6b7280', isento:'#10b981' };
 
     // Verificar carência (overdue mas dentro de 3 dias)
     if (status === 'overdue' && c.plan_expires_at) {
@@ -7667,48 +7669,54 @@ function renderSATable(lista) {
       else { diasStr = dias + ' dias'; diasColor = '#10b981'; }
     }
 
-    return '<tr>' +
-      // Igreja + link
-      '<td style="max-width:160px">' +
-        '<div style="font-weight:700;font-size:13px;margin-bottom:2px">' + c.name + '</div>' +
-        '<a href="' + link + '" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none">/' + slug + '</a>' +
-        (c.notes ? '<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic">' + c.notes + '</div>' : '') +
-      '</td>' +
-      // Admin + botão cobrar
-      '<td style="font-size:12px">' +
-        '<div style="color:var(--muted);margin-bottom:4px">' + (c.owner_email||'-') + '</div>' +
-        (c.owner_email && c.owner_email !== '-' ?
-          '<button class="btn-cobrar-pix" data-email="' + c.owner_email + '" data-name="' + c.name + '" data-valor="' + valor.toFixed(2) + '" ' +
-          'style="background:rgba(37,211,102,.15);color:#25d366;border:1px solid rgba(37,211,102,.3);padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">' +
-          'PIX Cobrar</button>' : '') +
-      '</td>' +
-      // Plano
-      '<td><span style="font-size:12px;font-weight:600">' + (c.plan||'free').toUpperCase() + '</span></td>' +
-      // Valor
-      '<td style="font-weight:700;color:' + (valor > 0 ? '#10b981' : 'var(--muted)') + ';font-size:13px">' +
-        (valor > 0 ? 'R$ ' + valor.toFixed(2) : 'Gratis') +
-      '</td>' +
-      // Status badge
-      '<td><span style="background:' + (statusBg[status]||'rgba(107,114,128,.15)') + ';color:' + (statusColors[status]||'#6b7280') + ';padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">' +
-        (statusLabels[status]||status) +
-      '</span></td>' +
-      // Vencimento
-      '<td style="font-size:12px;color:var(--muted)">' + (c.plan_expires_at ? new Date(c.plan_expires_at).toLocaleDateString('pt-BR') : '-') + '</td>' +
-      // Dias
-      '<td style="font-weight:700;font-size:12px;color:' + diasColor + '">' + diasStr + '</td>' +
-      // Usuarios
-      '<td style="text-align:center;font-size:13px">' + (c.user_count||0) + '</td>' +
-      // Acoes
-      '<td style="white-space:nowrap">' +
-        '<button class="btn btn-secondary btn-sm sa-edit-btn" ' +
-          'data-id="' + c.id + '" data-name="' + c.name + '" data-plan="' + (c.plan||'free') + '" ' +
-          'data-value="' + valor + '" data-status="' + status + '" ' +
-          'data-expires="' + (c.plan_expires_at||'').slice(0,10) + '" ' +
-          'data-notes="' + (c.notes||'').replace(/"/g,"'") + '" ' +
-          'style="margin-right:4px">&#9998; Editar</button>' +
-        '<button class="btn btn-danger btn-sm sa-del-btn" data-id="' + c.id + '" data-name="' + c.name + '">&#128465;</button>' +
-      '</td>' +
-    '</tr>';
+    var planColor = planColors[c.plan] || '#6b7280';
+    var planUp = (c.plan||'free').toUpperCase();
+    return '<div style="background:var(--surface);border:1px solid var(--border);border-left:4px solid ' + planColor + ';border-radius:12px;padding:14px 16px">' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap">' +
+        '<div>' +
+          '<div style="font-weight:700;font-size:15px;margin-bottom:2px">' + c.name + '</div>' +
+          '<a href="' + link + '" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none">/' + slug + '</a>' +
+          (c.notes ? '<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic">' + c.notes + '</div>' : '') +
+        '</div>' +
+        '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex-shrink:0">' +
+          '<span style="background:' + (statusBg[status]||'rgba(107,114,128,.15)') + ';color:' + (statusColors[status]||'#6b7280') + ';padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">' + (statusLabels[status]||status) + '</span>' +
+          '<span style="font-weight:700;font-size:12px;color:' + diasColor + '">' + diasStr + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px;margin-bottom:10px">' +
+        '<div style="background:var(--surface2);border-radius:8px;padding:7px 10px">' +
+          '<div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Plano</div>' +
+          '<div style="font-weight:700;font-size:13px;color:' + planColor + '">' + planUp + '</div>' +
+        '</div>' +
+        '<div style="background:var(--surface2);border-radius:8px;padding:7px 10px">' +
+          '<div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Valor/mes</div>' +
+          '<div style="font-weight:700;font-size:13px;color:' + (valor > 0 ? '#10b981' : 'var(--muted)') + '">' + (valor > 0 ? 'R$ ' + valor.toFixed(2) : 'Gratis') + '</div>' +
+        '</div>' +
+        '<div style="background:var(--surface2);border-radius:8px;padding:7px 10px">' +
+          '<div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Usuarios</div>' +
+          '<div style="font-weight:700;font-size:13px">' + (c.user_count||0) + '</div>' +
+        '</div>' +
+        '<div style="background:var(--surface2);border-radius:8px;padding:7px 10px">' +
+          '<div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Vencimento</div>' +
+          '<div style="font-weight:600;font-size:12px">' + (c.plan_expires_at ? new Date(c.plan_expires_at).toLocaleDateString('pt-BR') : '-') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">' +
+        '<div style="font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px">' + (c.owner_email||'-') + '</div>' +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap">' +
+          (c.owner_email && c.owner_email !== '-' ?
+            '<button class="btn-cobrar-pix" data-email="' + c.owner_email + '" data-name="' + c.name + '" data-valor="' + valor.toFixed(2) + '" ' +
+            'style="background:rgba(37,211,102,.15);color:#25d366;border:1px solid rgba(37,211,102,.3);padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">PIX</button>' : '') +
+          '<button class="btn btn-secondary btn-sm sa-edit-btn" ' +
+            'data-id="' + c.id + '" data-name="' + c.name + '" data-plan="' + (c.plan||'free') + '" ' +
+            'data-value="' + valor + '" data-status="' + status + '" ' +
+            'data-expires="' + (c.plan_expires_at||'').slice(0,10) + '" ' +
+            'data-notes="' + (c.notes||'').replace(/"/g,"'") + '" ' +
+            '>&#9998; Editar</button>' +
+          '<button class="btn btn-danger btn-sm sa-del-btn" data-id="' + c.id + '" data-name="' + c.name + '">&#128465;</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
   }).join('');
 
   // Listener PIX
@@ -8640,30 +8648,58 @@ function gerarPDFSermao(sermon) {
   document.getElementById('btn-pdf-close').addEventListener('click', function() { overlay.remove(); });
 
   document.getElementById('btn-pdf-print').addEventListener('click', function() {
-    // Mobile-friendly: use Blob + iframe para evitar popup blocker
+    var titulo = (sermon.titulo || 'esboco').toLowerCase().replace(/[^a-z0-9]/g,'-').slice(0,30);
     var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">' +
       '<meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<title>' + (sermon.titulo || 'Esboco') + '</title>' +
       '<style>' +
-      'body{font-family:Arial,sans-serif;font-size:14px;margin:16px;padding:0;color:#111}' +
-      'p{margin:4px 0;line-height:1.7}hr{border:none;border-top:1px dashed #ddd;margin:12px 0}' +
-      '@media print{.btn-area{display:none}@page{margin:12mm}}' +
-      '.btn-area{text-align:center;padding:16px;background:#f9f9f9;border-top:1px solid #eee;position:sticky;bottom:0}' +
-      '.bp{background:#f59e0b;color:#000;border:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-right:8px}' +
-      '.bf{background:#ddd;color:#333;border:none;padding:12px 16px;border-radius:8px;font-size:14px;cursor:pointer}' +
+      'body{font-family:Arial,sans-serif;font-size:14px;margin:20px;color:#111;background:#fff}' +
+      'p{margin:4px 0;line-height:1.7}hr{border:none;border-top:1px dashed #ccc;margin:12px 0}' +
+      'h1,h2,h3{margin:8px 0}' +
+      '.no-print{display:none}' +
+      '@media print{@page{margin:15mm}body{margin:0}}' +
       '</style></head><body>' +
       body.innerHTML +
-      '<div class="btn-area">' +
-        '<button class="bp" onclick="window.print()">&#128196; Salvar PDF</button>' +
-        '<button class="bf" onclick="window.close()">Fechar</button>' +
-      '</div></body></html>';
-    var blob = new Blob([html], { type: 'text/html' });
-    var url  = URL.createObjectURL(blob);
-    var a    = document.createElement('a');
-    a.href   = url;
-    a.target = '_blank';
-    a.click();
-    setTimeout(function() { URL.revokeObjectURL(url); }, 3000);
+      '</body></html>';
+
+    // Detectar iOS (nao suporta download de blob)
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    if (isIOS || isSafari) {
+      // iOS/Safari: abre em nova aba, usuario usa "Compartilhar > Imprimir" para salvar PDF
+      var blob = new Blob([html], { type: 'text/html' });
+      var url  = URL.createObjectURL(blob);
+      var w = window.open(url, '_blank');
+      if (!w) {
+        // Fallback: iframe
+        var iframe = document.createElement('iframe');
+        iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:99999;background:#fff';
+        iframe.srcdoc = html;
+        document.body.appendChild(iframe);
+        var closeBtn = document.createElement('button');
+        closeBtn.textContent = 'X Fechar';
+        closeBtn.style.cssText = 'position:fixed;top:10px;right:10px;z-index:999999;background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer';
+        closeBtn.onclick = function() { iframe.remove(); closeBtn.remove(); };
+        document.body.appendChild(closeBtn);
+        toast('Toque nos 3 pontinhos > Imprimir para salvar como PDF', 'success');
+      } else {
+        toast('Na nova aba: toque em Compartilhar > Imprimir > Salvar PDF', 'success');
+      }
+      setTimeout(function() { URL.revokeObjectURL(url); }, 10000);
+    } else {
+      // Android/Desktop: download direto
+      var blob = new Blob([html], { type: 'text/html' });
+      var url  = URL.createObjectURL(blob);
+      var a    = document.createElement('a');
+      a.href   = url;
+      a.download = titulo + '.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(url); }, 3000);
+      toast('Arquivo baixado! Abra no Chrome e imprima como PDF.', 'success');
+    }
   });
 }
 
