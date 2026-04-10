@@ -16,6 +16,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -8627,11 +8629,11 @@ function gerarPDFSermao(sermon) {
   modal.style.cssText = 'background:#fff;border-radius:16px;width:100%;max-width:740px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)';
 
   var header = document.createElement('div');
-  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #eee;flex-shrink:0;background:#fff';
+  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #eee;flex-shrink:0;background:#fff;gap:8px;flex-wrap:wrap';
   header.innerHTML =
     '<div style="font-weight:700;font-size:15px;color:#111">Esboço de Pregacao</div>' +
     '<div style="display:flex;gap:8px">' +
-      '<button id="btn-pdf-print" style="background:#f59e0b;color:#000;border:none;padding:8px 20px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer">Imprimir / PDF</button>' +
+      '<button id="btn-pdf-download" style="background:#f59e0b;color:#000;border:none;padding:8px 18px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">&#128196; Baixar PDF</button>' +
       '<button id="btn-pdf-close" style="background:#f1f5f9;color:#333;border:none;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer">Fechar</button>' +
     '</div>';
 
@@ -8647,62 +8649,75 @@ function gerarPDFSermao(sermon) {
   overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
   document.getElementById('btn-pdf-close').addEventListener('click', function() { overlay.remove(); });
 
-  document.getElementById('btn-pdf-print').addEventListener('click', function() {
-    var titulo = (sermon.titulo || 'esboco').toLowerCase().replace(/[^a-z0-9]/g,'-').slice(0,30);
-    var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">' +
-      '<meta name="viewport" content="width=device-width,initial-scale=1">' +
-      '<title>' + (sermon.titulo || 'Esboco') + '</title>' +
-      '<style>' +
-      'body{font-family:Arial,sans-serif;font-size:14px;margin:20px;color:#111;background:#fff}' +
-      'p{margin:4px 0;line-height:1.7}hr{border:none;border-top:1px dashed #ccc;margin:12px 0}' +
-      'h1,h2,h3{margin:8px 0}' +
-      '.no-print{display:none}' +
-      '@media print{@page{margin:15mm}body{margin:0}}' +
-      '</style></head><body>' +
-      body.innerHTML +
-      '</body></html>';
+  document.getElementById('btn-pdf-download').addEventListener('click', function() {
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '&#9203; Gerando...';
 
-    // Detectar iOS (nao suporta download de blob)
-    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    var titulo = (sermon.titulo || 'Esboco').replace(/[*#-]+/g, '').trim() || 'Esboco';
+    var filename = titulo.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '-').slice(0,40) + '.pdf';
 
-    if (isIOS || isSafari) {
-      // iOS/Safari: abre em nova aba, usuario usa "Compartilhar > Imprimir" para salvar PDF
-      var blob = new Blob([html], { type: 'text/html' });
-      var url  = URL.createObjectURL(blob);
-      var w = window.open(url, '_blank');
-      if (!w) {
-        // Fallback: iframe
-        var iframe = document.createElement('iframe');
-        iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:99999;background:#fff';
-        iframe.srcdoc = html;
-        document.body.appendChild(iframe);
-        var closeBtn = document.createElement('button');
-        closeBtn.textContent = 'X Fechar';
-        closeBtn.style.cssText = 'position:fixed;top:10px;right:10px;z-index:999999;background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer';
-        closeBtn.onclick = function() { iframe.remove(); closeBtn.remove(); };
-        document.body.appendChild(closeBtn);
-        toast('Toque nos 3 pontinhos > Imprimir para salvar como PDF', 'success');
-      } else {
-        toast('Na nova aba: toque em Compartilhar > Imprimir > Salvar PDF', 'success');
+    // Usar html2canvas + jsPDF
+    var jsPDF = window.jspdf && window.jspdf.jsPDF;
+    if (!jsPDF || !window.html2canvas) {
+      // Fallback: window.print()
+      var printWin = window.open('', '_blank');
+      if (printWin) {
+        printWin.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + titulo + '</title>' +
+          '<style>body{font-family:Arial,sans-serif;font-size:13px;margin:20px;color:#111}p{margin:3px 0;line-height:1.6}hr{border:none;border-top:1px dashed #ccc;margin:10px 0}@media print{@page{margin:12mm}}</style>' +
+          '</head><body>' + body.innerHTML + '</body></html>');
+        printWin.document.close();
+        printWin.focus();
+        setTimeout(function() { printWin.print(); }, 500);
       }
-      setTimeout(function() { URL.revokeObjectURL(url); }, 10000);
-    } else {
-      // Android/Desktop: download direto
-      var blob = new Blob([html], { type: 'text/html' });
-      var url  = URL.createObjectURL(blob);
-      var a    = document.createElement('a');
-      a.href   = url;
-      a.download = titulo + '.html';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(function() { URL.revokeObjectURL(url); }, 3000);
-      toast('Arquivo baixado! Abra no Chrome e imprima como PDF.', 'success');
+      btn.disabled = false;
+      btn.innerHTML = '&#128196; Baixar PDF';
+      return;
     }
+
+    // Clone body content para renderização limpa
+    var clone = document.createElement('div');
+    clone.style.cssText = 'position:absolute;left:-9999px;top:0;width:700px;background:#fff;padding:20px;font-family:Arial,sans-serif;font-size:13px;color:#111;line-height:1.6';
+    clone.innerHTML = body.innerHTML;
+    document.body.appendChild(clone);
+
+    html2canvas(clone, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      windowWidth: 740
+    }).then(function(canvas) {
+      document.body.removeChild(clone);
+      var imgData = canvas.toDataURL('image/jpeg', 0.92);
+      var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      var pageW = doc.internal.pageSize.getWidth();
+      var pageH = doc.internal.pageSize.getHeight();
+      var margin = 10;
+      var imgW = pageW - margin * 2;
+      var imgH = (canvas.height * imgW) / canvas.width;
+      var y = margin;
+
+      // Paginar se necessário
+      while (y < imgH + margin) {
+        if (y > margin) doc.addPage();
+        doc.addImage(imgData, 'JPEG', margin, y > margin ? -(y - margin) + margin : margin, imgW, imgH);
+        y += pageH - margin * 2;
+      }
+
+      doc.save(filename);
+      btn.disabled = false;
+      btn.innerHTML = '&#128196; Baixar PDF';
+      toast('PDF baixado!', 'success');
+    }).catch(function(err) {
+      document.body.removeChild(clone);
+      console.error(err);
+      // Fallback simples
+      window.print();
+      btn.disabled = false;
+      btn.innerHTML = '&#128196; Baixar PDF';
+    });
   });
 }
-
 
 function _gerarPDFSermao(sermon) {
   var jsPDF = window.jspdf && window.jspdf.jsPDF || window.jsPDF;
