@@ -1123,6 +1123,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   .modal-footer { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
 }
 
+
+/* FEEDBACK */
+.feedback-cat-btn{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--font-body)}
+.feedback-cat-btn.active,.feedback-cat-btn:hover{background:rgba(245,158,11,.15);border-color:var(--accent);color:var(--accent)}
+.feedback-star{background:none;border:none;font-size:28px;cursor:pointer;color:var(--muted);padding:0 2px;transition:transform .1s;line-height:1}
+.feedback-star.filled{color:var(--accent)}
+.feedback-star:hover{transform:scale(1.2)}
+@media(max-width:768px){#feedback-btn{bottom:calc(72px + env(safe-area-inset-bottom) + 8px)}}
 </style>
 </head>
 <body>
@@ -9318,15 +9326,6 @@ function gerarPDFSermao(sermon) {
     w.document.write('.bp{background:#f59e0b;color:#000;border:none;padding:10px 24px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;margin-right:8px}');
     w.document.write('.bf{background:#ddd;color:#333;border:none;padding:10px 14px;border-radius:6px;font-size:13px;cursor:pointer}');
     w.document.write('@media print{.btn-area{display:none}@page{margin:12mm}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}');
-    w.document.write('
-/* FEEDBACK */
-.feedback-cat-btn{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--font-body)}
-.feedback-cat-btn.active,.feedback-cat-btn:hover{background:rgba(245,158,11,.15);border-color:var(--accent);color:var(--accent)}
-.feedback-star{background:none;border:none;font-size:28px;cursor:pointer;color:var(--muted);padding:0 2px;transition:transform .1s;line-height:1}
-.feedback-star.filled{color:var(--accent)}
-.feedback-star:hover{transform:scale(1.2)}
-@media(max-width:768px){#feedback-btn{bottom:calc(72px + env(safe-area-inset-bottom) + 8px)}}
-
 </style></head><body>');
     w.document.write(body.innerHTML);
     w.document.write('<div class="btn-area"><button class="bp" onclick="window.print()">Imprimir / Salvar PDF</button>');
