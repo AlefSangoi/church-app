@@ -298,10 +298,11 @@ body.sidebar-collapsed #main-content{margin-left:64px}
 .modal-header{padding:24px 28px 20px;border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:12px}
 .modal-header h3{font-size:18px;font-weight:700;flex:1}
-.modal-close{width:32px;height:32px;border-radius:8px;background:var(--surface2);border:none;
-  cursor:pointer;color:var(--muted);font-size:16px;display:flex;align-items:center;
+.modal-close{width:36px;height:36px;border-radius:8px;background:var(--surface2);border:none;
+  cursor:pointer;color:var(--muted);font-size:18px;display:flex;align-items:center;
   justify-content:center;transition:all .15s}
 .modal-close:hover{color:var(--text);background:var(--border)}
+.modal-drag-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:10px auto 0;display:none}
 .modal-body{padding:24px 28px}
 .modal-footer{padding:16px 28px 24px;border-top:1px solid var(--border);
   display:flex;justify-content:flex-end;gap:10px}
@@ -1007,6 +1008,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 }
 
 @media(max-width: 768px) {
+  /* Drag handle visible on mobile */
+  .modal-drag-handle { display: block !important; }
+
+  /* Close button maior no mobile */
+  .modal-close { width: 44px !important; height: 44px !important; font-size: 20px !important; }
+
   /* Show bottom nav, hide sidebar */
   #bottom-nav { display: flex; }
   #sidebar { display: none !important; }
@@ -2890,9 +2897,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 <!-- SERVICE DETAIL MODAL -->
 <div id="service-modal" class="modal-overlay hidden">
   <div class="modal">
+    <div class="modal-drag-handle"></div>
     <div class="modal-header">
       <h3 id="svc-modal-title">Culto</h3>
-      <button class="modal-close" id="btn-close-service-modal">X</button>
+      <button class="modal-close" id="btn-close-service-modal">&#10005;</button>
     </div>
     <div class="modal-body" id="svc-modal-body"></div>
     <div class="modal-footer" id="svc-modal-footer"></div>
@@ -5272,6 +5280,12 @@ function openServiceModal(id) {
 }
 
 document.getElementById('btn-close-service-modal').addEventListener('click', closeServiceModal);
+
+// Fechar clicando no overlay (fora do modal)
+document.getElementById('service-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeServiceModal();
+});
+
 function closeServiceModal() {
   document.getElementById('service-modal').classList.add('hidden');
 }
@@ -9688,6 +9702,21 @@ document.addEventListener('click', function(e) {
 // =============================================
 // INICIALIZAR APP - chamado após todos os scripts
 // =============================================
+// Swipe down para fechar modal no mobile
+(function() {
+  var modal = document.getElementById('service-modal');
+  if (!modal) return;
+  var startY = 0;
+  var modalBox = modal.querySelector('.modal');
+  modal.addEventListener('touchstart', function(e) {
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  modal.addEventListener('touchend', function(e) {
+    var dy = e.changedTouches[0].clientY - startY;
+    if (dy > 80) closeServiceModal(); // swipe down 80px = fechar
+  }, { passive: true });
+})();
+
 // Iniciar app diretamente (scripts estao no final do body, DOM ja esta pronto)
 if (typeof initApp === 'function') {
   initApp();
