@@ -1008,6 +1008,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 }
 
 @media(max-width: 768px) {
+  /* Show plan card on mobile profile page */
+  #mobile-plano-card { display: block !important; }
+
   /* Drag handle visible on mobile */
   .modal-drag-handle { display: block !important; }
 
@@ -2670,6 +2673,22 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         </div>
         <button class="btn btn-primary" style="width:auto" id="btn-save-profile">Salvar dados</button>
 
+        <!-- PLANO - visível no mobile -->
+        <div id="mobile-plano-card" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:24px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Plano Atual</div>
+            <button onclick="abrirModalPlanos()" style="background:var(--accent);color:#000;border:none;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">Ver planos</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <span id="mobile-plano-nome" style="font-size:16px;font-weight:700;color:var(--accent)">-</span>
+            <span id="mobile-plano-dias" style="font-size:13px;color:var(--muted)"></span>
+          </div>
+          <div style="height:6px;background:var(--surface2);border-radius:100px;overflow:hidden;margin-bottom:6px">
+            <div id="mobile-plano-bar" style="height:100%;border-radius:100px;background:var(--accent);width:0%;transition:width .4s"></div>
+          </div>
+          <div id="mobile-plano-hint" style="font-size:11px;color:var(--muted)"></div>
+        </div>
+
         <div style="border-top:1px solid var(--border);margin:28px 0"></div>
         <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Alterar Senha</h3>
         <div class="form-group">
@@ -4096,6 +4115,16 @@ function atualizarBadgePlanoSidebar(church) {
   }
 
   badge.style.display = 'block';
+
+  // Sincronizar com card mobile no perfil
+  var mNome = document.getElementById('mobile-plano-nome');
+  var mDias = document.getElementById('mobile-plano-dias');
+  var mBar  = document.getElementById('mobile-plano-bar');
+  var mHint = document.getElementById('mobile-plano-hint');
+  if (mNome) { mNome.textContent = plano.label; mNome.style.color = plan === 'isento' ? '#10b981' : 'var(--accent)'; }
+  if (mDias && diasTxt !== undefined) { mDias.textContent = diasTxt || (plan === 'isento' ? 'Acesso completo' : ''); }
+  if (mBar  && typeof pct !== 'undefined') { mBar.style.width = (plan === 'isento' ? 100 : pct) + '%'; mBar.style.background = plan === 'isento' ? '#10b981' : cor; }
+  if (mHint && hintEl) mHint.textContent = hintEl.textContent || '';
 }
 
 // =============================================
