@@ -1230,6 +1230,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
               </div>
             </div>
             <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px">
+              <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
+                Claude AI <span id="badge-renov-claude" style="display:none;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700"></span>
+              </div>
+              <div style="display:flex;gap:8px">
+                <div style="flex:1"><label style="display:block;font-size:10px;color:var(--muted);margin-bottom:3px">Valor (R$)</label>
+                  <input type="number" id="custo-claude" placeholder="0.00" step="0.01" min="0" oninput="atualizarMetricas()"
+                    style="width:100%;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px"/></div>
+                <div style="flex:1"><label style="display:block;font-size:10px;color:var(--muted);margin-bottom:3px">Renovação</label>
+                  <input type="date" id="renov-claude"
+                    style="width:100%;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px"/></div>
+              </div>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px">
               <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Outros</div>
               <label style="display:block;font-size:10px;color:var(--muted);margin-bottom:3px">Valor (R$)</label>
               <input type="number" id="custo-outros" placeholder="0.00" step="0.01" min="0" oninput="atualizarMetricas()"
@@ -3049,9 +3062,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 <script>
 
 // ===== config.js =====
-(function() {
-
-// =============================================
 // CONFIGURACAO SUPABASE
 // =============================================
 var SUPABASE_URL = 'https://gupbbjhbxmnkaizzjwqn.supabase.co';
@@ -3108,18 +3118,9 @@ var editingServiceId = null;
 var editingUserId = null;
 
 // Expor estado globalmente para todos os módulos
-window.currentUser       = currentUser;
-window.currentProfile    = currentProfile;
-window.currentMonth      = currentMonth;
-window.allServices       = allServices;
-window.editingServiceId  = editingServiceId;
 window.editingUserId     = editingUserId;
 
-// Getters/setters para manter sincronia entre arquivos
-Object.defineProperty(window, 'currentUser', {
-  get: function() { return currentUser; },
-  set: function(v) { currentUser = v; }
-});
+
 Object.defineProperty(window, 'currentProfile', {
   get: function() { return currentProfile; },
   set: function(v) { currentProfile = v; }
@@ -3239,19 +3240,16 @@ window.VERSICULOS        = VERSICULOS;
 window.mostrarVersiculo  = mostrarVersiculo;
 window.toast             = toast;
 
-})();
-
 
 // ===== helpers.js =====
-(function() {
-  var startX = 0;
-  var sidebar = document.getElementById('sidebar');
+// swipe gesture
+var startX = 0;
+var _swipeSidebar = document.getElementById('sidebar');
   sidebar.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
   sidebar.addEventListener('touchend', function(e) {
     var dx = e.changedTouches[0].clientX - startX;
     if (dx < -60) toggleSidebar(true); // swipe esquerda = fechar
   }, { passive: true });
-})();
 
 // Botao colapsar sidebar (apenas desktop)
 document.getElementById('btn-collapse').addEventListener('click', function() {
@@ -3400,6 +3398,10 @@ document.addEventListener('keydown', function(e) {
   // 2. Fecha modal de planos
   var planosModal = document.getElementById('modal-planos');
   if (planosModal) { planosModal.remove(); return; }
+
+  // 2b. Fecha modal de esboço (sermao-modal se existir)
+  var sermaoModal = document.getElementById('modal-sermao-view');
+  if (sermaoModal) { sermaoModal.remove(); return; }
 
   // 3. Fecha modal de escala em massa
   var massaModal = document.getElementById('modal-escala-massa');
@@ -5445,13 +5447,15 @@ function saveTeam(serviceId, teamId) {
   var updates = {};
 
   if (r === 'admin' || (r === 'lider' && dept === 'louvor')) {
-    updates.worship_pastor       = val('edit-pastor') || '';
+    var pastorVal = val('edit-pastor') || '';
+    if (pastorVal) updates.worship_pastor = pastorVal;
     updates.worship_band         = val('edit-band') || '';
     updates.worship_repertoire   = val('edit-repertoire') || '';
     updates.worship_dress_code   = val('edit-dresscode') || '';
     updates.worship_vocais       = getListFromUI('vocais');
     updates.worship_teclado      = getListFromUI('teclado');
-    updates.worship_violao       = getListFromUI('violao');
+    var violaoVal = getListFromUI('violao');
+    if (violaoVal) updates.worship_violao = violaoVal;
     updates.worship_guitarra     = getListFromUI('guitarra');
     updates.worship_bateria      = getListFromUI('bateria');
     updates.worship_baixo        = getListFromUI('baixo');
@@ -5607,8 +5611,8 @@ document.getElementById('btn-save-service').addEventListener('click', function()
     created_by: currentUser.id
   };
 
+  var pastorSvcVal = (document.getElementById('new-svc-pastor') || {}).value || '';
   var teamData = {
-    worship_pastor:      document.getElementById('new-svc-pastor').value,
     worship_band:        document.getElementById('new-svc-band').value,
     worship_repertoire:  document.getElementById('new-svc-repertoire').value,
     worship_dress_code:  document.getElementById('new-svc-dresscode').value,
@@ -5619,6 +5623,8 @@ document.getElementById('btn-save-service').addEventListener('click', function()
     notes:               document.getElementById('new-svc-notes').value,
     updated_by:          currentUser.id
   };
+
+  if (pastorSvcVal) teamData.worship_pastor = pastorSvcVal;
 
   if (editingServiceId) {
     sb.from('services').update(serviceData).eq('id', editingServiceId).then(function(res) {
@@ -7406,9 +7412,9 @@ function renderSATable(lista) {
     var link   = window.location.origin + '/' + slug;
     var valor  = parseFloat(c.plan_value) || 0;
     var status = c.plan_status || 'trial';
-    var statusLabels = { trial:'Trial', active:'Ativo', overdue:'Inadimplente', cancelled:'Cancelado' };
-    var statusColors = { trial:'#f59e0b', active:'#10b981', overdue:'#ef4444', cancelled:'#6b7280' };
-    var statusBg     = { trial:'rgba(245,158,11,.15)', active:'rgba(16,185,129,.15)', overdue:'rgba(239,68,68,.15)', cancelled:'rgba(107,114,128,.15)' };
+    var statusLabels = { trial:'Trial', active:'Ativo', full:'Isento', overdue:'Inadimplente', cancelled:'Cancelado' };
+    var statusColors = { trial:'#f59e0b', active:'#10b981', full:'#10b981', overdue:'#ef4444', cancelled:'#6b7280' };
+    var statusBg     = { trial:'rgba(245,158,11,.15)', active:'rgba(16,185,129,.15)', full:'rgba(16,185,129,.15)', overdue:'rgba(239,68,68,.15)', cancelled:'rgba(107,114,128,.15)' };
 
     // Verificar carência (overdue mas dentro de 3 dias)
     if (status === 'overdue' && c.plan_expires_at) {
@@ -8522,9 +8528,11 @@ function carregarCustosSalvos() {
       var el = function(id) { return document.getElementById(id); };
       if (el('custo-netlify'))        el('custo-netlify').value        = d.netlify        || 0;
       if (el('custo-supabase'))       el('custo-supabase').value       = d.supabase       || 0;
+      if (el('custo-claude'))         el('custo-claude').value         = d.claude         || 0;
       if (el('custo-outros'))         el('custo-outros').value         = d.outros         || 0;
       if (el('renov-netlify'))        el('renov-netlify').value        = d.renov_netlify  || '';
       if (el('renov-supabase'))       el('renov-supabase').value       = d.renov_supabase || '';
+      if (el('renov-claude'))         el('renov-claude').value         = d.renov_claude   || '';
     }
   } catch(e) {}
   atualizarMetricas();
@@ -8534,9 +8542,11 @@ function salvarCustos() {
   var dados = {
     netlify:        parseFloat((document.getElementById('custo-netlify')||{}).value)  || 0,
     supabase:       parseFloat((document.getElementById('custo-supabase')||{}).value) || 0,
+    claude:         parseFloat((document.getElementById('custo-claude')||{}).value)   || 0,
     outros:         parseFloat((document.getElementById('custo-outros')||{}).value)   || 0,
     renov_netlify:  (document.getElementById('renov-netlify')||{}).value  || '',
     renov_supabase: (document.getElementById('renov-supabase')||{}).value || '',
+    renov_claude:   (document.getElementById('renov-claude')||{}).value   || '',
   };
   localStorage.setItem(CUSTOS_KEY, JSON.stringify(dados));
   atualizarMetricas();
@@ -8548,7 +8558,7 @@ function verificarRenovacoes() {
   var hoje = new Date();
   var alertas = [];
 
-  ['netlify', 'supabase'].forEach(function(servico) {
+  ['netlify', 'supabase', 'claude'].forEach(function(servico) {
     var el = document.getElementById('renov-' + servico);
     if (!el || !el.value) return;
     var data = new Date(el.value + 'T00:00:00');
@@ -8594,8 +8604,9 @@ function verificarRenovacoes() {
 function atualizarMetricas() {
   var netlify  = parseFloat((document.getElementById('custo-netlify')||{}).value)  || 0;
   var supabase = parseFloat((document.getElementById('custo-supabase')||{}).value) || 0;
+  var claude   = parseFloat((document.getElementById('custo-claude')||{}).value)   || 0;
   var outros   = parseFloat((document.getElementById('custo-outros')||{}).value)   || 0;
-  var totalCusto = netlify + supabase + outros;
+  var totalCusto = netlify + supabase + claude + outros;
 
   var mrrEl = document.getElementById('sa-mrr');
   var mrrVal = mrrEl ? parseFloat(mrrEl.textContent.replace('R$','').replace(',','.')) || 0 : 0;
