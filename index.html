@@ -9326,7 +9326,7 @@ function gerarPDFSermao(sermon) {
     w.document.write('.bp{background:#f59e0b;color:#000;border:none;padding:10px 24px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;margin-right:8px}');
     w.document.write('.bf{background:#ddd;color:#333;border:none;padding:10px 14px;border-radius:6px;font-size:13px;cursor:pointer}');
     w.document.write('@media print{.btn-area{display:none}@page{margin:12mm}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}');
-</style></head><body>');
+    w.document.write('</style></head><body>');
     w.document.write(body.innerHTML);
     w.document.write('<div class="btn-area"><button class="bp" onclick="window.print()">Imprimir / Salvar PDF</button>');
     w.document.write('<button class="bf" onclick="window.close()">Fechar</button></div>');
