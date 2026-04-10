@@ -4035,6 +4035,22 @@ function atualizarBadgePlanoSidebar(church) {
 
   var plan    = church.plan || 'trial';
   var plano   = PLANOS[plan] || PLANOS.trial;
+
+  var nomeEl  = document.getElementById('sidebar-plano-nome');
+  var diasEl  = document.getElementById('sidebar-plano-dias');
+  var barEl   = document.getElementById('sidebar-plano-bar');
+  var hintEl  = document.getElementById('sidebar-plano-hint');
+
+  // Plano isento: tudo verde, sem contagem
+  if (plan === 'isento') {
+    if (nomeEl) { nomeEl.textContent = 'Isento'; nomeEl.style.color = '#10b981'; }
+    if (diasEl) { diasEl.textContent = ''; }
+    if (barEl)  { barEl.style.width = '100%'; barEl.style.background = '#10b981'; }
+    if (hintEl) { hintEl.textContent = 'Acesso completo'; hintEl.style.color = '#10b981'; }
+    badge.style.display = 'block';
+    return;
+  }
+
   var expires = church.plan_expires_at ? new Date(church.plan_expires_at) : null;
   var hoje    = new Date();
   var diasRestantes = expires ? Math.ceil((expires - hoje) / (1000*60*60*24)) : null;
@@ -4056,11 +4072,6 @@ function atualizarBadgePlanoSidebar(church) {
     else if (diasRestantes === 1) diasTxt = '1 dia restante';
     else diasTxt = diasRestantes + ' dias';
   }
-
-  var nomeEl  = document.getElementById('sidebar-plano-nome');
-  var diasEl  = document.getElementById('sidebar-plano-dias');
-  var barEl   = document.getElementById('sidebar-plano-bar');
-  var hintEl  = document.getElementById('sidebar-plano-hint');
 
   if (nomeEl) nomeEl.textContent = plano.label;
   if (diasEl) { diasEl.textContent = diasTxt; diasEl.style.color = pct >= 85 ? '#ef4444' : 'var(--muted)'; }
