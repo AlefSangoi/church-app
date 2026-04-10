@@ -832,6 +832,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .plan-trial{background:rgba(245,158,11,.15);color:var(--accent)}
 .plan-active{background:rgba(16,185,129,.15);color:var(--green)}
 .plan-overdue{background:rgba(239,68,68,.15);color:var(--red)}
+.plan-full{background:rgba(16,185,129,.15);color:var(--green)}
 .plan-cancelled{background:rgba(107,114,128,.15);color:var(--muted)}
 .pix-btn{
   display:inline-flex;align-items:center;gap:5px;padding:4px 10px;
@@ -2377,6 +2378,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
           <div>
             <h3 style="font-size:18px;font-weight:700;margin-bottom:4px">Links de Convite</h3>
             <p style="font-size:13px;color:var(--muted)">Gere links para convidar voluntarios e lideres para sua igreja.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" id="btn-novo-convite">+ Novo Convite</button>
         </div>
 
         <!-- Form novo convite -->
@@ -3443,6 +3446,7 @@ function carregarDashboard() {
   var fim  = ano + '-' + mm + '-' + new Date(ano, mes, 0).getDate();
 
   sb.from('services').select('id, title, location, service_type_key, color')
+    .eq('church_id', currentProfile.church_id)
     .gte('date', ini).lte('date', fim).then(function(sRes) {
       var cultos = sRes.data || [];
       document.getElementById('dc-total').textContent = cultos.length;
@@ -3493,6 +3497,7 @@ function carregarDashboard() {
 
           // Tabela voluntarios
           sb.from('profiles').select('id, name, role, department')
+            .eq('church_id', currentProfile.church_id)
             .in('role', ['voluntario','lider']).then(function(pRes) {
               var pessoas = pRes.data || [];
               var deptLabel = { louvor:'Louvor', som:'Som', projecao:'Proj', iluminacao:'Luz', live:'Live' };
