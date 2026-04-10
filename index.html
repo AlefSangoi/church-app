@@ -3379,9 +3379,11 @@ document.addEventListener('keydown', function(e) {
   var planosModal = document.getElementById('modal-planos');
   if (planosModal) { planosModal.remove(); return; }
 
-  // 2b. Fecha modal de esboço (sermao-modal se existir)
-  var sermaoModal = document.getElementById('modal-sermao-view');
-  if (sermaoModal) { sermaoModal.remove(); return; }
+  // 2b. Fecha form de esboço se estiver aberto
+  var sermaoForm = document.getElementById('sermao-form');
+  if (sermaoForm && sermaoForm.style.display !== 'none') {
+    sermaoForm.style.display = 'none'; return;
+  }
 
   // 3. Fecha modal de escala em massa
   var massaModal = document.getElementById('modal-escala-massa');
@@ -3415,15 +3417,25 @@ function roleLabel(r) {
 // =============================================
 // DASHBOARD
 // =============================================
+var dashboardInit = false;
 function initDashboard() {
+  if (!currentProfile || !currentProfile.church_id) return;
   var hoje = new Date();
-  document.getElementById('dash-mes').value = hoje.getMonth() + 1;
-  document.getElementById('dash-ano').value = hoje.getFullYear();
-  document.getElementById('btn-dash-load').addEventListener('click', carregarDashboard);
+  var mesEl = document.getElementById('dash-mes');
+  var anoEl = document.getElementById('dash-ano');
+  var btnEl = document.getElementById('btn-dash-load');
+  if (!mesEl || !anoEl || !btnEl) return;
+  mesEl.value = hoje.getMonth() + 1;
+  anoEl.value = hoje.getFullYear();
+  if (!dashboardInit) {
+    dashboardInit = true;
+    btnEl.addEventListener('click', carregarDashboard);
+  }
   carregarDashboard();
 }
 
 function carregarDashboard() {
+  if (!currentProfile || !currentProfile.church_id) return;
   var mes  = parseInt(document.getElementById('dash-mes').value);
   var ano  = parseInt(document.getElementById('dash-ano').value);
   var mm   = String(mes).padStart(2,'0');
@@ -5903,6 +5915,10 @@ var DAY_NAMES = ['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado']
 // APROVACAO DE USUARIOS
 // =============================================
 function carregarAprovacoes() {
+  if (!currentProfile || !currentProfile.church_id) {
+    setTimeout(carregarAprovacoes, 1000);
+    return;
+  }
   var churchId = currentProfile && currentProfile.church_id;
   if (!churchId) return;
   var tbody = document.getElementById('aprovacoes-tbody');
@@ -6448,7 +6464,9 @@ function fmtDate(dt) {
 function loadUsersTable() {
   var churchId = currentProfile && currentProfile.church_id;
   if (!churchId) {
-    document.getElementById('users-table-body').innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--muted)">Sem church_id definido</td></tr>';
+    var tbody = document.getElementById('users-table-body');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--muted)">Carregando...</td></tr>';
+    setTimeout(function() { if (currentProfile && currentProfile.church_id) loadUsersTable(); }, 1000);
     return;
   }
   sb.from('profiles').select('*').eq('church_id', churchId).eq('status', 'approved').order('name').then(function(res) {
@@ -7581,6 +7599,10 @@ function exportarRelatorioSA() {
 // =============================================
 var configInit = false;
 function initConfiguracoes() {
+  if (!currentProfile || !currentProfile.church_id) {
+    setTimeout(initConfiguracoes, 1000);
+    return;
+  }
   if (configInit) return;
   configInit = true;
 
@@ -9284,6 +9306,10 @@ window.getPlano             = getPlano;
 // =============================================
 var convitesInit = false;
 function initConvites() {
+  if (!currentProfile || !currentProfile.church_id) {
+    setTimeout(initConvites, 1000);
+    return;
+  }
   if (!convitesInit) {
     convitesInit = true;
     document.getElementById('btn-novo-convite').addEventListener('click', function() {
