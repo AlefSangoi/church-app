@@ -3243,13 +3243,16 @@ window.toast             = toast;
 
 // ===== helpers.js =====
 // swipe gesture
-var startX = 0;
-var _swipeSidebar = document.getElementById('sidebar');
+(function() {
+  var startX = 0;
+  var sidebar = document.getElementById('sidebar');
+  if (!sidebar) return;
   sidebar.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
   sidebar.addEventListener('touchend', function(e) {
     var dx = e.changedTouches[0].clientX - startX;
-    if (dx < -60) toggleSidebar(true); // swipe esquerda = fechar
+    if (dx < -60) toggleSidebar(true);
   }, { passive: true });
+})();
 
 // Botao colapsar sidebar (apenas desktop)
 document.getElementById('btn-collapse').addEventListener('click', function() {
