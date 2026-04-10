@@ -3117,30 +3117,7 @@ var allServices = [];
 var editingServiceId = null;
 var editingUserId = null;
 
-// Expor estado globalmente para todos os módulos
-window.editingUserId     = editingUserId;
-
-
-Object.defineProperty(window, 'currentProfile', {
-  get: function() { return currentProfile; },
-  set: function(v) { currentProfile = v; }
-});
-Object.defineProperty(window, 'allServices', {
-  get: function() { return allServices; },
-  set: function(v) { allServices = v; }
-});
-Object.defineProperty(window, 'currentMonth', {
-  get: function() { return currentMonth; },
-  set: function(v) { currentMonth = v; }
-});
-Object.defineProperty(window, 'editingServiceId', {
-  get: function() { return editingServiceId; },
-  set: function(v) { editingServiceId = v; }
-});
-Object.defineProperty(window, 'editingUserId', {
-  get: function() { return editingUserId; },
-  set: function(v) { editingUserId = v; }
-});
+// Estado global - variaveis sao globais por serem declaradas com var no escopo principal
 
 var SERVICE_META = {
   'culto-familia-sede-09':   { title: 'Culto da Familia', location: 'SEDE', time: '09:00', color: '#f59e0b', recurrence: 'weekly', dayOfWeek: 0 },
