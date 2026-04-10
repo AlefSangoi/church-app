@@ -4770,7 +4770,8 @@ function showPageSafe(page) {
 
   var titles = { agenda: 'Agenda', proximos: 'Proximos Cultos',
     'my-team': 'Minha Equipe', admin: 'Administracao',
-    sermao: 'Gerador de Esbocos', profile: 'Meu Perfil' };
+    sermao: 'Gerador de Esbocos', profile: 'Meu Perfil',
+    ajuda: 'Central de Ajuda' };
   document.getElementById('page-title').textContent = titles[page] || '';
 
   if (page === 'proximos') renderServiceCards(allServices.filter(function(s) {
