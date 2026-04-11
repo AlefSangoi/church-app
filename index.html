@@ -1160,6 +1160,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   </div>
 
   <div class="sa-content">
+  <!-- SA Navigation Tabs -->
+  <div style="display:flex;gap:6px;margin-bottom:20px;background:var(--surface2);border-radius:12px;padding:6px;flex-wrap:wrap">
+    <button class="sa-nav-btn active" onclick="showSATab('clientes')" id="sa-nav-clientes" style="flex:1;min-width:80px;padding:8px 12px;background:var(--surface);border:none;border-radius:8px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s">&#127963; Clientes</button>
+    <button class="sa-nav-btn" onclick="showSATab('metricas')" id="sa-nav-metricas" style="flex:1;min-width:80px;padding:8px 12px;background:none;border:none;border-radius:8px;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s">&#128200; Métricas</button>
+    <button class="sa-nav-btn" onclick="showSATab('feedbacks')" id="sa-nav-feedbacks" style="flex:1;min-width:80px;padding:8px 12px;background:none;border:none;border-radius:8px;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s">&#128172; Feedbacks</button>
+    <button class="sa-nav-btn" onclick="showSATab('referencia')" id="sa-nav-referencia" style="flex:1;min-width:80px;padding:8px 12px;background:none;border:none;border-radius:8px;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s">&#128203; Planos</button>
+  </div>
+  <div id="sa-tab-clientes" class="sa-tab-content">
     <!-- Stats gerais -->
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:28px">
       <div class="sa-stat" style="border-top:3px solid var(--accent)">
@@ -1192,6 +1200,43 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
       </div>
     </div>
 
+
+
+    <!-- Filtros -->
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+      <h3 style="font-size:16px;font-weight:700">Clientes</h3>
+      <select id="sa-filter-status" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px">
+        <option value="">Todos os status</option>
+        <option value="trial">Trial</option>
+        <option value="active">Ativos</option>
+        <option value="overdue">Inadimplentes</option>
+        <option value="cancelled">Cancelados</option>
+      </select>
+      <button class="btn btn-secondary btn-sm" id="btn-sa-refresh">Atualizar</button>
+      <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="exportarRelatorioSA()">&#11015; Exportar CSV</button>
+    </div>
+
+    <!-- Tabela de referência de planos -->
+    
+
+    <!-- Clientes -->
+    <div style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Clientes</div>
+      <select id="sa-filter-status-top" onchange="document.getElementById('sa-filter-status').value=this.value;initSuperAdmin()" style="padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px">
+        <option value="">Todos</option>
+        <option value="trial">Trial</option>
+        <option value="active">Ativos</option>
+        <option value="full">Isentos</option>
+        <option value="overdue">Inadimplentes</option>
+      </select>
+    </div>
+    <div id="sa-churches-body" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+      <div style="text-align:center;padding:40px;color:var(--muted)">Carregando...</div>
+    </div>
+
+  </div><!-- end sa-tab-clientes -->
+
+  <div id="sa-tab-metricas" class="sa-tab-content" style="display:none">
     <!-- Painel de Metricas de Custo -->
     <details id="painel-custos" style="margin-bottom:24px">
       <summary style="cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.5px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;list-style:none;display:flex;align-items:center;gap:8px" onclick="setTimeout(initMetricasCusto,50)">
@@ -1278,66 +1323,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         </div>
       </div>
     </details>
+  </div>
 
-    <!-- Filtros -->
-    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-      <h3 style="font-size:16px;font-weight:700">Clientes</h3>
-      <select id="sa-filter-status" style="padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px">
-        <option value="">Todos os status</option>
-        <option value="trial">Trial</option>
-        <option value="active">Ativos</option>
-        <option value="overdue">Inadimplentes</option>
-        <option value="cancelled">Cancelados</option>
-      </select>
-      <button class="btn btn-secondary btn-sm" id="btn-sa-refresh">Atualizar</button>
-      <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="exportarRelatorioSA()">&#11015; Exportar CSV</button>
-    </div>
-
-    <!-- Tabela de referência de planos -->
-    <details style="margin-bottom:20px">
-      <summary style="cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.5px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;list-style:none;display:flex;align-items:center;gap:8px">
-        <span>&#9432;</span> Referência de Planos <span style="margin-left:auto;font-size:11px;font-weight:400">clique para expandir</span>
-      </summary>
-      <div style="background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden">
-        <table style="width:100%;border-collapse:collapse;font-size:13px">
-          <thead>
-            <tr>
-              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Plano</th>
-              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Valor/mês</th>
-              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Usuários</th>
-              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Esboços IA</th>
-              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Convites</th>
-              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Notif. WA</th>
-              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Locais</th>
-              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)">Vigência</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border)"><span class="plan-badge plan-trial">Trial</span></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">Grátis</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">5</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">1 total</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">❌</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">❌</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">1</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">10 dias</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border)"><span class="plan-badge" style="background:rgba(59,130,246,.15);color:#3b82f6">Básico</span></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">R$ 29,90</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">15</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">3/mês</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">✅</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">❌</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">1</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">30 dias</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border)"><span class="plan-badge" style="background:rgba(139,92,246,.15);color:#8b5cf6">Essencial</span></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">R$ 49,90</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">30</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">10/mês</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">✅</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">✅</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">2</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">30 dias</td></tr>
-            <tr><td style="padding:10px 14px;border-bottom:1px solid var(--border)"><span class="plan-badge plan-trial">Profissional</span></td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">R$ 79,90</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">60</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">20/mês</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">✅</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">✅</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">5</td><td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center">30 dias</td></tr>
-            <tr><td style="padding:10px 14px"><span class="plan-badge plan-active">Premium</span></td><td style="padding:10px 14px;text-align:center">R$ 119,90</td><td style="padding:10px 14px;text-align:center">Ilimitado</td><td style="padding:10px 14px;text-align:center">Ilimitado</td><td style="padding:10px 14px;text-align:center">✅</td><td style="padding:10px 14px;text-align:center">✅</td><td style="padding:10px 14px;text-align:center">Ilimitado</td><td style="padding:10px 14px;text-align:center">30 dias</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </details>
-
-    <!-- Clientes -->
-    <div style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-      <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Clientes</div>
-      <select id="sa-filter-status-top" onchange="document.getElementById('sa-filter-status').value=this.value;initSuperAdmin()" style="padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px">
-        <option value="">Todos</option>
-        <option value="trial">Trial</option>
-        <option value="active">Ativos</option>
-        <option value="full">Isentos</option>
-        <option value="overdue">Inadimplentes</option>
-      </select>
-    </div>
-    <div id="sa-churches-body" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
-      <div style="text-align:center;padding:40px;color:var(--muted)">Carregando...</div>
-    </div>
-
+  <div id="sa-tab-feedbacks" class="sa-tab-content" style="display:none">
     <!-- FEEDBACKS DOS CLIENTES -->
     <details id="sa-feedbacks-details" style="background:var(--surface2);border:1px solid var(--border);border-radius:14px;margin-bottom:20px;overflow:hidden">
       <summary style="padding:14px 18px;cursor:pointer;font-weight:700;font-size:14px;list-style:none;display:flex;align-items:center;justify-content:space-between" onclick="carregarFeedbacks()">
@@ -2564,7 +2552,17 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 
         <!-- Exportar / Importar backup -->
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px">
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:4px">&#128190; Backup da Agenda</h4>
+          <!-- Link da Igreja -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px">
+          <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">&#127760; Link da sua Igreja</div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Compartilhe este link com seus voluntários para que eles se cadastrem diretamente na sua igreja:</p>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="text" id="input-church-link" readonly style="flex:1;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--accent);font-size:13px;font-family:monospace"/>
+            <button onclick="copiarLinkIgreja()" class="btn btn-secondary btn-sm">&#128203; Copiar</button>
+          </div>
+        </div>
+
+        <h4 style="font-size:15px;font-weight:700;margin-bottom:4px">&#128190; Backup da Agenda</h4>
           <p style="font-size:13px;color:var(--muted);margin-bottom:6px">
             Exporte seus dados regularmente. <strong>O Church App nao e responsavel por backups</strong> — a responsabilidade de manter cópias é do administrador da igreja. Recomendamos baixar a cada <strong>15 dias</strong>.
           </p>
@@ -3687,10 +3685,10 @@ function carregarDashboard() {
           // Graficos
           renderCharts(totalConf, totalAus, totalPend, tipoRows, confs);
 
-          // Tabela voluntarios
+          // Tabela voluntários analítica
           sb.from('profiles').select('id, name, role, department')
             .eq('church_id', currentProfile.church_id)
-            .in('role', ['voluntario','lider']).then(function(pRes) {
+            .in('role', ['voluntario','lider','pastor','admin']).then(function(pRes) {
               var pessoas = pRes.data || [];
               var deptLabel = { louvor:'Louvor', som:'Som', projecao:'Proj', iluminacao:'Luz', live:'Live' };
               var rows = pessoas.map(function(p) {
@@ -4691,6 +4689,26 @@ function initApp() {
   // Hash de retorno OAuth
   if (window.location.hash && window.location.hash.indexOf('access_token') !== -1) {
     return; // onAuthStateChange cuida disso
+  }
+
+  // Se tem slug na URL e nao logado, verificar se a igreja existe e mostrar contexto
+  if (churchSlug) {
+    sb.auth.getSession().then(function(res) {
+      if (res.data && res.data.session) {
+        loadApp(res.data.session.user);
+      } else {
+        // Mostrar nome da igreja no login
+        sb.from('churches').select('name, logo_url').eq('slug', churchSlug).maybeSingle().then(function(r) {
+          if (r.data) {
+            // Exibir nome da igreja na tela de login
+            var el = document.getElementById('login-church-name');
+            if (el) { el.textContent = r.data.name; el.style.display = 'block'; }
+            localStorage.setItem('gca_church_slug', churchSlug);
+          }
+        });
+      }
+    });
+    return;
   }
 
   // Sessao existente
@@ -7534,6 +7552,24 @@ window.hideOnboarding       = hideOnboarding;
 var SUPER_ADMIN_EMAIL = 'getprojection@gmail.com';
 var saEditingChurchId = null;
 
+function showSATab(tab) {
+  // Hide all tabs
+  document.querySelectorAll('.sa-tab-content').forEach(function(t) { t.style.display = 'none'; });
+  document.querySelectorAll('.sa-nav-btn').forEach(function(b) {
+    b.style.background = 'none';
+    b.style.color = 'var(--muted)';
+  });
+  // Show selected
+  var tabEl = document.getElementById('sa-tab-' + tab);
+  if (tabEl) tabEl.style.display = 'block';
+  var btnEl = document.getElementById('sa-nav-' + tab);
+  if (btnEl) { btnEl.style.background = 'var(--surface)'; btnEl.style.color = 'var(--text)'; }
+  // Lazy load
+  if (tab === 'metricas') { initMetricasCusto(); verificarRenovacoes(); }
+  if (tab === 'feedbacks') carregarFeedbacks();
+}
+window.showSATab = showSATab;
+
 function initSuperAdmin() {
   document.getElementById('btn-sa-logout').addEventListener('click', function() {
     sb.auth.signOut().then(function() { window.location.reload(); });
@@ -7840,6 +7876,13 @@ function exportarRelatorioSA() {
 // CONFIGURACOES: BACKUP E EXCLUSAO
 // =============================================
 var configInit = false;
+function copiarLinkIgreja() {
+  var inp = document.getElementById('input-church-link');
+  if (!inp) return;
+  navigator.clipboard ? navigator.clipboard.writeText(inp.value).then(function() { toast('Link copiado!', 'success'); }) : (inp.select(), document.execCommand('copy'), toast('Link copiado!', 'success'));
+}
+window.copiarLinkIgreja = copiarLinkIgreja;
+
 function initConfiguracoes() {
   if (!currentProfile || !currentProfile.church_id) {
     setTimeout(initConfiguracoes, 1000);
@@ -7847,6 +7890,19 @@ function initConfiguracoes() {
   }
   if (configInit) return;
   configInit = true;
+
+  // Preencher link da igreja
+  if (window.currentChurch && window.currentChurch.slug) {
+    var linkEl = document.getElementById('input-church-link');
+    if (linkEl) linkEl.value = window.location.origin + '/' + window.currentChurch.slug;
+  } else {
+    sb.from('churches').select('slug').eq('id', currentProfile.church_id).single().then(function(r) {
+      if (r.data && r.data.slug) {
+        var linkEl = document.getElementById('input-church-link');
+        if (linkEl) linkEl.value = window.location.origin + '/' + r.data.slug;
+      }
+    });
+  }
 
   // Exportar backup
   document.getElementById('btn-exportar-backup').addEventListener('click', exportarBackup);
@@ -8230,6 +8286,9 @@ function gerarEsboço() {
     'O estilo deve ser conversacional, com perguntas retorias, repeticoes intencionais e momentos de apelo.',
     '',
     'REFERENCIAS BIBLICAS: ' + refs,
+    'IMPORTANTE SOBRE CITACOES: Ao citar versiculos, use EXATAMENTE o texto da versao ' + versao + '.',
+    'Nao parafraseie nem resuma os versiculos — cite o texto biblico completo entre aspas.',
+    'Formato obrigatorio para cada citacao: "texto do versiculo" (' + versao + ' - Livro cap:ver)',
     'DURACAO: ' + duracao + ' minutos',
     'PUBLICO: ' + publicoLabels[publico],
     tema ? 'TEMA CENTRAL: ' + tema : '',
@@ -8803,6 +8862,7 @@ function _gerarPDFSermao(sermon) {
 // METRICAS DE CUSTO - SUPER ADMIN
 // =============================================
 var CUSTOS_KEY = 'sa_custos_config';
+var SA_METRICS_ID = 'sa_metrics_v1'; // chave no Supabase KV via church_id=null
 
 function initMetricasCusto() {
   carregarCustosSalvos();
@@ -8812,6 +8872,33 @@ function initMetricasCusto() {
 }
 
 function carregarCustosSalvos() {
+  // Tentar carregar do banco primeiro, fallback para localStorage
+  sb.from('sa_config').select('value').eq('key', SA_METRICS_ID).maybeSingle().then(function(r) {
+    if (r.data && r.data.value) {
+      try {
+        var d = JSON.parse(r.data.value);
+        localStorage.setItem(CUSTOS_KEY, r.data.value); // sync local
+        aplicarDadosCustos(d);
+      } catch(e) { carregarCustosLocal(); }
+    } else {
+      carregarCustosLocal();
+    }
+  }).catch(function() { carregarCustosLocal(); });
+}
+
+function aplicarDadosCustos(d) {
+  var el = function(id) { return document.getElementById(id); };
+  if (el('custo-netlify'))  el('custo-netlify').value  = d.netlify  || 0;
+  if (el('custo-supabase')) el('custo-supabase').value = d.supabase || 0;
+  if (el('custo-claude'))   el('custo-claude').value   = d.claude   || 0;
+  if (el('custo-outros'))   el('custo-outros').value   = d.outros   || 0;
+  if (el('renov-netlify'))  el('renov-netlify').value  = d.renov_netlify  || '';
+  if (el('renov-supabase')) el('renov-supabase').value = d.renov_supabase || '';
+  if (el('renov-claude'))   el('renov-claude').value   = d.renov_claude   || '';
+  atualizarMetricas();
+}
+
+function carregarCustosLocal() {
   try {
     var saved = localStorage.getItem(CUSTOS_KEY);
     if (saved) {
@@ -8840,6 +8927,10 @@ function salvarCustos() {
     renov_claude:   (document.getElementById('renov-claude')||{}).value   || '',
   };
   localStorage.setItem(CUSTOS_KEY, JSON.stringify(dados));
+  // Salvar também no Supabase para persistência entre dispositivos
+  sb.from('sa_config').upsert({ key: SA_METRICS_ID, value: JSON.stringify(dados), updated_at: new Date().toISOString() }, { onConflict: 'key' }).catch(function() {
+    // Tabela pode não existir, usar apenas localStorage
+  });
   atualizarMetricas();
   verificarRenovacoes();
   toast('Custos salvos!', 'success');
