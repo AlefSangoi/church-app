@@ -46,7 +46,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 /* TOAST */
 #toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
 .toast{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  padding:12px 18px;font-size:14px;color:var(--text);animation:slideIn .25s ease;min-width:240px}
+  padding:12px 18px;font-size:14px;color:var(--text);animation:slideIn .25s ease;min-width:240px;
+  box-shadow:0 4px 20px rgba(0,0,0,.3)}
 .toast.success{border-left:3px solid var(--green)}
 .toast.error{border-left:3px solid var(--red)}
 @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
@@ -223,10 +224,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 
 .sidebar-footer{padding:12px 10px;border-top:1px solid var(--border)}
 .user-chip{display:flex;align-items:center;gap:10px;padding:10px 10px;background:var(--surface2);
-  border-radius:10px}
-.user-avatar{width:32px;height:32px;border-radius:8px;
+  border-radius:12px;transition:background .15s}
+.user-chip:hover{background:var(--border)}
+.user-avatar{width:34px;height:34px;border-radius:10px;
   background:linear-gradient(135deg,var(--accent),var(--purple));
-  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex-shrink:0}
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(245,158,11,.3)}
 .user-info{flex:1;min-width:0}
 .user-info .user-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .user-info .user-role{font-size:11px;color:var(--muted)}
@@ -258,9 +261,9 @@ body.sidebar-collapsed #main-content{margin-left:64px}
 .cal-day{background:var(--surface);border:1px solid var(--border);border-radius:8px;
   padding:6px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;
   min-height:72px;vertical-align:top}
-.cal-day:hover{border-color:var(--accent)}
-.cal-day.other-month{opacity:.25}
-.cal-day.today{border-color:var(--accent);background:rgba(245,158,11,.05)}
+.cal-day:hover{border-color:var(--accent);background:rgba(245,158,11,.03)}
+.cal-day.other-month{opacity:.2}
+.cal-day.today{border-color:var(--accent);background:rgba(245,158,11,.07);box-shadow:0 0 0 1px rgba(245,158,11,.2)}
 .cal-day.selected{border-color:var(--accent2);background:rgba(59,130,246,.08)}
 .cal-day .day-num{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px;line-height:1}
 .cal-day.today .day-num{color:var(--accent)}
@@ -282,8 +285,11 @@ body.sidebar-collapsed #main-content{margin-left:64px}
   padding:18px 20px;transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
 .service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
   background:var(--card-color,var(--accent));border-radius:16px 16px 0 0}
-.service-card:hover{border-color:rgba(255,255,255,.15);transform:translateY(-2px);
-  box-shadow:var(--shadow)}
+.service-card::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s;
+  background:radial-gradient(ellipse at top,rgba(255,255,255,.04) 0%,transparent 70%)}
+.service-card:hover{border-color:rgba(255,255,255,.18);transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(0,0,0,.28)}
+.service-card:hover::after{opacity:1}
 .card-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .card-date{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.5px}
 .card-status{margin-left:auto;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
@@ -854,6 +860,24 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .alerta-venc{color:var(--red);font-weight:700;font-size:11px}
 .ok-venc{color:var(--green);font-size:11px}
 
+/* === REPERTÓRIO COM NOTAS === */
+.rep-linha{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.rep-linha input{flex:1;padding:7px 10px;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:var(--font-body);font-size:13px}
+.rep-linha input:focus{outline:none;border-color:var(--accent)}
+.rep-nota-sel{padding:7px 8px;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;color:var(--accent);font-family:var(--font-mono);font-size:12px;
+  font-weight:700;cursor:pointer;width:60px;flex-shrink:0}
+.rep-nota-sel:focus{outline:none;border-color:var(--accent)}
+.rep-rm-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;
+  padding:4px 6px;border-radius:6px;flex-shrink:0;line-height:1}
+.rep-rm-btn:hover{color:var(--red);background:rgba(239,68,68,.1)}
+.rep-add-btn{display:flex;align-items:center;gap:6px;background:var(--surface2);
+  border:1px dashed var(--border);border-radius:8px;padding:7px 12px;
+  color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;width:100%;
+  justify-content:center;margin-top:4px;transition:all .15s}
+.rep-add-btn:hover{border-color:var(--accent);color:var(--accent)}
+
 /* === PASTOR / ESBOÇO IA === */
 .sermon-card{
   background:var(--surface);border:1px solid var(--border);
@@ -874,6 +898,28 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   font-size:14px;line-height:1.7;white-space:pre-wrap;
   max-height:400px;overflow-y:auto;
 }
+
+/* === SUPORTE WA === */
+.suporte-wa-btn{
+  display:flex;align-items:center;gap:12px;width:100%;
+  background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);
+  border-radius:14px;padding:16px 20px;cursor:pointer;transition:all .2s;
+  margin-bottom:16px;text-align:left;
+}
+.suporte-wa-btn:hover{background:rgba(37,211,102,.15);border-color:rgba(37,211,102,.4)}
+.suporte-wa-icon{font-size:28px;flex-shrink:0}
+.suporte-wa-title{font-size:15px;font-weight:700;color:#25d366;margin-bottom:2px}
+.suporte-wa-sub{font-size:12px;color:var(--muted)}
+#suporte-wa-form{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:20px;margin-bottom:16px;display:none;
+}
+#suporte-wa-form textarea{
+  width:100%;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);font-family:var(--font-body);font-size:14px;
+  resize:vertical;min-height:100px;margin:8px 0 12px;
+}
+#suporte-wa-form textarea:focus{outline:none;border-color:#25d366}
 
 /* === AJUDA === */
 .ajuda-card{
@@ -1111,25 +1157,120 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   #main-content { margin-left: 0 !important; padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
   #hamburger { display: none !important; }
 
-  /* Topbar more compact */
-  .topbar { padding: 10px 16px; gap: 8px; }
-  .topbar h2 { font-size: 16px; font-weight: 700; }
+  /* Topbar mobile — mostrar nome da igreja */
+  .topbar { padding: 10px 16px; gap: 10px; }
+  .topbar h2 { font-size: 15px; font-weight: 700; }
+  #topbar-church-name-mobile {
+    font-size: 11px; color: var(--muted); font-weight: 500;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 140px;
+  }
 
   /* Pages */
-  .page { padding: 16px 16px 24px; animation: fadeUp .25s ease; }
+  .page { padding: 14px 14px 24px; animation: fadeUp .25s ease; }
 
-  /* Calendar */
-  .calendar-grid { gap: 2px; }
-  .cal-header { font-size: 9px; padding: 5px 1px; }
-  .cal-day { min-height: 54px; padding: 4px 3px; border-radius: 6px; }
-  .cal-day .day-num { font-size: 11px; margin-bottom: 2px; }
-  .cal-event-pill { font-size: 9px; padding: 1px 3px; border-radius: 3px; }
-  .month-nav h3 { font-size: 17px; min-width: 120px; }
-  .month-nav .btn { padding: 9px 12px; font-size: 14px; }
+  /* ---- BANNER CONVIDAR MOBILE ---- */
+  #banner-convidar {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+    border-radius: 14px !important;
+    margin: 0 0 14px !important;
+  }
+  #banner-convidar .banner-icon { font-size: 22px; flex-shrink: 0; }
+  #banner-convidar-txt {
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    flex: 1;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+  #banner-convidar button[onclick*="convidar"],
+  #banner-convidar button[onclick*="Convidar"] {
+    font-size: 12px !important;
+    padding: 8px 12px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ---- CALENDÁRIO MOBILE ---- */
+  .month-nav {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px; gap: 8px;
+  }
+  .month-nav h3 {
+    font-size: 15px !important;
+    min-width: unset !important;
+    text-align: center;
+    flex: 1;
+  }
+  .month-nav .btn {
+    padding: 8px 14px !important;
+    font-size: 13px !important;
+    border-radius: 10px !important;
+    white-space: nowrap;
+  }
+  .calendar-grid { gap: 2px; margin-bottom: 12px; }
+  .cal-header {
+    font-size: 9px; padding: 4px 1px;
+    letter-spacing: .5px;
+  }
+  .cal-day {
+    min-height: 58px; padding: 4px 3px;
+    border-radius: 8px;
+  }
+  .cal-day .day-num { font-size: 11px; margin-bottom: 3px; }
+  .cal-event-pill {
+    font-size: 9px !important;
+    padding: 2px 4px !important;
+    border-radius: 4px !important;
+    line-height: 1.3;
+    margin-bottom: 1px !important;
+  }
+
+  /* Rodapé do calendário — "Clique..." e "Ver todos" numa linha só */
+  .cal-footer-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    margin-top: 8px;
+  }
+  .cal-footer-row .cal-hint {
+    font-size: 11px !important;
+    color: var(--muted) !important;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    flex: 1;
+  }
+  .cal-footer-row .btn {
+    white-space: nowrap !important;
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+    flex-shrink: 0;
+  }
+
+  /* ---- BOTTOM NAV REFINADO ---- */
+  #bottom-nav {
+    height: 60px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .bn-item { gap: 2px; padding: 6px 4px; }
+  .bn-icon { font-size: 20px; }
+  .bn-label { font-size: 10px; font-weight: 600; letter-spacing: .2px; }
+  .bn-item.active .bn-label { color: var(--accent); }
+  .bn-item.active .bn-icon { transform: translateY(-1px); }
 
   /* Service cards */
-  .services-grid { grid-template-columns: 1fr; gap: 12px; }
-  .service-card { padding: 16px; border-radius: 14px; }
+  .services-grid { grid-template-columns: 1fr; gap: 10px; }
+  .service-card { padding: 14px; border-radius: 14px; }
   .card-title { font-size: 16px; }
   .card-team { grid-template-columns: 1fr; gap: 6px; }
 
@@ -1159,7 +1300,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   .form-group label { font-size: 13px; margin-bottom: 8px; }
   .form-group input, .form-group select, .form-group textarea {
     padding: 14px 14px;
-    font-size: 16px; /* prevents iOS zoom */
+    font-size: 16px;
     border-radius: 12px;
   }
 
@@ -1178,7 +1319,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   .dash-card .dc-value { font-size: 26px; }
 
   /* Toast bottom */
-  #toast-container { top: auto; bottom: calc(72px + env(safe-area-inset-bottom)); right: 12px; left: 12px; }
+  #toast-container { top: auto; bottom: calc(68px + env(safe-area-inset-bottom)); right: 12px; left: 12px; }
   .toast { min-width: unset; width: 100%; font-size: 14px; }
 
   /* Invite cards */
@@ -1191,11 +1332,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   .confirm-bar .confirm-actions { display: flex; gap: 8px; }
   .confirm-bar .confirm-actions .btn { flex: 1; justify-content: center; }
 
-  /* Banner convidar */
-  #banner-convidar { border-radius: 12px; margin: 0 0 16px; }
-
   /* Escala em massa grid */
   #em-equipe-wrap > div[style*="grid"] { grid-template-columns: 1fr 1fr !important; }
+
+  /* Voluntário mobile */
+  .vol-stats { grid-template-columns: repeat(3,1fr); gap: 8px; padding: 14px 14px 0; }
+  .vol-stat-card { padding: 10px 8px; }
+  .vol-stat-num { font-size: 24px; }
+  .vol-body { padding: 14px 14px 80px; }
+  .vol-header { padding: 16px 14px; }
+  .vol-greeting { font-size: 20px; }
 }
 
 /* Extra small */
@@ -1458,6 +1604,73 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
     </details>
     </div>
   </div>
+
+  <!-- ABA PLANOS -->
+  <div id="sa-tab-referencia" class="sa-tab-content" style="display:none">
+    <div style="margin-bottom:20px">
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:4px">&#128203; Tabela de Planos</h3>
+      <p style="font-size:13px;color:var(--muted)">Referência dos planos disponíveis no sistema.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:4px solid #6b7280;border-radius:12px;padding:14px">
+        <div style="font-weight:800;font-size:13px;color:#6b7280;margin-bottom:10px">TRIAL</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Valor</span><strong>Grátis</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Duração</span><strong>5 dias</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Usuários</span><strong>5</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Esboços IA</span><strong>1</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Suporte WA</span><strong style="color:#ef4444">Não</strong></div>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:4px solid #3b82f6;border-radius:12px;padding:14px">
+        <div style="font-weight:800;font-size:13px;color:#3b82f6;margin-bottom:10px">BÁSICO</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Valor</span><strong>R$ 29,90/mês</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Usuários</span><strong>15</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Esboços IA</span><strong>3/mês</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Suporte WA</span><strong style="color:#10b981">Sim ✓</strong></div>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:4px solid #8b5cf6;border-radius:12px;padding:14px">
+        <div style="font-weight:800;font-size:13px;color:#8b5cf6;margin-bottom:10px">ESSENCIAL</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Valor</span><strong>R$ 49,90/mês</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Usuários</span><strong>30</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Esboços IA</span><strong>10/mês</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Suporte WA</span><strong style="color:#10b981">Sim ✓</strong></div>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:4px solid #f59e0b;border-radius:12px;padding:14px">
+        <div style="font-weight:800;font-size:13px;color:#f59e0b;margin-bottom:10px">PROFISSIONAL</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Valor</span><strong>R$ 79,90/mês</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Usuários</span><strong>60</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Esboços IA</span><strong>30/mês</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Suporte WA</span><strong style="color:#10b981">Prioritário ✓</strong></div>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:4px solid #10b981;border-radius:12px;padding:14px">
+        <div style="font-weight:800;font-size:13px;color:#10b981;margin-bottom:10px">PREMIUM</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Valor</span><strong>R$ 119,90/mês</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Usuários</span><strong>150</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Esboços IA</span><strong>Ilimitado</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Suporte WA</span><strong style="color:#10b981">VIP ✓</strong></div>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:4px solid #ec4899;border-radius:12px;padding:14px">
+        <div style="font-weight:800;font-size:13px;color:#ec4899;margin-bottom:10px">ENTERPRISE</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Valor</span><strong>R$ 249,90/mês</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Usuários</span><strong>Ilimitado</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Esboços IA</span><strong>Ilimitado</strong></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Suporte WA</span><strong style="color:#10b981">Dedicado ✓</strong></div>
+        </div>
+      </div>
+    </div>
+    <a href="https://wa.me/5549988068778" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:rgba(37,211,102,.15);color:#25d366;border:1px solid rgba(37,211,102,.3);padding:10px 18px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none">&#128242; WhatsApp Suporte</a>
+  </div>
+
 </div>
 
 <!-- MODAL EDITAR CLIENTE (Super Admin) -->
@@ -1472,7 +1685,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         <div class="form-group">
           <label>Plano</label>
           <select id="sa-edit-plan" onchange="autoPreencherValorPlano(this.value)">
-            <option value="trial">Trial (10 dias gratis)</option>
+            <option value="trial">Trial (5 dias gratis)</option>
             <option value="basico">Basico - R$ 29,90/mes</option>
             <option value="essencial">Essencial - R$ 49,90/mes</option>
             <option value="profissional">Profissional - R$ 79,90/mes</option>
@@ -2053,7 +2266,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   <main id="main-content">
     <div class="topbar">
       <button id="hamburger">&#9776;</button>
-      <h2 id="page-title">Agenda</h2>
+      <div style="display:flex;flex-direction:column;gap:1px">
+        <h2 id="page-title">Agenda</h2>
+        <span id="topbar-church-name-mobile" style="font-size:11px;color:var(--muted);font-weight:500;display:none"></span>
+      </div>
       <div class="ml-auto flex gap-2" id="topbar-actions"></div>
     </div>
 
@@ -2061,26 +2277,26 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
     <div id="page-agenda" class="page active">
 
       <!-- Banner de convite (aparece para admins com vagas disponíveis) -->
-      <div id="banner-convidar" style="display:none;background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(59,130,246,.08));border:1px solid rgba(245,158,11,.25);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-        <span style="font-size:24px">&#128101;</span>
+      <div id="banner-convidar" style="display:none;background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(59,130,246,.08));border:1px solid rgba(245,158,11,.25);border-radius:14px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+        <span class="banner-icon" style="font-size:22px;flex-shrink:0">&#128101;</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:700;margin-bottom:2px">Convide sua equipe!</div>
-          <div id="banner-convidar-txt" style="font-size:12px;color:var(--muted)">Sua equipe ainda esta incompleta.</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:1px">Convide sua equipe!</div>
+          <div id="banner-convidar-txt" style="font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Sua equipe ainda esta incompleta.</div>
         </div>
-        <button onclick="showPageSafe('admin');setTimeout(function(){document.querySelector('[data-admin-tab=convites]').click();},100)" style="background:var(--accent);color:#000;border:none;padding:10px 18px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap">&#128279; Convidar agora</button>
-        <button onclick="document.getElementById('banner-convidar').style.display='none'" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px;line-height:1" title="Fechar">&#215;</button>
+        <button onclick="showPageSafe('admin');setTimeout(function(){document.querySelector('[data-admin-tab=convites]').click();},100)" style="background:var(--accent);color:#000;border:none;padding:8px 14px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0">&#128279; Convidar agora</button>
+        <button onclick="document.getElementById('banner-convidar').style.display='none'" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px;line-height:1;flex-shrink:0" title="Fechar">&#215;</button>
       </div>
 
       <div class="month-nav">
-        <button class="btn btn-secondary btn-sm" id="btn-prev-month">Anterior</button>
+        <button class="btn btn-secondary btn-sm" id="btn-prev-month">&#8249; Anterior</button>
         <h3 id="month-label">Janeiro 2026</h3>
-        <button class="btn btn-secondary btn-sm" id="btn-next-month">Proximo</button>
+        <button class="btn btn-secondary btn-sm" id="btn-next-month">Proximo &#8250;</button>
       </div>
       <div class="calendar-grid" id="calendar-grid"></div>
       <div class="services-section">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-          <h4 id="services-section-label" style="margin:0">Clique em um dia para ver os cultos</h4>
-          <button id="btn-toggle-cultos" class="btn btn-secondary btn-sm" style="font-size:12px;padding:5px 12px">Ver todos do mes</button>
+        <div class="cal-footer-row" style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <h4 id="services-section-label" class="cal-hint" style="margin:0;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:700">Clique em um dia para ver os cultos</h4>
+          <button id="btn-toggle-cultos" class="btn btn-secondary btn-sm" style="font-size:12px;padding:6px 14px;white-space:nowrap;flex-shrink:0">Ver todos do mes</button>
         </div>
         <div id="services-list" class="services-grid hidden"></div>
       </div>
@@ -2854,6 +3070,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 
     <!-- AJUDA -->
     <div id="page-ajuda" class="page">
+      <!-- Botão de suporte WA (apenas planos Básico+) -->
+      <div id="suporte-wa-wrap" style="display:none">
+        <button class="suporte-wa-btn" onclick="toggleSuporteWAForm()">
+          <span class="suporte-wa-icon">&#128242;</span>
+          <div>
+            <div class="suporte-wa-title">Suporte via WhatsApp</div>
+            <div class="suporte-wa-sub">Descreva sua dúvida e enviaremos ao suporte</div>
+          </div>
+        </button>
+        <div id="suporte-wa-form">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px">Qual é sua dúvida?</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Descreva o problema ou dúvida antes de abrir o WhatsApp. Assim o suporte já saberá como te ajudar.</div>
+          <textarea id="suporte-wa-texto" placeholder="Ex: Não consigo escalar voluntários no culto de domingo..."></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button onclick="enviarSuporteWA()" style="flex:1;background:#25d366;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;min-width:140px">&#128242; Enviar pelo WhatsApp</button>
+            <button onclick="toggleSuporteWAForm()" style="background:var(--surface2);color:var(--muted);border:1px solid var(--border);padding:10px 16px;border-radius:10px;font-size:13px;cursor:pointer">Cancelar</button>
+          </div>
+        </div>
+      </div>
       <div style="max-width:720px">
 
         <h2 style="font-family:var(--font-display);font-size:28px;letter-spacing:1px;margin-bottom:4px">Central de Ajuda</h2>
@@ -3178,23 +3413,27 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   <!-- BOTTOM NAV MOBILE -->
   <nav id="bottom-nav">
     <button class="bn-item active" data-page="agenda">
-      <span class="bn-icon">&#128197;</span>
+      <span class="bn-icon">📅</span>
       <span class="bn-label">Agenda</span>
     </button>
     <button class="bn-item" data-page="proximos">
-      <span class="bn-icon">&#128203;</span>
+      <span class="bn-icon">🗓️</span>
       <span class="bn-label">Proximos</span>
     </button>
     <button class="bn-item bn-item--admin admin-only" data-page="admin">
-      <span class="bn-icon">&#9881;</span>
+      <span class="bn-icon">⚙️</span>
       <span class="bn-label">Admin</span>
     </button>
     <button class="bn-item bn-item--pastor pastor-only" data-page="sermao">
-      <span class="bn-icon">&#128214;</span>
+      <span class="bn-icon">✍️</span>
       <span class="bn-label">Esbocos</span>
     </button>
+    <button class="bn-item voluntario-only" data-page="voluntario" id="bn-voluntario" style="display:none">
+      <span class="bn-icon">📋</span>
+      <span class="bn-label">Escalas</span>
+    </button>
     <button class="bn-item" data-page="page-profile-trigger">
-      <span class="bn-icon">&#128100;</span>
+      <span class="bn-icon">👤</span>
       <span class="bn-label">Perfil</span>
     </button>
   </nav>
@@ -4072,6 +4311,7 @@ function carregarUsuariosParaSelects() {
 }
 
 function preencherSelects(profiles) {
+  // Selects do modal de novo culto (preenchem input de texto)
   var selectIds = [
     'new-svc-pastor-select', 'new-svc-band-select',
     'new-svc-sound-select', 'new-svc-projection-select',
@@ -4080,26 +4320,49 @@ function preencherSelects(profiles) {
   selectIds.forEach(function(id) {
     var sel = document.getElementById(id);
     if (!sel) return;
-    // Manter primeira opção
     var first = sel.options[0];
     sel.innerHTML = '';
     sel.appendChild(first);
     profiles.forEach(function(p) {
       var opt = document.createElement('option');
-      opt.value = p.name;
+      // Valor: id|nome para identificação única
+      opt.value = p.id + '|' + p.name;
       opt.textContent = p.name + (p.role && p.role !== 'voluntario' ? ' (' + p.role + ')' : '');
       sel.appendChild(opt);
     });
-    // Ao selecionar, preenche o input de texto correspondente
     var inputId = id.replace('-select', '');
-    sel.addEventListener('change', function() {
-      if (!this.value) return;
-      var inp = document.getElementById(inputId);
-      if (inp) {
-        inp.value = this.value;
-        this.value = ''; // reset select
-      }
+    if (!sel._listenerSet) {
+      sel._listenerSet = true;
+      sel.addEventListener('change', function() {
+        if (!this.value) return;
+        var nome = this.value.split('|')[1] || this.value;
+        var inp = document.getElementById(inputId);
+        if (inp) { inp.value = nome; this.value = ''; }
+      });
+    }
+  });
+
+  // Selects dinâmicos do multiInput (sel-vocais, sel-teclado etc.)
+  var multiSections = ['vocais','teclado','violao','guitarra','bateria','baixo','louvor-outros','som','proj'];
+  multiSections.forEach(function(sec) {
+    var sel = document.getElementById('sel-' + sec);
+    if (!sel) return;
+    sel.innerHTML = '<option value="">Selecionar...</option>';
+    profiles.forEach(function(p) {
+      var opt = document.createElement('option');
+      opt.value = p.id + '|' + p.name;
+      opt.textContent = p.name + (p.role && p.role !== 'voluntario' ? ' (' + p.role + ')' : '');
+      sel.appendChild(opt);
     });
+    if (!sel._listenerSet) {
+      sel._listenerSet = true;
+      sel.addEventListener('change', function() {
+        if (!this.value) return;
+        var nome = this.value.split('|')[1] || this.value;
+        var inp = document.getElementById('inp-' + this.getAttribute('data-section'));
+        if (inp) { inp.value = nome; this.value = ''; }
+      });
+    }
   });
 }
 window.carregarUsuariosParaSelects = carregarUsuariosParaSelects;
@@ -4216,7 +4479,7 @@ function abrirModalPlanos() {
   var nomeIgreja = church.name || '';
 
   var planos = [
-    { key:'trial',        nome:'Trial',        valor:'Gratis',    dias:'10 dias', usuarios:5,   esbocos:'1 gratis',  convites:'Sim',   cor:'#6b7280' },
+    { key:'trial',        nome:'Trial',        valor:'Gratis',    dias:'5 dias', usuarios:5,   esbocos:'1 gratis',  convites:'Sim',   cor:'#6b7280' },
     { key:'basico',       nome:'Basico',        valor:'R$29,90',   dias:'30 dias', usuarios:15,  esbocos:'3/mes',     convites:'Sim',   cor:'#3b82f6' },
     { key:'essencial',    nome:'Essencial',     valor:'R$49,90',   dias:'30 dias', usuarios:30,  esbocos:'10/mes',    convites:'Sim',   cor:'#8b5cf6' },
     { key:'profissional', nome:'Profissional',  valor:'R$79,90',   dias:'30 dias', usuarios:60,  esbocos:'30/mes',    convites:'Sim',   cor:'#f59e0b' },
@@ -4793,6 +5056,11 @@ function initApp() {
     }
     if (event === 'SIGNED_OUT') {
       currentUser = null; currentProfile = null;
+      // Limpar slug salvo para não contaminar próxima sessão
+      // (manter apenas se veio da URL atual)
+      var urlSlug = (new URLSearchParams(window.location.search)).get('church') ||
+                    window.location.pathname.replace('/','').split('/')[0] || '';
+      if (!urlSlug) localStorage.removeItem('gca_church_slug');
       document.getElementById('app-screen').classList.add('hidden');
       document.getElementById('login-screen').style.display = 'flex';
     }
@@ -4879,9 +5147,16 @@ function loadApp(user) {
         sb.from('profiles').upsert({ id: user.id, name: novoNome, email: user.email, role: 'visitante', status: 'pending' }).then(function() {});
       }
 
-      // Sem church_id: redirecionar para onboarding
+      // Sem church_id: verificar se veio pelo link de uma igreja específica
       if (!currentProfile.church_id) {
-        showOnboardingBanner();
+        var slugAtual = getChurchSlug();
+        if (slugAtual) {
+          // Usuário acessou pelo link de uma igreja mas não tem acesso ainda
+          // Mostrar tela de "solicite acesso ao administrador" em vez de onboarding
+          mostrarTelaSemAcesso(slugAtual);
+        } else {
+          showOnboardingBanner();
+        }
         return;
       }
 
@@ -4895,6 +5170,18 @@ function loadApp(user) {
       document.getElementById('app-screen').classList.remove('hidden');
       updateUserChip();
       applyRoleVisibility();
+
+      // Verificar se o usuário pertence à igreja do slug atual
+      var slugURL = getChurchSlug();
+      if (slugURL && currentProfile.church_id) {
+        sb.from('churches').select('id, slug').eq('slug', slugURL).maybeSingle().then(function(sr) {
+          if (sr.data && sr.data.id !== currentProfile.church_id) {
+            // Usuário pertence a outra igreja — mostrar tela de sem acesso
+            mostrarTelaSemAcesso(slugURL);
+            return;
+          }
+        });
+      }
 
       // Carregar nome e logo da igreja no sidebar e favicon
       if (currentProfile.church_id) {
@@ -4926,6 +5213,7 @@ function loadApp(user) {
             mostrarBannerPlano(r.data);
             atualizarBadgePlanoSidebar(r.data);
             setTimeout(verificarBannerConvite, 1500);
+            setTimeout(verificarSuporteWA, 1600);
           }
         });
       }
@@ -4965,6 +5253,44 @@ function loadApp(user) {
       setTimeout(carregarMeusCultos, 800);
     });
 }
+
+function mostrarTelaSemAcesso(slug) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-screen').classList.add('hidden');
+  var os = document.getElementById('onboarding-screen');
+  if (os) os.style.display = 'none';
+
+  var old = document.getElementById('tela-sem-acesso');
+  if (old) old.remove();
+
+  // Buscar nome da igreja pelo slug
+  sb.from('churches').select('name, logo_url').eq('slug', slug).maybeSingle().then(function(r) {
+    var churchName = (r.data && r.data.name) || slug;
+    var logoUrl    = (r.data && r.data.logo_url) || '';
+
+    var div = document.createElement('div');
+    div.id = 'tela-sem-acesso';
+    div.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:32px 20px;text-align:center';
+    div.innerHTML =
+      '<div style="max-width:420px;width:100%">' +
+        (logoUrl ? '<img src="' + logoUrl + '" style="width:64px;height:64px;border-radius:14px;object-fit:cover;margin:0 auto 20px;display:block"/>' :
+          '<div style="width:64px;height:64px;border-radius:14px;background:rgba(245,158,11,.15);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px">&#9962;</div>') +
+        '<div style="font-family:var(--font-display);font-size:28px;letter-spacing:1px;margin-bottom:6px">' + churchName + '</div>' +
+        '<p style="font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.6">Voce ainda nao tem acesso a esta agenda.<br>Solicite um convite ao administrador da igreja.</p>' +
+        '<div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;text-align:left">' +
+          '<div style="font-size:13px;font-weight:700;margin-bottom:8px">Como entrar:</div>' +
+          '<div style="font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px">' +
+            '<div>&#49;&#65039;&#8419; Peça ao administrador um link de convite</div>' +
+            '<div>&#50;&#65039;&#8419; Clique no link recebido pelo WhatsApp</div>' +
+            '<div>&#51;&#65039;&#8419; Faca login com sua conta Google ou email</div>' +
+          '</div>' +
+        '</div>' +
+        '<button onclick="sb.auth.signOut()" style="background:var(--surface2);color:var(--muted);border:1px solid var(--border);padding:11px 24px;border-radius:10px;font-size:13px;cursor:pointer;font-family:var(--font-body)">Sair / Trocar conta</button>' +
+      '</div>';
+    document.body.appendChild(div);
+  });
+}
+window.mostrarTelaSemAcesso = mostrarTelaSemAcesso;
 
 function showOnboardingBanner() {
   // Mostrar a tela de onboarding integrada
@@ -5109,6 +5435,11 @@ function applyRoleVisibility() {
   var paginaAtiva = document.querySelector('.page.active');
   if (paginaAtiva) {
     var idPagina = paginaAtiva.id;
+    // Voluntário não deve ver agenda, proximos, admin, etc.
+    if (r === 'voluntario' && idPagina !== 'page-voluntario') {
+      showPageSafe('voluntario');
+      return;
+    }
     if (idPagina === 'page-admin' && r !== 'admin') showPageSafe('agenda');
     if (idPagina === 'page-my-team' && r !== 'lider' && r !== 'admin') showPageSafe('agenda');
     if (idPagina === 'page-sermao' && r !== 'pastor' && r !== 'admin') showPageSafe('agenda');
@@ -5118,6 +5449,10 @@ function applyRoleVisibility() {
 // Navegacao segura com verificacao de permissao
 function showPageSafe(page) {
   var r = currentProfile ? currentProfile.role : 'visitante';
+  // Voluntário só pode ver sua própria tela de escalas
+  if (r === 'voluntario' && (page === 'agenda' || page === 'proximos' || page === 'my-team' || page === 'admin' || page === 'sermao')) {
+    page = 'voluntario';
+  }
   if (page === 'admin' && r !== 'admin') {
     toast('Acesso restrito a administradores.', 'error'); page = 'agenda';
   }
@@ -5824,7 +6159,19 @@ function saveTeam(serviceId, teamId) {
     var pastorVal = val('edit-pastor') || '';
     if (pastorVal) updates.worship_pastor = pastorVal;
     updates.worship_band         = val('edit-band') || '';
-    updates.worship_repertoire   = val('edit-repertoire') || '';
+    // Serializar repertório com notas: formato "Música | Nota" por linha
+    var repLinhasEls2 = document.querySelectorAll('#rep-linhas-wrap .rep-linha');
+    if (repLinhasEls2.length) {
+      var repArr2 = [];
+      repLinhasEls2.forEach(function(el) {
+        var musica2 = (el.querySelector('.rep-musica-inp')||{value:''}).value.trim();
+        var nota2   = (el.querySelector('.rep-nota-sel')||{value:''}).value.trim();
+        if (musica2) repArr2.push(musica2 + (nota2 ? ' | ' + nota2 : ''));
+      });
+      updates.worship_repertoire = repArr2.join('\n');
+    } else {
+      updates.worship_repertoire = val('edit-repertoire') || '';
+    }
     updates.worship_dress_code   = val('edit-dresscode') || '';
     updates.worship_vocais       = getListFromUI('vocais');
     updates.worship_teclado      = getListFromUI('teclado');
@@ -6060,8 +6407,16 @@ function escAttr(s) {
 function renderEquipeEdit(team, role, dept) {
   var canAll = (role === 'admin');
 
+  function extrairNome(val) {
+    // Suporta formato legado "Nome" e novo "id|Nome"
+    if (!val) return '';
+    var parts = val.split('|');
+    return parts.length > 1 ? parts[1] : parts[0];
+  }
+
   function multiInput(sectionId, icon, label, fieldKey, canEdit) {
-    var pessoas = parseList(team[fieldKey] || '');
+    var raw    = team[fieldKey] || '';
+    var pessoas = parseList(raw).map(function(p){ return { raw: p, nome: extrairNome(p) }; });
     var html = '<div class="equipe-section">' +
       '<div class="equipe-section-title">' + icon + ' ' + label + '</div>' +
       '<div class="multi-pessoa-list" id="list-' + sectionId + '">';
@@ -6070,17 +6425,20 @@ function renderEquipeEdit(team, role, dept) {
     } else {
       pessoas.forEach(function(p, i) {
         if (canEdit) {
-          html += '<span class="pessoa-tag">' + escHtml(p) +
+          html += '<span class="pessoa-tag" data-raw="' + escAttr(p.raw) + '">' + escHtml(p.nome) +
             '<span class="remove-pessoa" data-section="' + sectionId + '" data-idx="' + i + '">x</span></span>';
         } else {
-          html += '<span class="pessoa-tag">' + escHtml(p) + '</span>';
+          html += '<span class="pessoa-tag">' + escHtml(p.nome) + '</span>';
         }
       });
     }
     html += '</div>';
     if (canEdit) {
       html += '<div class="add-pessoa-row">' +
-        '<input type="text" id="inp-' + sectionId + '" placeholder="Nome da pessoa..." maxlength="60"/>' +
+        '<input type="text" id="inp-' + sectionId + '" placeholder="Digitar nome..." maxlength="80" style="flex:1"/>' +
+        '<select id="sel-' + sectionId + '" style="padding:7px 10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;min-width:0;flex:1.2" data-section="' + sectionId + '">' +
+          '<option value="">Selecionar...</option>' +
+        '</select>' +
         '<button class="add-pessoa-btn" data-section="' + sectionId + '" data-field="' + fieldKey + '">+ Add</button>' +
       '</div>';
     }
@@ -6152,9 +6510,39 @@ function renderEquipeEdit(team, role, dept) {
   if (canLouvor2) {
     html += '<div class="equipe-section">';
     html += '<div class="equipe-section-title">&#127925; Repertorio</div>';
-    html += '<div class="form-group" style="margin-bottom:8px"><label>Cole o repertorio (uma musica por linha)</label>' +
-      '<textarea id="edit-repertoire" style="min-height:120px;font-size:13px" ' +
-      'placeholder="Ex: Gratidao E (Havila)">' + escHtml(team.worship_repertoire||'') + '</textarea></div>';
+    // Repertório com notas — parsear formato "Nome | Nota" ou legado "Nome (Nota)"
+    var repRaw = team.worship_repertoire || '';
+    var repLinhas = repRaw ? repRaw.split('\n').map(function(l){ return l.trim(); }).filter(Boolean) : [];
+    var NOTAS = ['','C','C#','D','D#','E','F','F#','G','G#','A','A#','B',
+                 'Cm','C#m','Dm','D#m','Em','Fm','F#m','Gm','G#m','Am','A#m','Bm'];
+
+    function buildRepHtml(linhas) {
+      var h = '<div id="rep-linhas-wrap">';
+      (linhas.length ? linhas : ['']).forEach(function(linha, idx) {
+        var parts = linha.split('|');
+        var musica = parts[0] ? parts[0].trim() : '';
+        var nota   = parts[1] ? parts[1].trim() : '';
+        // legado: "Nome (Nota)"
+        if (!nota) {
+          var m2 = musica.match(/^(.*?)\s*\(([A-G][b#]?m?)\)\s*$/);
+          if (m2) { musica = m2[1].trim(); nota = m2[2]; }
+        }
+        var notaOpts = NOTAS.map(function(n){ return '<option value="'+n+'"'+(n===nota?' selected':'')+'>'+( n||'Tom')+' </option>'; }).join('');
+        h += '<div class="rep-linha" data-idx="'+idx+'">' +
+          '<input type="text" class="rep-musica-inp" placeholder="Nome da música..." value="'+escAttr(musica)+'"/>' +
+          '<select class="rep-nota-sel">'+notaOpts+'</select>' +
+          '<button type="button" class="rep-rm-btn" title="Remover">&#215;</button>' +
+          '</div>';
+      });
+      h += '</div>' +
+        '<button type="button" class="rep-add-btn" id="btn-add-rep-linha">+ Adicionar música</button>';
+      return h;
+    }
+
+    html += '<div class="form-group" style="margin-bottom:8px">' +
+      '<label>Repertório <span style="font-size:11px;color:var(--muted);font-weight:400">— nome + tom de cada música</span></label>' +
+      buildRepHtml(repLinhas) +
+      '</div>';
     html += '<div class="form-group"><label>Dress Code</label>' +
       '<input type="text" id="edit-dresscode" value="' + escAttr(team.worship_dress_code||'') + '" placeholder="Ex: Social / Casual"/></div>';
     html += '</div>';
@@ -8345,7 +8733,7 @@ function showInviteScreen(token) {
 // CONFIGURACAO DOS PLANOS
 // =============================================
 var PLANOS = {
-  trial:         { label:'Trial',         valor:0,      dias:10,   usuarios:5,    esbocos:1,   convites:true,  wa_notif:false, locais:1,   isento:false },
+  trial:         { label:'Trial',         valor:0,      dias:5,    usuarios:5,    esbocos:1,   convites:true,  wa_notif:false, locais:1,   isento:false },
   basico:        { label:'Basico',        valor:29.90,  dias:30,   usuarios:15,   esbocos:3,   convites:true,  wa_notif:false, locais:1,   isento:false },
   essencial:     { label:'Essencial',     valor:49.90,  dias:30,   usuarios:30,   esbocos:10,  convites:true,  wa_notif:true,  locais:2,   isento:false },
   profissional:  { label:'Profissional',  valor:79.90,  dias:30,   usuarios:60,   esbocos:30,  convites:true,  wa_notif:true,  locais:5,   isento:false },
@@ -10162,30 +10550,87 @@ function mostrarBoasVindasComConvite() {
   var old = document.getElementById('modal-boas-vindas');
   if (old) old.remove();
 
+  var slides = [
+    {
+      icon: '&#127881;',
+      titulo: 'Agenda criada com sucesso!',
+      desc: 'Bem-vindo ao Church App! Vamos te guiar pelos primeiros passos para ter tudo funcionando.',
+      cor: '#f59e0b',
+      btn: 'Vamos começar &#8594;',
+      acao: 'next'
+    },
+    {
+      icon: '&#128197;',
+      titulo: '1&#176; Configure seus cultos',
+      desc: 'Acesse a <strong>Agenda</strong> e clique em <strong>+ Novo Culto</strong> para adicionar os cultos da sua igreja. Você pode definir data, horário, local e cor de cada culto.',
+      cor: '#3b82f6',
+      btn: 'Entendido &#8594;',
+      acao: 'next'
+    },
+    {
+      icon: '&#128279;',
+      titulo: '2&#176; Convide sua equipe',
+      desc: 'Vá em <strong>Administração &gt; Convites</strong> e gere um link para enviar pelo WhatsApp. Cada voluntário usa o link para entrar direto na agenda da sua igreja.',
+      cor: '#10b981',
+      btn: 'Entendido &#8594;',
+      acao: 'next'
+    },
+    {
+      icon: '&#128101;',
+      titulo: '3&#176; Escale os voluntários',
+      desc: 'Clique em um culto na agenda e acesse a aba <strong>Equipe</strong> para definir quem está escalado em cada função. Use o select para escolher da lista de membros.',
+      cor: '#8b5cf6',
+      btn: 'Ir para a Agenda &#127944;',
+      acao: 'finish'
+    }
+  ];
+
+  var currentSlide = 0;
+
   var overlay = document.createElement('div');
   overlay.id = 'modal-boas-vindas';
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px';
 
-  overlay.innerHTML =
-    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:460px;padding:32px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)">' +
-      '<div style="font-size:52px;margin-bottom:16px">&#127881;</div>' +
-      '<div style="font-family:var(--font-display);font-size:28px;letter-spacing:1px;margin-bottom:8px">Agenda criada!</div>' +
-      '<p style="font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.6">Agora convide sua equipe para comecar a escalar os cultos. Cada voluntario recebera um link para entrar direto na sua agenda.</p>' +
-      '<button id="btn-bv-convidar" style="display:block;width:100%;background:var(--accent);color:#000;border:none;padding:15px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;margin-bottom:10px">&#128279; Convidar minha equipe agora</button>' +
-      '<button id="btn-bv-depois" style="display:block;width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:12px;border-radius:12px;font-size:13px;cursor:pointer">Fazer isso depois</button>' +
-    '</div>';
+  function renderSlide(idx) {
+    var s = slides[idx];
+    var dots = slides.map(function(_, i) {
+      return '<div style="width:' + (i === idx ? '20px' : '8px') + ';height:8px;border-radius:20px;background:' +
+        (i === idx ? s.cor : 'rgba(255,255,255,.2)') + ';transition:all .3s"></div>';
+    }).join('');
+
+    overlay.innerHTML =
+      '<div style="background:var(--surface);border:1px solid var(--border);border-radius:24px;width:100%;max-width:460px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">' +
+        '<div style="background:linear-gradient(135deg,' + s.cor + '22,' + s.cor + '08);border-bottom:1px solid ' + s.cor + '30;padding:32px;text-align:center">' +
+          '<div style="font-size:56px;margin-bottom:16px;line-height:1">' + s.icon + '</div>' +
+          '<div style="font-family:var(--font-display);font-size:24px;letter-spacing:1px;margin-bottom:10px;color:var(--text)">' + s.titulo + '</div>' +
+          '<p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0">' + s.desc + '</p>' +
+        '</div>' +
+        '<div style="padding:20px 24px">' +
+          '<div style="display:flex;justify-content:center;gap:6px;margin-bottom:20px">' + dots + '</div>' +
+          '<button id="btn-bv-main" style="display:block;width:100%;background:' + s.cor + ';color:' + (s.cor === '#f59e0b' ? '#000' : '#fff') + ';border:none;padding:14px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:8px">' + s.btn + '</button>' +
+          (idx > 0 ? '' : '') +
+          '<button id="btn-bv-skip" style="display:block;width:100%;background:transparent;border:none;color:var(--muted);padding:10px;font-size:12px;cursor:pointer">Pular tutorial</button>' +
+        '</div>' +
+      '</div>';
+
+    document.getElementById('btn-bv-main').addEventListener('click', function() {
+      if (s.acao === 'next') {
+        currentSlide++;
+        renderSlide(currentSlide);
+      } else {
+        overlay.remove();
+        showPageSafe('admin');
+        setTimeout(function() {
+          var tab = document.querySelector('[data-admin-tab="convites"]');
+          if (tab) tab.click();
+        }, 150);
+      }
+    });
+    document.getElementById('btn-bv-skip').addEventListener('click', function() { overlay.remove(); });
+  }
 
   document.body.appendChild(overlay);
-
-  document.getElementById('btn-bv-convidar').addEventListener('click', function() {
-    overlay.remove();
-    showPageSafe('admin');
-    setTimeout(function() {
-      var tab = document.querySelector('[data-admin-tab="convites"]');
-      if (tab) tab.click();
-    }, 150);
-  });
-  document.getElementById('btn-bv-depois').addEventListener('click', function() { overlay.remove(); });
+  renderSlide(0);
 }
 window.mostrarBoasVindasComConvite = mostrarBoasVindasComConvite;
 
@@ -10420,6 +10865,48 @@ function deleteFeedback(id) {
 window.zerarFeedbacks  = zerarFeedbacks;
 window.deleteFeedback  = deleteFeedback;
 
+// =============================================
+// SUPORTE WHATSAPP (planos Básico+)
+// =============================================
+function toggleSuporteWAForm() {
+  var form = document.getElementById('suporte-wa-form');
+  if (!form) return;
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+window.toggleSuporteWAForm = toggleSuporteWAForm;
+
+function enviarSuporteWA() {
+  var texto = (document.getElementById('suporte-wa-texto') || {}).value.trim();
+  if (!texto) { toast('Descreva sua duvida antes de enviar.', 'error'); return; }
+  var igreja = (window.currentChurch && window.currentChurch.name) || 'Igreja';
+  var plano  = (window.currentChurch && window.currentChurch.plan) || '';
+  var msg = '&#128172; *Suporte Church App*' +
+    '\n\n*Igreja:* ' + igreja +
+    (plano ? '\n*Plano:* ' + plano.toUpperCase() : '') +
+    '\n\n*Duvida:*\n' + texto +
+    '\n\n_Enviado pelo app Church App_';
+  var url = 'https://wa.me/5549988068778?text=' + encodeURIComponent(
+    '&#128172; Suporte Church App\n\nIgreja: ' + igreja +
+    (plano ? '\nPlano: ' + plano.toUpperCase() : '') +
+    '\n\nDuvida:\n' + texto +
+    '\n\nEnviado pelo app Church App'
+  );
+  window.open(url, '_blank');
+  document.getElementById('suporte-wa-form').style.display = 'none';
+  if (document.getElementById('suporte-wa-texto')) document.getElementById('suporte-wa-texto').value = '';
+}
+window.enviarSuporteWA = enviarSuporteWA;
+
+function verificarSuporteWA() {
+  // Mostrar botão de suporte WA apenas para planos Básico+
+  var wrap = document.getElementById('suporte-wa-wrap');
+  if (!wrap || !window.currentChurch) return;
+  var planosComSuporte = ['basico','essencial','profissional','premium','enterprise','isento'];
+  var plano = (window.currentChurch.plan || '').toLowerCase();
+  wrap.style.display = planosComSuporte.indexOf(plano) !== -1 ? 'block' : 'none';
+}
+window.verificarSuporteWA = verificarSuporteWA;
+
 // Mostrar botao feedback quando logado
 function mostrarBotaoFeedback() {
   var btn = document.getElementById('feedback-btn');
@@ -10476,69 +10963,100 @@ window.initVoluntarioView = initVoluntarioView;
 function carregarEscalasVoluntario() {
   if (!currentUser || !currentProfile) return;
 
-  var hoje = new Date();
+  var hoje    = new Date();
+  var hojeStr = hoje.toISOString().slice(0,10);
   var inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1).toISOString().slice(0,10);
   var fimMes    = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).toISOString().slice(0,10);
-  var hojeStr   = hoje.toISOString().slice(0,10);
+  var userName  = (currentProfile.name || '').toLowerCase().trim();
 
-  // Buscar confirmações do usuário para saber em quais cultos está escalado
-  sb.from('service_confirmations')
+  // Buscar confirmações do usuário (já existentes no banco)
+  var confPromise = sb.from('service_confirmations')
     .select('service_id, status')
-    .eq('user_id', currentUser.id)
-    .gte('created_at', inicioMes)
-    .then(function(confRes) {
-      var confirmMap = {};
-      (confRes.data || []).forEach(function(c) { confirmMap[c.service_id] = c.status; });
+    .eq('user_id', currentUser.id);
 
-      // Buscar equipes que incluem o nome do usuário
-      var userName = (currentProfile.name || '').toLowerCase().trim();
-      sb.from('service_teams')
-        .select('service_id, worship_vocais, worship_teclado, worship_violao, worship_guitarra, worship_bateria, worship_baixo, worship_outros, sound_operator, sound_operators, projection_operator, lighting_operator, live_operator, worship_band, worship_leader, worship_pastor')
-        .eq('church_id', currentProfile.church_id)
-        .then(function(teamRes) {
-          var teams = teamRes.data || [];
-          var meusServiceIds = [];
-          var meusPapeis = {};
+  // Buscar equipes que contenham o nome do usuário
+  var teamPromise = sb.from('service_teams')
+    .select('service_id, worship_vocais, worship_teclado, worship_violao, worship_guitarra, worship_bateria, worship_baixo, worship_outros, sound_operator, sound_operators, projection_operator, lighting_operator, live_operator, worship_band, worship_leader, worship_pastor')
+    .eq('church_id', currentProfile.church_id);
 
-          teams.forEach(function(t) {
-            var campos = [
-              {k:'worship_vocais',l:'Vocais'},{k:'worship_teclado',l:'Teclado'},
-              {k:'worship_violao',l:'Violao'},{k:'worship_guitarra',l:'Guitarra'},
-              {k:'worship_bateria',l:'Bateria'},{k:'worship_baixo',l:'Baixo'},
-              {k:'worship_outros',l:'Outros'},{k:'sound_operator',l:'Som'},
-              {k:'sound_operators',l:'Som'},{k:'projection_operator',l:'Projecao'},
-              {k:'lighting_operator',l:'Iluminacao'},{k:'live_operator',l:'Live'},
-              {k:'worship_band',l:'Louvor'},{k:'worship_leader',l:'Lider'},
-              {k:'worship_pastor',l:'Pastor/Ministro'}
-            ];
-            campos.forEach(function(c) {
-              var val = (t[c.k] || '').toLowerCase();
-              if (val && val.indexOf(userName) !== -1) {
-                if (meusServiceIds.indexOf(t.service_id) === -1) meusServiceIds.push(t.service_id);
-                if (!meusPapeis[t.service_id]) meusPapeis[t.service_id] = c.l;
-              }
-            });
+  Promise.all([confPromise, teamPromise]).then(function(results) {
+    var confirmacoes = results[0].data || [];
+    var teams        = results[1].data || [];
+
+    // Mapa de confirmações existentes
+    var confirmMap = {};
+    confirmacoes.forEach(function(c) { confirmMap[c.service_id] = c.status; });
+
+    // Encontrar cultos onde o voluntário está escalado por nome
+    var meusServiceIds = Object.keys(confirmMap); // já confirmados
+    var meusPapeis = {};
+
+    var camposDef = [
+      {k:'worship_vocais',l:'Vocais'},{k:'worship_teclado',l:'Teclado'},
+      {k:'worship_violao',l:'Violao'},{k:'worship_guitarra',l:'Guitarra'},
+      {k:'worship_bateria',l:'Bateria'},{k:'worship_baixo',l:'Baixo'},
+      {k:'worship_outros',l:'Outros'},{k:'sound_operator',l:'Som'},
+      {k:'sound_operators',l:'Som'},{k:'projection_operator',l:'Projecao'},
+      {k:'lighting_operator',l:'Iluminacao'},{k:'live_operator',l:'Live'},
+      {k:'worship_band',l:'Louvor'},{k:'worship_leader',l:'Lider'},
+      {k:'worship_pastor',l:'Pastor/Ministro'}
+    ];
+
+    teams.forEach(function(t) {
+      camposDef.forEach(function(campo) {
+        var val = (t[campo.k] || '');
+        if (!val) return;
+        // Verificar por ID único primeiro (formato id|Nome) — match exato
+        var matchById = val.indexOf(currentUser.id) !== -1;
+        // Fallback: match por nome completo exato (legado sem ID)
+        var matchByName = false;
+        if (!matchById && userName) {
+          var partes = val.toLowerCase().split(',').map(function(p){ return p.trim(); });
+          matchByName = partes.some(function(p) {
+            // Apenas match de nome completo, não parcial (evita "Alef" casar com "Alef Junior")
+            var nomeSemId = p.split('|').pop().trim();
+            return nomeSemId === userName;
           });
-
-          if (!meusServiceIds.length) {
-            renderVoluntarioVazio();
-            return;
+        }
+        if (matchById || matchByName) {
+          if (meusServiceIds.indexOf(t.service_id) === -1) {
+            meusServiceIds.push(t.service_id);
           }
-
-          // Buscar detalhes dos serviços
-          sb.from('services')
-            .select('id, title, date, time, color, location')
-            .eq('church_id', currentProfile.church_id)
-            .in('id', meusServiceIds)
-            .gte('date', hojeStr)
-            .order('date', { ascending: true })
-            .then(function(svcRes) {
-              var servicos = svcRes.data || [];
-              renderVoluntarioEscalas(servicos, meusPapeis, confirmMap);
-              atualizarStatsVoluntario(confirmMap, meusServiceIds);
-            });
-        });
+          if (!meusPapeis[t.service_id]) meusPapeis[t.service_id] = campo.l;
+        }
+      });
     });
+
+    // Atualizar stats do mês
+    var totalMes = meusServiceIds.length;
+    var confMes  = confirmacoes.filter(function(c){ return c.status === 'confirmed'; }).length;
+    var pendMes  = meusServiceIds.filter(function(id){ return !confirmMap[id]; }).length;
+    var el = function(id){ return document.getElementById(id); };
+    if (el('vol-stat-total')) el('vol-stat-total').textContent = totalMes;
+    if (el('vol-stat-conf'))  el('vol-stat-conf').textContent  = confMes;
+    if (el('vol-stat-pend'))  el('vol-stat-pend').textContent  = pendMes;
+
+    if (!meusServiceIds.length) {
+      renderVoluntarioVazio();
+      return;
+    }
+
+    // Buscar detalhes dos serviços futuros
+    sb.from('services')
+      .select('id, title, date, time, color, location')
+      .eq('church_id', currentProfile.church_id)
+      .in('id', meusServiceIds)
+      .gte('date', hojeStr)
+      .order('date', { ascending: true })
+      .then(function(svcRes) {
+        var servicos = svcRes.data || [];
+        // Para cultos que aparecem na sidebar mas sem paper definido
+        servicos.forEach(function(s) {
+          if (!meusPapeis[s.id]) meusPapeis[s.id] = 'Equipe';
+        });
+        renderVoluntarioEscalas(servicos, meusPapeis, confirmMap);
+      });
+  });
 }
 window.carregarEscalasVoluntario = carregarEscalasVoluntario;
 
@@ -10627,21 +11145,33 @@ window.confirmarPresencaVol = confirmarPresencaVol;
 
 // Mostrar view correta por role
 function aplicarViewPorRole(role) {
-  var navVol  = document.getElementById('nav-voluntario');
-  var isVol   = role === 'voluntario';
+  var navVol = document.getElementById('nav-voluntario');
+  var bnVol  = document.getElementById('bn-voluntario');
+  var isVol  = role === 'voluntario';
 
   if (isVol) {
-    // Voluntário: ocultar agenda e mostrar suas escalas
     document.querySelectorAll('.nav-item[data-page="agenda"]').forEach(function(el){ el.style.display='none'; });
     document.querySelectorAll('.nav-item[data-page="proximos"]').forEach(function(el){ el.style.display='none'; });
+    document.querySelectorAll('.bn-item[data-page="agenda"]').forEach(function(el){ el.style.display='none'; });
+    document.querySelectorAll('.bn-item[data-page="proximos"]').forEach(function(el){ el.style.display='none'; });
+    document.querySelectorAll('.bn-item[data-page="admin"]').forEach(function(el){ el.style.display='none'; });
+    document.querySelectorAll('.bn-item[data-page="sermao"]').forEach(function(el){ el.style.display='none'; });
     if (navVol) navVol.style.display = 'flex';
-    // Navegar para view voluntário ao carregar
-    setTimeout(function() {
-      showPage('voluntario');
-      initVoluntarioView();
-    }, 300);
+    if (bnVol)  bnVol.style.display  = 'flex';
+    setTimeout(function() { showPageSafe('voluntario'); }, 400);
   } else {
     if (navVol) navVol.style.display = 'none';
+    if (bnVol)  bnVol.style.display  = 'none';
+    document.querySelectorAll('.nav-item[data-page="agenda"]').forEach(function(el){ el.style.display=''; });
+    document.querySelectorAll('.nav-item[data-page="proximos"]').forEach(function(el){ el.style.display=''; });
+    document.querySelectorAll('.bn-item[data-page="agenda"]').forEach(function(el){ el.style.display=''; });
+    document.querySelectorAll('.bn-item[data-page="proximos"]').forEach(function(el){ el.style.display=''; });
+  }
+
+  // Nome da igreja na topbar mobile
+  if (window.currentChurch && window.currentChurch.name) {
+    var el = document.getElementById('topbar-church-name-mobile');
+    if (el) { el.textContent = window.currentChurch.name; el.style.display = 'block'; }
   }
 }
 window.aplicarViewPorRole = aplicarViewPorRole;
