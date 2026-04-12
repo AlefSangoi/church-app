@@ -1151,10 +1151,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   /* Close button maior no mobile */
   .modal-close { width: 44px !important; height: 44px !important; font-size: 20px !important; }
 
-  /* Show bottom nav, hide sidebar */
-  #bottom-nav { display: flex; }
-  #sidebar { display: none !important; }
-  #main-content { margin-left: 0 !important; padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+  /* Show bottom nav only on small phones, sidebar still visible on tablets */
+  #bottom-nav { display: none; }
+  #sidebar { display: flex !important; width: 80px; }
+  #sidebar.collapsed { width: 80px; }
+  #main-content { margin-left: 80px !important; padding-bottom: 16px; }
   #hamburger { display: none !important; }
 
   /* Topbar mobile — mostrar nome da igreja */
@@ -1334,6 +1335,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 
   /* Escala em massa grid */
   #em-equipe-wrap > div[style*="grid"] { grid-template-columns: 1fr 1fr !important; }
+}
+
+@media(max-width: 600px) {
+  #bottom-nav { display: flex !important; }
+  #sidebar { display: none !important; }
+  #main-content { margin-left: 0 !important; padding-bottom: calc(64px + env(safe-area-inset-bottom)) !important; }
+}
+
+@media(max-width: 768px) {
 
   /* Voluntário mobile */
   .vol-stats { grid-template-columns: repeat(3,1fr); gap: 8px; padding: 14px 14px 0; }
@@ -3065,6 +3075,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
           <input type="password" id="profile-confirm-pass" placeholder="Repita a nova senha"/>
         </div>
         <button class="btn btn-secondary" style="width:auto" id="btn-change-pass">Alterar Senha</button>
+
+        <!-- BOTÃO SAIR - visível no mobile (sidebar oculta no mobile) -->
+        <div style="border-top:1px solid var(--border);margin:28px 0"></div>
+        <button id="btn-logout-mobile" onclick="document.getElementById('btn-logout').click()"
+          style="display:flex;align-items:center;gap:10px;width:100%;padding:13px 16px;
+          background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:12px;
+          color:var(--red);font-family:var(--font-body);font-size:14px;font-weight:600;
+          cursor:pointer;transition:all .2s">
+          &#x21AA; Sair da conta
+        </button>
       </div>
     </div>
 
@@ -5171,17 +5191,27 @@ function loadApp(user) {
       updateUserChip();
       applyRoleVisibility();
 
-      // Verificar se o usuário pertence à igreja do slug atual
+      // Verificar se o usuário pertence à igreja do slug atual (SÍNCRONO antes de renderizar)
       var slugURL = getChurchSlug();
       if (slugURL && currentProfile.church_id) {
+        // Verificar ANTES de renderizar o app - evita "flash" da interface errada
         sb.from('churches').select('id, slug').eq('slug', slugURL).maybeSingle().then(function(sr) {
           if (sr.data && sr.data.id !== currentProfile.church_id) {
-            // Usuário pertence a outra igreja — mostrar tela de sem acesso
+            // Usuário pertence a outra igreja — ocultar app e mostrar tela de sem acesso
+            document.getElementById('app-screen').classList.add('hidden');
+            document.getElementById('login-screen').style.display = 'none';
             mostrarTelaSemAcesso(slugURL);
             return;
           }
+          // Pertence à igreja correta — continuar carregando
+          _carregarDadosIgreja();
         });
+        return; // Aguardar verificação antes de continuar
       }
+
+      // Sem slug na URL — carregar normalmente
+      _carregarDadosIgreja();
+      function _carregarDadosIgreja() {
 
       // Carregar nome e logo da igreja no sidebar e favicon
       if (currentProfile.church_id) {
@@ -5217,6 +5247,8 @@ function loadApp(user) {
           }
         });
       }
+
+      } // fim _carregarDadosIgreja
 
       // Banner de aprovacao pendente para visitantes
       if (currentProfile.status === 'pending' && currentProfile.role === 'visitante') {
