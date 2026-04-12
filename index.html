@@ -26,6 +26,13 @@
   --green:#10b981;--red:#ef4444;--purple:#8b5cf6;--pink:#ec4899;
   --font-display:'Bebas Neue',sans-serif;--font-body:'DM Sans',sans-serif;
   --font-mono:'JetBrains Mono',monospace;--radius:12px;
+  --shadow:0 4px 24px rgba(0,0,0,.35);
+}
+:root.light-mode{
+  --bg:#f0f2f8;--surface:#ffffff;--surface2:#f5f7fc;--border:rgba(0,0,0,0.08);
+  --text:#1a1d2e;--muted:#64748b;--accent:#f59e0b;--accent2:#3b82f6;
+  --green:#059669;--red:#dc2626;--purple:#7c3aed;--pink:#db2777;
+  --shadow:0 4px 24px rgba(0,0,0,.10);
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
@@ -156,7 +163,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 /* SIDEBAR */
 #sidebar{width:240px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);
   display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;
-  transition:transform .3s, width .3s}
+  transition:transform .3s, width .3s;box-shadow:var(--shadow)}
 #sidebar.collapsed{width:64px}
 #sidebar.collapsed .sidebar-logo span,
 #sidebar.collapsed .nav-section-label,
@@ -170,22 +177,22 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 #sidebar.collapsed .user-chip{justify-content:center;padding:8px 4px}
 #sidebar.collapsed #btn-collapse span{transform:rotate(180deg)}
 
-.sidebar-logo{padding:20px 16px 16px;border-bottom:1px solid var(--border);
+.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
 .sidebar-logo:hover .logo-church-img{filter:brightness(1.1)}
 .logo-church-img{width:36px;height:36px;border-radius:10px;object-fit:contain;
   background:#d4c4a8;padding:3px;flex-shrink:0}
 .sidebar-logo span{font-family:var(--font-display);font-size:20px;letter-spacing:1px;
   white-space:nowrap;overflow:hidden}
-.sidebar-nav{flex:1;padding:12px 10px;overflow-y:auto;overflow-x:hidden}
-.nav-section-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--muted);padding:8px 8px 4px;white-space:nowrap}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;
-  color:var(--muted);font-size:14px;font-weight:500;transition:all .15s;margin-bottom:2px;
+.sidebar-nav{flex:1;padding:10px 8px;overflow-y:auto;overflow-x:hidden}
+.nav-section-label{font-size:9px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--muted);padding:10px 10px 4px;white-space:nowrap}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;
+  color:var(--muted);font-size:13.5px;font-weight:500;transition:all .15s;margin-bottom:1px;
   border:none;background:none;width:100%;text-align:left;position:relative}
 .nav-item:hover{background:var(--surface2);color:var(--text)}
-.nav-item.active{background:rgba(245,158,11,.12);color:var(--accent)}
-.nav-item .icon{width:18px;text-align:center;font-size:15px;flex-shrink:0}
+.nav-item.active{background:rgba(245,158,11,.12);color:var(--accent);font-weight:600}
+.nav-item .icon{width:20px;text-align:center;font-size:15px;flex-shrink:0}
 .nav-badge{position:absolute;right:10px;top:50%;transform:translateY(-50%);
   background:var(--red);color:#fff;border-radius:20px;
   font-size:10px;font-weight:700;padding:1px 6px;min-width:18px;text-align:center}
@@ -233,11 +240,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 #main-content{margin-left:240px;flex:1;padding:0;min-height:100vh;transition:margin-left .3s}
 #sidebar.collapsed ~ * #main-content,
 body.sidebar-collapsed #main-content{margin-left:64px}
-.topbar{position:sticky;top:0;z-index:50;background:rgba(10,12,18,.85);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;gap:16px}
-.topbar h2{font-size:18px;font-weight:600}
+.topbar{position:sticky;top:0;z-index:50;background:var(--surface);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:16px;
+  box-shadow:0 1px 8px rgba(0,0,0,.08)}
+.topbar h2{font-size:17px;font-weight:700;letter-spacing:.3px}
 #hamburger{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer}
-.page{display:none;padding:32px;animation:fadeUp .3s ease}
+.page{display:none;padding:28px 32px;animation:fadeUp .3s ease}
 .page.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
@@ -267,27 +275,27 @@ body.sidebar-collapsed #main-content{margin-left:64px}
 .cal-more{font-size:10px;color:var(--muted);padding:1px 4px}
 
 /* SERVICE CARDS */
-.services-section h4{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--muted);margin-bottom:16px}
-.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:32px}
+.services-section h4{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:28px}
 .service-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
-  padding:20px;transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
+  padding:18px 20px;transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
 .service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:var(--card-color,var(--accent))}
+  background:var(--card-color,var(--accent));border-radius:16px 16px 0 0}
 .service-card:hover{border-color:rgba(255,255,255,.15);transform:translateY(-2px);
-  box-shadow:0 8px 32px rgba(0,0,0,.3)}
-.card-meta{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+  box-shadow:var(--shadow)}
+.card-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .card-date{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.5px}
 .card-status{margin-left:auto;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
 .status-scheduled{background:rgba(59,130,246,.15);color:var(--accent2)}
 .status-completed{background:rgba(16,185,129,.15);color:var(--green)}
 .status-cancelled{background:rgba(239,68,68,.15);color:var(--red)}
-.card-title{font-size:18px;font-weight:700;margin-bottom:4px}
-.card-location{font-size:13px;color:var(--muted);margin-bottom:16px}
-.card-team{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.team-item{display:flex;align-items:center;gap:8px;font-size:13px}
-.team-icon{font-size:14px;width:20px;text-align:center}
-.team-label{color:var(--muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.card-title{font-size:17px;font-weight:700;margin-bottom:3px}
+.card-location{font-size:12px;color:var(--muted);margin-bottom:14px}
+.card-team{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.team-item{display:flex;align-items:center;gap:6px;font-size:12px}
+.team-icon{font-size:13px;width:18px;text-align:center}
+.team-label{color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .team-value{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .team-empty{color:var(--muted);font-style:italic}
 
@@ -918,6 +926,84 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .sidebar-legal-links span{font-size:10px;color:var(--border)}
 #sidebar.collapsed .sidebar-legal-links{display:none}
 
+/* THEME TOGGLE */
+.theme-toggle-btn{
+  display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  cursor:pointer;font-family:var(--font-body);font-size:12px;font-weight:600;
+  color:var(--muted);margin-bottom:6px;transition:all .2s;
+}
+.theme-toggle-btn:hover{border-color:var(--accent);color:var(--accent)}
+.theme-toggle-icon{font-size:14px}
+#sidebar.collapsed .theme-toggle-btn{justify-content:center;padding:8px 4px}
+#sidebar.collapsed .theme-toggle-txt{display:none}
+
+/* VOLUNTÁRIO VIEW */
+#page-voluntario{padding:0}
+.vol-header{
+  background:linear-gradient(135deg,var(--surface) 0%,var(--surface2) 100%);
+  border-bottom:1px solid var(--border);padding:20px 28px;
+}
+.vol-greeting{font-size:22px;font-weight:700;margin-bottom:2px}
+.vol-greeting span{color:var(--accent)}
+.vol-subtitle{font-size:13px;color:var(--muted)}
+.vol-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:20px 28px 0}
+.vol-stat-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:14px;text-align:center;
+}
+.vol-stat-num{font-family:var(--font-display);font-size:28px;letter-spacing:1px}
+.vol-stat-num.amber{color:var(--accent)}
+.vol-stat-num.green{color:var(--green)}
+.vol-stat-num.muted{color:var(--muted)}
+.vol-stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:2px}
+.vol-body{padding:20px 28px 80px}
+.vol-section-title{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;margin-top:20px;
+}
+.vol-section-title:first-child{margin-top:0}
+.vol-cult-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:14px 16px;margin-bottom:10px;position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.vol-cult-card:hover{border-color:rgba(255,255,255,.15)}
+.vol-cult-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px;
+  background:var(--card-color,var(--accent));
+}
+.vol-cult-card .vc-top{
+  display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;
+}
+.vol-cult-card .vc-name{font-size:14px;font-weight:700}
+.vol-cult-card .vc-time{font-size:11px;color:var(--muted);margin-top:2px}
+.vol-role-badge{
+  font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;
+  background:rgba(245,158,11,.12);color:var(--accent);flex-shrink:0;
+}
+.vol-actions{display:flex;gap:8px}
+.vol-btn{
+  flex:1;padding:8px 12px;border-radius:8px;border:none;
+  font-family:var(--font-body);font-size:12px;font-weight:700;cursor:pointer;
+  transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.vol-btn-yes{
+  background:rgba(16,185,129,.15);color:var(--green);
+  border:1px solid rgba(16,185,129,.25);
+}
+.vol-btn-yes:hover,.vol-btn-yes.active{background:var(--green);color:#fff;border-color:var(--green)}
+.vol-btn-no{
+  background:rgba(239,68,68,.08);color:var(--red);
+  border:1px solid rgba(239,68,68,.2);
+}
+.vol-btn-no:hover,.vol-btn-no.active{background:var(--red);color:#fff;border-color:var(--red)}
+.vol-empty{
+  text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+}
+.vol-empty .vol-empty-icon{font-size:32px;margin-bottom:8px}
+
 .invite-card{
   background:var(--surface);border:1px solid var(--border);border-radius:14px;
   padding:18px 20px;display:flex;align-items:center;gap:14px;margin-bottom:10px;
@@ -1390,7 +1476,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
             <option value="basico">Basico - R$ 29,90/mes</option>
             <option value="essencial">Essencial - R$ 49,90/mes</option>
             <option value="profissional">Profissional - R$ 79,90/mes</option>
-            <option value="premium">Premium - R$ 119,90/mes</option>
+            <option value="premium">Premium - R$ 119,90/mes (ate 150 usuarios)</option>
+            <option value="enterprise">Enterprise - R$ 249,90/mes (ilimitado)</option>
             <option value="isento" style="color:#10b981">&#9733; Isento (Parceiro)</option>
           </select>
         </div>
@@ -1923,6 +2010,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
       <button class="nav-item" data-page="ajuda">
         <span class="icon">&#10067;</span><span class="nav-item-label"> Ajuda</span>
       </button>
+      <!-- NAV VOLUNTÁRIO (mostrado apenas para perfil voluntário) -->
+      <button class="nav-item voluntario-only" data-page="voluntario" id="nav-voluntario" style="display:none">
+        <span class="icon">&#128197;</span><span class="nav-item-label"> Minhas Escalas</span>
+      </button>
     </div>
 
     <div class="sidebar-footer">
@@ -1934,6 +2025,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
         </div>
         <button class="btn btn-icon btn-secondary" id="btn-logout" style="margin-left:auto" title="Sair">&#x21AA;</button>
       </div>
+      <!-- Toggle tema -->
+      <button class="theme-toggle-btn" id="btn-toggle-theme" onclick="toggleTheme()" title="Alternar tema">
+        <span class="theme-toggle-icon" id="theme-icon">&#9790;</span>
+        <span class="theme-toggle-txt" id="theme-txt">Modo Claro</span>
+      </button>
       <!-- Badge de plano -->
       <div id="sidebar-plano-badge" style="display:none;margin-top:8px;padding:8px 10px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);cursor:pointer" onclick="abrirModalPlanos()">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
@@ -3048,6 +3144,35 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 
       </div>
     </div>
+
+    <!-- PAGE VOLUNTÁRIO -->
+    <div id="page-voluntario" class="page">
+      <div class="vol-header">
+        <div class="vol-greeting">Olá, <span id="vol-greeting-name">Voluntário</span> 👋</div>
+        <div class="vol-subtitle">Seus próximos cultos escalados</div>
+      </div>
+      <div class="vol-stats">
+        <div class="vol-stat-card">
+          <div class="vol-stat-num amber" id="vol-stat-total">—</div>
+          <div class="vol-stat-label">Este mês</div>
+        </div>
+        <div class="vol-stat-card">
+          <div class="vol-stat-num green" id="vol-stat-conf">—</div>
+          <div class="vol-stat-label">Confirmados</div>
+        </div>
+        <div class="vol-stat-card">
+          <div class="vol-stat-num muted" id="vol-stat-pend">—</div>
+          <div class="vol-stat-label">Pendentes</div>
+        </div>
+      </div>
+      <div class="vol-body" id="vol-body-content">
+        <div class="vol-empty">
+          <div class="vol-empty-icon">📅</div>
+          <p>Carregando suas escalas...</p>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- BOTTOM NAV MOBILE -->
@@ -4091,11 +4216,12 @@ function abrirModalPlanos() {
   var nomeIgreja = church.name || '';
 
   var planos = [
-    { key:'trial',        nome:'Trial',        valor:'Gratis',   dias:'7 dias',  usuarios:5,   esbocos:'1 total',   convites:'Nao',   cor:'#6b7280' },
-    { key:'basico',       nome:'Basico',        valor:'R$29,90',  dias:'30 dias', usuarios:15,  esbocos:'3/mes',     convites:'Sim',   cor:'#3b82f6' },
-    { key:'essencial',    nome:'Essencial',     valor:'R$49,90',  dias:'30 dias', usuarios:30,  esbocos:'10/mes',    convites:'Sim',   cor:'#8b5cf6' },
-    { key:'profissional', nome:'Profissional',  valor:'R$79,90',  dias:'30 dias', usuarios:60,  esbocos:'30/mes',    convites:'Sim',   cor:'#f59e0b' },
-    { key:'premium',      nome:'Premium',       valor:'R$119,90', dias:'30 dias', usuarios:999, esbocos:'Ilimitado', convites:'Sim',   cor:'#10b981' },
+    { key:'trial',        nome:'Trial',        valor:'Gratis',    dias:'10 dias', usuarios:5,   esbocos:'1 gratis',  convites:'Sim',   cor:'#6b7280' },
+    { key:'basico',       nome:'Basico',        valor:'R$29,90',   dias:'30 dias', usuarios:15,  esbocos:'3/mes',     convites:'Sim',   cor:'#3b82f6' },
+    { key:'essencial',    nome:'Essencial',     valor:'R$49,90',   dias:'30 dias', usuarios:30,  esbocos:'10/mes',    convites:'Sim',   cor:'#8b5cf6' },
+    { key:'profissional', nome:'Profissional',  valor:'R$79,90',   dias:'30 dias', usuarios:60,  esbocos:'30/mes',    convites:'Sim',   cor:'#f59e0b' },
+    { key:'premium',      nome:'Premium',       valor:'R$119,90',  dias:'30 dias', usuarios:150, esbocos:'Ilimitado', convites:'Sim',   cor:'#10b981' },
+    { key:'enterprise',   nome:'Enterprise',    valor:'R$249,90',  dias:'30 dias', usuarios:999, esbocos:'Ilimitado', convites:'Sim',   cor:'#ec4899' },
   ];
 
   var cardsHtml = planos.map(function(p) {
@@ -4976,6 +5102,9 @@ function applyRoleVisibility() {
     el.style.display = (r === 'admin') ? '' : 'none';
   });
 
+  // Aplicar view especial para voluntário
+  if (typeof aplicarViewPorRole === 'function') aplicarViewPorRole(r);
+
   // Redirecionar pagina se sem permissao
   var paginaAtiva = document.querySelector('.page.active');
   if (paginaAtiva) {
@@ -5011,7 +5140,7 @@ function showPageSafe(page) {
   var titles = { agenda: 'Agenda', proximos: 'Proximos Cultos',
     'my-team': 'Minha Equipe', admin: 'Administracao',
     sermao: 'Gerador de Esbocos', profile: 'Meu Perfil',
-    ajuda: 'Central de Ajuda' };
+    ajuda: 'Central de Ajuda', voluntario: 'Minhas Escalas' };
   document.getElementById('page-title').textContent = titles[page] || '';
 
   if (page === 'proximos') renderServiceCards(allServices.filter(function(s) {
@@ -5035,6 +5164,7 @@ function showPageSafe(page) {
   }
   if (page === 'admin') renderAdminServices();
   if (page === 'sermao') initSermao();
+  if (page === 'voluntario' && typeof initVoluntarioView === 'function') initVoluntarioView();
 
   toggleSidebar(true);
 }
@@ -6901,10 +7031,27 @@ function carregarLocais() {
   if (!currentProfile || !currentProfile.church_id) return;
   var lista = document.getElementById('locais-lista');
   if (!lista) return;
-  var chave = 'locais_' + currentProfile.church_id;
-  var saved = localStorage.getItem(chave);
-  var locais = saved ? JSON.parse(saved) : [];
-  renderLocais(locais);
+  // Buscar locais do Supabase (campo locations na tabela churches)
+  sb.from('churches').select('locations').eq('id', currentProfile.church_id).single()
+    .then(function(res) {
+      var locais = [];
+      if (res.data && res.data.locations) {
+        try { locais = JSON.parse(res.data.locations); } catch(e) { locais = []; }
+      }
+      // Fallback para localStorage se nao houver no banco
+      if (!locais.length) {
+        var chave = 'locais_' + currentProfile.church_id;
+        var saved = localStorage.getItem(chave);
+        if (saved) locais = JSON.parse(saved);
+      }
+      renderLocais(locais);
+    })
+    .catch(function() {
+      var chave = 'locais_' + currentProfile.church_id;
+      var saved = localStorage.getItem(chave);
+      var locais = saved ? JSON.parse(saved) : [];
+      renderLocais(locais);
+    });
 }
 
 function renderLocais(locais) {
@@ -6938,6 +7085,11 @@ function salvarLocal() {
   var locais = JSON.parse(localStorage.getItem(chave) || '[]');
   locais.push({ nome:nome, cep:cep, rua:rua, numero:numero, bairro:bairro, cidade:cidade });
   localStorage.setItem(chave, JSON.stringify(locais));
+  // Salvar tambem no Supabase para persistir entre dispositivos
+  sb.from('churches').update({ locations: JSON.stringify(locais) }).eq('id', currentProfile.church_id)
+    .then(function(res) {
+      if (res.error) console.warn('Erro ao salvar locais no banco:', res.error.message);
+    });
   // Limpar campos
   ['loc-nome','loc-cep','loc-rua','loc-numero','loc-bairro','loc-cidade'].forEach(function(id) {
     var el = document.getElementById(id); if (el) el.value = '';
@@ -6953,6 +7105,11 @@ function deletarLocal(idx) {
   var locais = JSON.parse(localStorage.getItem(chave) || '[]');
   locais.splice(idx, 1);
   localStorage.setItem(chave, JSON.stringify(locais));
+  // Salvar remoção no Supabase
+  sb.from('churches').update({ locations: JSON.stringify(locais) }).eq('id', currentProfile.church_id)
+    .then(function(res) {
+      if (res.error) console.warn('Erro ao remover local do banco:', res.error.message);
+    });
   renderLocais(locais);
   atualizarSelectLocais();
   toast('Local removido.', 'success');
@@ -8188,13 +8345,14 @@ function showInviteScreen(token) {
 // CONFIGURACAO DOS PLANOS
 // =============================================
 var PLANOS = {
-  trial:         { label:'Trial',         valor:0,     dias:10,    usuarios:5,   esbocos:1,   convites:false, wa_notif:false, locais:1,   isento:false },
-  basico:        { label:'Basico',        valor:29.90, dias:30,   usuarios:15,  esbocos:3,   convites:true,  wa_notif:false, locais:1,   isento:false },
-  essencial:     { label:'Essencial',     valor:49.90, dias:30,   usuarios:30,  esbocos:10,   convites:true,  wa_notif:true,  locais:2,   isento:false },
-  profissional:  { label:'Profissional',  valor:79.90, dias:30,   usuarios:60,  esbocos:30,  convites:true,  wa_notif:true,  locais:5,   isento:false },
-  premium:       { label:'Premium',       valor:119.90, dias:30,   usuarios:999, esbocos:999, convites:true,  wa_notif:true,  locais:999, isento:false },
-  free:          { label:'Free',          valor:0,     dias:30,   usuarios:10,  esbocos:0,   convites:false, wa_notif:false, locais:1,   isento:false },
-  isento:        { label:'Isento',        valor:0,     dias:9999, usuarios:999, esbocos:999, convites:true,  wa_notif:true,  locais:999, isento:true  },
+  trial:         { label:'Trial',         valor:0,      dias:10,   usuarios:5,    esbocos:1,   convites:true,  wa_notif:false, locais:1,   isento:false },
+  basico:        { label:'Basico',        valor:29.90,  dias:30,   usuarios:15,   esbocos:3,   convites:true,  wa_notif:false, locais:1,   isento:false },
+  essencial:     { label:'Essencial',     valor:49.90,  dias:30,   usuarios:30,   esbocos:10,  convites:true,  wa_notif:true,  locais:2,   isento:false },
+  profissional:  { label:'Profissional',  valor:79.90,  dias:30,   usuarios:60,   esbocos:30,  convites:true,  wa_notif:true,  locais:5,   isento:false },
+  premium:       { label:'Premium',       valor:119.90, dias:30,   usuarios:150,  esbocos:999, convites:true,  wa_notif:true,  locais:999, isento:false },
+  enterprise:    { label:'Enterprise',    valor:249.90, dias:30,   usuarios:999,  esbocos:999, convites:true,  wa_notif:true,  locais:999, isento:false },
+  free:          { label:'Free',          valor:0,      dias:30,   usuarios:10,   esbocos:1,   convites:true,  wa_notif:false, locais:1,   isento:false },
+  isento:        { label:'Isento',        valor:0,      dias:9999, usuarios:999,  esbocos:999, convites:true,  wa_notif:true,  locais:999, isento:true  },
 };
 
 function getPlano(church) {
@@ -8261,13 +8419,18 @@ function gerarEsboço() {
 
   // Verificar limite de esbocos do plano
   var planoAtual = PLANOS[(window.currentChurch && window.currentChurch.plan) || 'trial'];
+  var esbocosUsados = window.esbocosUsadosMes || 0;
   if (planoAtual.esbocos === 0) {
-    toast('Seu plano (' + planoAtual.label + ') nao inclui o Gerador de Esbocos com IA.', 'error');
+    toast('Seu plano nao inclui o Gerador de Esbocos com IA.', 'error');
     setTimeout(abrirModalPlanos, 500);
     return;
   }
-  if (planoAtual.esbocos < 999 && (window.esbocosUsadosMes || 0) >= planoAtual.esbocos) {
-    toast('Limite de ' + planoAtual.esbocos + ' esbocos/mes atingido no plano ' + planoAtual.label + '.', 'error');
+  if (planoAtual.esbocos < 999 && esbocosUsados >= planoAtual.esbocos) {
+    if (planoAtual.label === 'Free' || planoAtual.label === 'Trial') {
+      toast('Voce ja usou o esboço gratuito deste mes. Faca upgrade para gerar mais!', 'error');
+    } else {
+      toast('Limite de ' + planoAtual.esbocos + ' esbocos/mes atingido no plano ' + planoAtual.label + '.', 'error');
+    }
     setTimeout(abrirModalPlanos, 500);
     return;
   }
@@ -9922,14 +10085,26 @@ function aplicarEscalaMassa() {
     // Buscar team_id existente
     sb.from('service_teams').select('id').eq('service_id', serviceId).maybeSingle()
       .then(function(r) {
+        // r.error pode ocorrer se a linha nao existe - tratamos abaixo
+        var existingId = r.data && r.data.id;
         var promise;
-        if (r.data && r.data.id) {
-          promise = sb.from('service_teams').update(updates).eq('id', r.data.id);
+        if (existingId) {
+          // Atualizar registro existente
+          promise = sb.from('service_teams').update(updates).eq('id', existingId);
         } else {
+          // Inserir novo registro
           var insert = Object.assign({ service_id: serviceId, church_id: currentProfile.church_id }, updates);
           promise = sb.from('service_teams').insert(insert);
         }
-        return promise;
+        return promise.then(function(res) {
+          if (res.error) {
+            // Se insert falhou por conflito, tentar update por service_id
+            if (res.error.code === '23505') {
+              return sb.from('service_teams').update(updates).eq('service_id', serviceId);
+            }
+            console.warn('Escala massa erro culto ' + serviceId + ':', res.error.message);
+          }
+        });
       })
       .then(function() {
         done++;
@@ -10252,6 +10427,226 @@ function mostrarBotaoFeedback() {
 }
 window.mostrarBotaoFeedback = mostrarBotaoFeedback;
 
+// =============================================
+// TOGGLE TEMA DARK/LIGHT
+// =============================================
+function toggleTheme() {
+  var isLight = document.documentElement.classList.toggle('light-mode');
+  localStorage.setItem('church_theme', isLight ? 'light' : 'dark');
+  var icon = document.getElementById('theme-icon');
+  var txt  = document.getElementById('theme-txt');
+  if (icon) icon.textContent = isLight ? '☀️' : '🌙';
+  if (txt)  txt.textContent  = isLight ? 'Modo Escuro' : 'Modo Claro';
+  // Atualizar meta theme-color
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', isLight ? '#f0f2f8' : '#0a0c12');
+}
+window.toggleTheme = toggleTheme;
+
+// Carregar tema salvo
+(function() {
+  var saved = localStorage.getItem('church_theme');
+  if (saved === 'light') {
+    document.documentElement.classList.add('light-mode');
+    setTimeout(function() {
+      var icon = document.getElementById('theme-icon');
+      var txt  = document.getElementById('theme-txt');
+      if (icon) icon.textContent = '☀️';
+      if (txt)  txt.textContent  = 'Modo Escuro';
+    }, 100);
+  }
+})();
+
+// =============================================
+// VIEW VOLUNTÁRIO - Minhas Escalas
+// =============================================
+function initVoluntarioView() {
+  var page = document.getElementById('page-voluntario');
+  if (!page || !currentUser || !currentProfile) return;
+
+  // Saudar
+  var firstName = (currentProfile.name || '').split(' ')[0];
+  var greetEl = document.getElementById('vol-greeting-name');
+  if (greetEl) greetEl.textContent = firstName;
+
+  carregarEscalasVoluntario();
+}
+window.initVoluntarioView = initVoluntarioView;
+
+function carregarEscalasVoluntario() {
+  if (!currentUser || !currentProfile) return;
+
+  var hoje = new Date();
+  var inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1).toISOString().slice(0,10);
+  var fimMes    = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).toISOString().slice(0,10);
+  var hojeStr   = hoje.toISOString().slice(0,10);
+
+  // Buscar confirmações do usuário para saber em quais cultos está escalado
+  sb.from('service_confirmations')
+    .select('service_id, status')
+    .eq('user_id', currentUser.id)
+    .gte('created_at', inicioMes)
+    .then(function(confRes) {
+      var confirmMap = {};
+      (confRes.data || []).forEach(function(c) { confirmMap[c.service_id] = c.status; });
+
+      // Buscar equipes que incluem o nome do usuário
+      var userName = (currentProfile.name || '').toLowerCase().trim();
+      sb.from('service_teams')
+        .select('service_id, worship_vocais, worship_teclado, worship_violao, worship_guitarra, worship_bateria, worship_baixo, worship_outros, sound_operator, sound_operators, projection_operator, lighting_operator, live_operator, worship_band, worship_leader, worship_pastor')
+        .eq('church_id', currentProfile.church_id)
+        .then(function(teamRes) {
+          var teams = teamRes.data || [];
+          var meusServiceIds = [];
+          var meusPapeis = {};
+
+          teams.forEach(function(t) {
+            var campos = [
+              {k:'worship_vocais',l:'Vocais'},{k:'worship_teclado',l:'Teclado'},
+              {k:'worship_violao',l:'Violao'},{k:'worship_guitarra',l:'Guitarra'},
+              {k:'worship_bateria',l:'Bateria'},{k:'worship_baixo',l:'Baixo'},
+              {k:'worship_outros',l:'Outros'},{k:'sound_operator',l:'Som'},
+              {k:'sound_operators',l:'Som'},{k:'projection_operator',l:'Projecao'},
+              {k:'lighting_operator',l:'Iluminacao'},{k:'live_operator',l:'Live'},
+              {k:'worship_band',l:'Louvor'},{k:'worship_leader',l:'Lider'},
+              {k:'worship_pastor',l:'Pastor/Ministro'}
+            ];
+            campos.forEach(function(c) {
+              var val = (t[c.k] || '').toLowerCase();
+              if (val && val.indexOf(userName) !== -1) {
+                if (meusServiceIds.indexOf(t.service_id) === -1) meusServiceIds.push(t.service_id);
+                if (!meusPapeis[t.service_id]) meusPapeis[t.service_id] = c.l;
+              }
+            });
+          });
+
+          if (!meusServiceIds.length) {
+            renderVoluntarioVazio();
+            return;
+          }
+
+          // Buscar detalhes dos serviços
+          sb.from('services')
+            .select('id, title, date, time, color, location')
+            .eq('church_id', currentProfile.church_id)
+            .in('id', meusServiceIds)
+            .gte('date', hojeStr)
+            .order('date', { ascending: true })
+            .then(function(svcRes) {
+              var servicos = svcRes.data || [];
+              renderVoluntarioEscalas(servicos, meusPapeis, confirmMap);
+              atualizarStatsVoluntario(confirmMap, meusServiceIds);
+            });
+        });
+    });
+}
+window.carregarEscalasVoluntario = carregarEscalasVoluntario;
+
+function atualizarStatsVoluntario(confirmMap, ids) {
+  var confirmados = Object.values(confirmMap).filter(function(s){ return s === 'confirmed'; }).length;
+  var pendentes   = ids.length - Object.keys(confirmMap).length;
+  var el = function(id) { return document.getElementById(id); };
+  if (el('vol-stat-total'))   el('vol-stat-total').textContent   = ids.length;
+  if (el('vol-stat-conf'))    el('vol-stat-conf').textContent    = confirmados;
+  if (el('vol-stat-pend'))    el('vol-stat-pend').textContent    = Math.max(0, pendentes);
+}
+
+function renderVoluntarioVazio() {
+  var body = document.getElementById('vol-body-content');
+  if (!body) return;
+  body.innerHTML = '<div class="vol-empty"><div class="vol-empty-icon">📅</div><p>Voce ainda nao esta escalado em nenhum culto proximo.<br>Fique de olho nas notificacoes!</p></div>';
+}
+
+function renderVoluntarioEscalas(servicos, papeis, confirmMap) {
+  var body = document.getElementById('vol-body-content');
+  if (!body) return;
+  if (!servicos.length) { renderVoluntarioVazio(); return; }
+
+  var hoje = new Date(); hoje.setHours(0,0,0,0);
+  var fim7 = new Date(); fim7.setDate(fim7.getDate() + 7); fim7.setHours(23,59,59,999);
+
+  var estaSemanaSvcs  = servicos.filter(function(s){ var d=new Date(s.date+'T00:00:00'); return d>=hoje && d<=fim7; });
+  var proximosSvcs    = servicos.filter(function(s){ var d=new Date(s.date+'T00:00:00'); return d>fim7; });
+
+  function buildCard(s) {
+    var cor     = s.color || '#f59e0b';
+    var papel   = papeis[s.id] || 'Equipe';
+    var status  = confirmMap[s.id] || 'pending';
+    var dt      = new Date(s.date+'T00:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
+    var hr      = (s.time||'').slice(0,5);
+    var isYes   = status === 'confirmed';
+    var isNo    = status === 'declined';
+    return '<div class="vol-cult-card" style="--card-color:' + cor + '">' +
+      '<div class="vc-top">' +
+        '<div>' +
+          '<div class="vc-name">' + s.title + '</div>' +
+          '<div class="vc-time">' + dt + (hr?' · '+hr:'') + '</div>' +
+        '</div>' +
+        '<span class="vol-role-badge">' + papel + '</span>' +
+      '</div>' +
+      '<div class="vol-actions">' +
+        '<button class="vol-btn vol-btn-yes' + (isYes?' active':'') + '" data-id="' + s.id + '" data-action="confirmed" onclick="confirmarPresencaVol(this)">✓ Vou</button>' +
+        '<button class="vol-btn vol-btn-no'  + (isNo?' active':'')  + '" data-id="' + s.id + '" data-action="declined"  onclick="confirmarPresencaVol(this)">✗ Nao vou</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  var html = '';
+  if (estaSemanaSvcs.length) {
+    html += '<div class="vol-section-title">Esta semana</div>';
+    html += estaSemanaSvcs.map(buildCard).join('');
+  }
+  if (proximosSvcs.length) {
+    html += '<div class="vol-section-title">Proximas escalas</div>';
+    html += proximosSvcs.map(buildCard).join('');
+  }
+  body.innerHTML = html;
+}
+
+function confirmarPresencaVol(btn) {
+  var serviceId = btn.getAttribute('data-id');
+  var action    = btn.getAttribute('data-action');
+  var card      = btn.closest('.vol-cult-card');
+
+  // Atualizar UI imediatamente
+  card.querySelectorAll('.vol-btn-yes, .vol-btn-no').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+
+  // Salvar no banco
+  sb.from('service_confirmations').upsert({
+    service_id: serviceId,
+    user_id:    currentUser.id,
+    status:     action
+  }, { onConflict: 'service_id,user_id' }).then(function(res) {
+    if (res.error) { toast('Erro ao salvar: ' + res.error.message, 'error'); return; }
+    toast(action === 'confirmed' ? 'Presenca confirmada!' : 'Ausencia registrada.', action === 'confirmed' ? 'success' : 'error');
+    carregarEscalasVoluntario();
+  });
+}
+window.confirmarPresencaVol = confirmarPresencaVol;
+
+// Mostrar view correta por role
+function aplicarViewPorRole(role) {
+  var navVol  = document.getElementById('nav-voluntario');
+  var isVol   = role === 'voluntario';
+
+  if (isVol) {
+    // Voluntário: ocultar agenda e mostrar suas escalas
+    document.querySelectorAll('.nav-item[data-page="agenda"]').forEach(function(el){ el.style.display='none'; });
+    document.querySelectorAll('.nav-item[data-page="proximos"]').forEach(function(el){ el.style.display='none'; });
+    if (navVol) navVol.style.display = 'flex';
+    // Navegar para view voluntário ao carregar
+    setTimeout(function() {
+      showPage('voluntario');
+      initVoluntarioView();
+    }, 300);
+  } else {
+    if (navVol) navVol.style.display = 'none';
+  }
+}
+window.aplicarViewPorRole = aplicarViewPorRole;
+
+// =============================================
 // Iniciar app diretamente (scripts estao no final do body, DOM ja esta pronto)
 if (typeof initApp === 'function') {
   initApp();
