@@ -5248,8 +5248,6 @@ function loadApp(user) {
         });
       }
 
-      } // fim _carregarDadosIgreja
-
       // Banner de aprovacao pendente para visitantes
       if (currentProfile.status === 'pending' && currentProfile.role === 'visitante') {
         showPendingBanner();
@@ -5260,6 +5258,7 @@ function loadApp(user) {
         verificarPendentes();
       }
 
+      // Carregar agenda — SEMPRE dentro de _carregarDadosIgreja para garantir execução
       loadServices().then(function() {
         renderCalendar();
         renderServices();
@@ -5278,6 +5277,8 @@ function loadApp(user) {
           }, 300);
         }
       });
+
+      } // fim _carregarDadosIgreja
       document.getElementById('profile-name').value = currentProfile.name || '';
       document.getElementById('profile-email').value = currentProfile.email || '';
       var phoneEl = document.getElementById('profile-phone');
@@ -5996,6 +5997,46 @@ function openServiceModal(id) {
   }
 
   document.getElementById('service-modal').classList.remove('hidden');
+
+  // Listener para add/remover linhas do repertório com notas
+  var modalBody = document.getElementById('svc-modal-body');
+  if (modalBody && !modalBody._repListenerSet) {
+    modalBody._repListenerSet = true;
+    modalBody.addEventListener('click', function(e) {
+      // Remover linha
+      if (e.target.classList.contains('rep-rm-btn')) {
+        var wrap = document.getElementById('rep-linhas-wrap');
+        if (!wrap) return;
+        var linha = e.target.closest('.rep-linha');
+        if (linha && wrap.querySelectorAll('.rep-linha').length > 1) {
+          linha.remove();
+        } else if (linha) {
+          var inp = linha.querySelector('.rep-musica-inp');
+          var sel = linha.querySelector('.rep-nota-sel');
+          if (inp) inp.value = '';
+          if (sel) sel.value = '';
+        }
+      }
+      // Adicionar linha
+      if (e.target.id === 'btn-add-rep-linha' || e.target.closest('#btn-add-rep-linha')) {
+        var wrap2 = document.getElementById('rep-linhas-wrap');
+        if (!wrap2) return;
+        var NOTAS_ADD = ['','C','C#','D','D#','E','F','F#','G','G#','A','A#','B',
+                         'Cm','C#m','Dm','D#m','Em','Fm','F#m','Gm','G#m','Am','A#m','Bm'];
+        var opts = NOTAS_ADD.map(function(n){ return '<option value="'+n+'">'+( n||'Tom')+'</option>'; }).join('');
+        var idx = wrap2.querySelectorAll('.rep-linha').length;
+        var div = document.createElement('div');
+        div.className = 'rep-linha';
+        div.setAttribute('data-idx', idx);
+        div.innerHTML =
+          '<input type="text" class="rep-musica-inp" placeholder="Nome da música..." style="flex:1;min-width:0"/>' +
+          '<select class="rep-nota-sel" style="width:70px;flex-shrink:0">'+opts+'</select>' +
+          '<button type="button" class="rep-rm-btn" title="Remover">&#215;</button>';
+        wrap2.appendChild(div);
+        div.querySelector('.rep-musica-inp').focus();
+      }
+    });
+  }
 }
 
 document.getElementById('btn-close-service-modal').addEventListener('click', closeServiceModal);
@@ -6561,8 +6602,8 @@ function renderEquipeEdit(team, role, dept) {
         }
         var notaOpts = NOTAS.map(function(n){ return '<option value="'+n+'"'+(n===nota?' selected':'')+'>'+( n||'Tom')+' </option>'; }).join('');
         h += '<div class="rep-linha" data-idx="'+idx+'">' +
-          '<input type="text" class="rep-musica-inp" placeholder="Nome da música..." value="'+escAttr(musica)+'"/>' +
-          '<select class="rep-nota-sel">'+notaOpts+'</select>' +
+          '<input type="text" class="rep-musica-inp" placeholder="Nome da música..." value="'+escAttr(musica)+'" style="flex:1;min-width:0"/>' +
+          '<select class="rep-nota-sel" style="width:70px;flex-shrink:0">'+notaOpts+'</select>' +
           '<button type="button" class="rep-rm-btn" title="Remover">&#215;</button>' +
           '</div>';
       });
